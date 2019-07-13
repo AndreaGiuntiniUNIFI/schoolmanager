@@ -4,4 +4,9 @@
   <artifactId>schoolmanager-aggregator</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+   <modules>
+   <module>../schoolmanager-backend</module>
+   <module>../schoolmanager-frontend</module>
+   <module>../schoolmanager-parent</module>
+   </modules>
 </project>
