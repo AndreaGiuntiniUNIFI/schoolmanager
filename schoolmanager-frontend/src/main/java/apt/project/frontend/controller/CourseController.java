@@ -1,20 +1,22 @@
 package apt.project.frontend.controller;
 
-import apt.project.backend.repository.CourseRepository;
+import apt.project.backend.repository.Repository;
 import apt.project.frontend.view.View;
 
-public class CourseController {
+public class CourseController implements Controller{
 
     private View courseView;
-    private CourseRepository courseRepository;
+    private Repository courseRepository;
 
-    public CourseController(View courseView, CourseRepository courseRepository) {
+    public CourseController(View courseView, Repository courseRepository) {
         this.courseView = courseView;
         this.courseRepository = courseRepository;
+        
     }
-
-    public void allCourses() {
-         courseView.showAllCourses(courseRepository.findAll());
-    }
+    
+    @Override
+    public void allEntities() {
+        courseView.showAll(courseRepository.findAll());
+   }
 
 }

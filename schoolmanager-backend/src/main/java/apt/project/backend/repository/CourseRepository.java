@@ -4,11 +4,13 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Entity;
 
-public class CourseRepository {
+public class CourseRepository implements Repository {
 
-    public List<Course> findAll() {
-        return asList(new Course());
+    @Override
+    public List<Entity> findAll() {
+        return asList(new Course("test"));
     }
 
 }

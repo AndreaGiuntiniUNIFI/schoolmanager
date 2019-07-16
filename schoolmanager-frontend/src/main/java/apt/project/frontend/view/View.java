@@ -2,10 +2,10 @@ package apt.project.frontend.view;
 
 import java.util.List;
 
-import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Entity;
 
 public interface View {
 
-    void showAllCourses(List<Course> courses);
+    void showAll(List<Entity> courses);
 
 }

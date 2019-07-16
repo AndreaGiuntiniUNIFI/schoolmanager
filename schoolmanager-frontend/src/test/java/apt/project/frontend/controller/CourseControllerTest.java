@@ -1,7 +1,6 @@
 package apt.project.frontend.controller;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,13 +13,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import apt.project.backend.domain.Course;
-import apt.project.backend.repository.CourseRepository;
+import apt.project.backend.domain.Entity;
+import apt.project.backend.repository.Repository;
 import apt.project.frontend.view.View;
 
 public class CourseControllerTest {
 
     @Mock
-    private CourseRepository courseRepository;
+    private Repository courseRepository;
 
     @Mock
     private View courseView;
@@ -35,12 +35,11 @@ public class CourseControllerTest {
 
     @Test
     public void testAllCourses() {
-        List<Course> courses = asList(new Course());
+        List<Entity> courses = asList(new Course("test"));
         when(courseRepository.findAll()).thenReturn(courses);
         // exercise
-        courseController.allCourses();
+        courseController.allEntities();
         // verify
-        verify(courseView).showAllCourses(courses);
-
+        verify(courseView).showAll(courses);
     }
 }
