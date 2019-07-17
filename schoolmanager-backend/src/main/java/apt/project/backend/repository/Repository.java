@@ -11,4 +11,6 @@ public interface Repository {
     void save(Entity e);
 
     void delete(Entity e);
+
+    public void update(Entity modifiedEntity);
 }

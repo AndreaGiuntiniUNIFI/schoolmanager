@@ -25,6 +25,12 @@ public class CourseRepository implements Repository {
 
     }
 
+    @Override
+    public void update(Entity existingEntity) {
+        // TODO Auto-generated method stub
+
+    }
+
     public Course findByTitle(String titleToFind) {
         return null;
     }

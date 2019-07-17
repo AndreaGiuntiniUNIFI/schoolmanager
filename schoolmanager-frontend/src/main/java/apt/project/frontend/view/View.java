@@ -14,4 +14,6 @@ public interface View {
 
     void entityDeleted(Entity entity);
 
+    void entityUpdated(Entity existingEntity, Entity modifiedEntity);
+
 }

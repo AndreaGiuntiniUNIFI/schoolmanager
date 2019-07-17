@@ -97,6 +97,36 @@ public class CourseControllerTest {
         // verify
         verify(courseView).showError("No existing course with title Course_2",
                 courseToDelete);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
+    @Test
+    public void testUpdateCourseWhenCourseExists() {
+        // setup
+        Course existingCourse = new Course("existingTitle");
+        Course modifiedCourse = new Course("modifiedTitle");
+        when(courseRepository.findByTitle("existingTitle"))
+                .thenReturn(existingCourse);
+        // exercise
+        courseController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        InOrder inOrder = inOrder(courseRepository, courseView);
+        inOrder.verify(courseRepository).update(modifiedCourse);
+        inOrder.verify(courseView).entityUpdated(existingCourse,
+                modifiedCourse);
+    }
+
+    @Test
+    public void testUpdateCourseWhenCourseDoesNotExist() {
+        // setup
+        Course existingCourse = new Course("existingTitle");
+        Course modifiedCourse = new Course("modifiedTitle");
+        when(courseRepository.findByTitle("existingTitle")).thenReturn(null);
+        // exercise
+        courseController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        verify(courseView).showError(
+                "No existing course with title existingTitle", existingCourse);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
+    }
 }
