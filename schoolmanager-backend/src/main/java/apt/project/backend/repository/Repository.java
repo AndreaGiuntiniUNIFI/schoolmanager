@@ -8,4 +8,7 @@ public interface Repository {
 
     List<Entity> findAll();
 
+    void save(Entity e);
+
+    void delete(Entity e);
 }
