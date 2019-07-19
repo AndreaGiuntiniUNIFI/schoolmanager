@@ -14,9 +14,9 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schoolmanager-backend</artifactId>
-      <version>${project.version}</version>>
+      <version>${project.version}</version>
     </dependency>
-  
+
     <!-- Compile scope dependencies -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -37,6 +37,7 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
     </dependency>
+
 
   </dependencies>
 

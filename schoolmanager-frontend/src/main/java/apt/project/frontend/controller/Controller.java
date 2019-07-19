@@ -1,8 +1,8 @@
 package apt.project.frontend.controller;
 
-import apt.project.backend.domain.Entity;
+import apt.project.backend.domain.BaseEntity;
 
-public interface Controller<T extends Entity> {
+public interface Controller<T extends BaseEntity> {
 
     void allEntities();
 

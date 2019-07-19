@@ -2,15 +2,15 @@ package apt.project.backend.repository;
 
 import java.util.List;
 
-import apt.project.backend.domain.Entity;
+import apt.project.backend.domain.BaseEntity;
 
-public interface Repository {
+public interface Repository<T extends BaseEntity> {
 
-    List<Entity> findAll();
+    List<T> findAll();
 
-    void save(Entity e);
+    void save(T e);
 
-    void delete(Entity e);
+    void delete(T e);
 
-    public void update(Entity modifiedEntity);
+    public void update(T modifiedEntity);
 }

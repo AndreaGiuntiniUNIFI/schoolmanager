@@ -1,40 +1,60 @@
 package apt.project.backend.repository;
 
-import static java.util.Arrays.asList;
-
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Entity;
 
-public class CourseRepository implements Repository {
+public class CourseRepository implements Repository<Course> {
 
-    @Override
-    public List<Entity> findAll() {
-        return asList(new Course("test"));
+    private EntityManager entityManager;
+
+    public CourseRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
-    public void save(Entity e) {
+    public List<Course> findAll() {
+        entityManager.getTransaction().begin();
+        List<Course> result = entityManager.createQuery("from Course", Course.class).getResultList();
+        entityManager.getTransaction().commit();
+        return result;
+    }
+
+    @Override
+    public void save(Course e) {
         return;
     }
 
     @Override
-    public void delete(Entity e) {
+    public void delete(Course e) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void update(Entity existingEntity) {
+    public void update(Course existingEntity) {
         // TODO Auto-generated method stub
 
     }
 
     public Course findByTitle(String titleToFind) {
-        return null;
+        entityManager.getTransaction().begin();
+        List<Course> result = entityManager.createQuery("from Course "
+                + "where title = :title ", Course.class).
+                setParameter("title",titleToFind).
+                setMaxResults(1).
+                getResultList();
+        entityManager.getTransaction().commit();
+    
+        if(result.size()==0) {
+            return null;
+        }
+        
+        return result.get(0);
     }
-
+    
     public void deleteByTitle(String titleToDelete) {
         return;
     }

@@ -12,9 +12,11 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <log4j.version>2.11.1</log4j.version>
+    <hibernate.version>5.4.3.Final</hibernate.version>
     <junit.version>4.12</junit.version>
     <assertj.version>3.11.1</assertj.version>
     <mockito.version>2.28.2</mockito.version>
+    <h2-driver.version>1.4.199</h2-driver.version>
   </properties>
 
   <dependencyManagement>
@@ -28,6 +30,13 @@
         <version>${log4j.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate.version}</version>
       </dependency>
 
       <!-- Test scope dependencies -->
@@ -56,10 +65,17 @@
         <scope>test</scope>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2-driver.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
-<build>
+  <build>
     <pluginManagement>
       <plugins>
 
@@ -150,7 +166,8 @@
           </executions>
         </plugin>
 
-        <!-- Maven-generated configuration: lock down plugins versions to enhance reproducibility -->
+        <!-- Maven-generated configuration: lock down plugins versions to enhance 
+          reproducibility -->
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
