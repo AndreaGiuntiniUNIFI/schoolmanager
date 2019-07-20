@@ -2,18 +2,18 @@ package apt.project.frontend.view;
 
 import java.util.List;
 
-import apt.project.backend.domain.Entity;
+import apt.project.backend.domain.BaseEntity;
 
-public interface View {
+public interface View<T extends BaseEntity> {
 
-    void showAll(List<Entity> courses);
+    void showAll(List<T> entity);
 
-    void entityAdded(Entity course);
+    void entityAdded(T entity);
 
-    void showError(String string, Entity entity);
+    void showError(String string, T entity);
 
-    void entityDeleted(Entity entity);
+    void entityDeleted(T entity);
 
-    void entityUpdated(Entity existingEntity, Entity modifiedEntity);
+    void entityUpdated(T existingEntity, T modifiedEntity);
 
 }

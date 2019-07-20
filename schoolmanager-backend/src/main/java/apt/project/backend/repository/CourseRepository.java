@@ -1,38 +1,63 @@
 package apt.project.backend.repository;
 
-import static java.util.Arrays.asList;
-
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Entity;
 
-public class CourseRepository implements Repository {
+public class CourseRepository implements Repository<Course> {
 
-    @Override
-    public List<Entity> findAll() {
-        return asList(new Course("test"));
+    private EntityManager entityManager;
+
+    public CourseRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
-    public void save(Entity e) {
-        return;
+    public List<Course> findAll() {
+        entityManager.getTransaction().begin();
+        List<Course> result = entityManager
+                .createQuery("from Course", Course.class).getResultList();
+        entityManager.getTransaction().commit();
+        return result;
     }
 
     @Override
-    public void delete(Entity e) {
-        // TODO Auto-generated method stub
-
+    public void save(Course course) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(course);
+        entityManager.getTransaction().commit();
     }
 
     @Override
-    public void update(Entity existingEntity) {
-        // TODO Auto-generated method stub
+    public void delete(Course course) {
+        entityManager.getTransaction().begin();
+        entityManager.remove(course);
+        entityManager.getTransaction().commit();
+    }
 
+    @Override
+    public void update(Course existingCourse) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(existingCourse);
+        entityManager.getTransaction().commit();
     }
 
     public Course findByTitle(String titleToFind) {
-        return null;
+        entityManager.getTransaction().begin();
+        List<Course> result = entityManager
+                .createQuery("from Course " + "where title = :title ",
+                        Course.class)
+                .setParameter("title", titleToFind).setMaxResults(1)
+                .getResultList();
+        entityManager.getTransaction().commit();
+
+        if (result.isEmpty()) {
+            return null;
+        }
+
+        return result.get(0);
     }
 
     public void deleteByTitle(String titleToDelete) {

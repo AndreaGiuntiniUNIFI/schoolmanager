@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Entity;
 import apt.project.backend.repository.CourseRepository;
 import apt.project.frontend.view.View;
 
@@ -27,7 +26,7 @@ public class CourseControllerTest {
     private CourseRepository courseRepository;
 
     @Mock
-    private View courseView;
+    private View<Course> courseView;
 
     @InjectMocks
     private CourseController courseController;
@@ -39,7 +38,7 @@ public class CourseControllerTest {
 
     @Test
     public void testAllCourses() {
-        List<Entity> courses = asList(new Course("test"));
+        List<Course> courses = asList(new Course("test"));
         when(courseRepository.findAll()).thenReturn(courses);
         // exercise
         courseController.allEntities();

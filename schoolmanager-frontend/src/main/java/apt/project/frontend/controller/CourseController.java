@@ -6,10 +6,10 @@ import apt.project.frontend.view.View;
 
 public class CourseController implements Controller<Course> {
 
-    private View courseView;
+    private View<Course> courseView;
     private CourseRepository courseRepository;
 
-    public CourseController(View courseView,
+    public CourseController(View<Course> courseView,
             CourseRepository courseRepository) {
         this.courseView = courseView;
         this.courseRepository = courseRepository;
