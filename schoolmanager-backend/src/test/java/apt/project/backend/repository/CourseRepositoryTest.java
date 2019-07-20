@@ -121,4 +121,25 @@ public class CourseRepositoryTest {
         entityManager.getTransaction().commit();
         assertThat(courses).isEmpty();
     }
+
+    @Test
+    public void testUpdate() {
+        // setup
+        Course existingCourse = new Course("Course1");
+        entityManager.getTransaction().begin();
+        entityManager.persist(existingCourse);
+        entityManager.getTransaction().commit();
+        entityManager.clear();
+        existingCourse.setTitle("Course1Modified");
+        // exercise
+        courseRepository.update(existingCourse);
+        // verify
+        entityManager.getTransaction().begin();
+        Course retrievedCourse = entityManager.find(Course.class,
+                existingCourse.getId());
+        entityManager.getTransaction().commit();
+
+        assertThat(retrievedCourse)
+                .isEqualToComparingFieldByField(existingCourse);
+    }
 }

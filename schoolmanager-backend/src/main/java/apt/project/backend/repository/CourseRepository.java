@@ -38,9 +38,10 @@ public class CourseRepository implements Repository<Course> {
     }
 
     @Override
-    public void update(Course existingEntity) {
-        // TODO Auto-generated method stub
-
+    public void update(Course existingCourse) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(existingCourse);
+        entityManager.getTransaction().commit();
     }
 
     public Course findByTitle(String titleToFind) {
@@ -52,7 +53,7 @@ public class CourseRepository implements Repository<Course> {
                 .getResultList();
         entityManager.getTransaction().commit();
 
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             return null;
         }
 
