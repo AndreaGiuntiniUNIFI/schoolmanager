@@ -17,20 +17,24 @@ public class CourseRepository implements Repository<Course> {
     @Override
     public List<Course> findAll() {
         entityManager.getTransaction().begin();
-        List<Course> result = entityManager.createQuery("from Course", Course.class).getResultList();
+        List<Course> result = entityManager
+                .createQuery("from Course", Course.class).getResultList();
         entityManager.getTransaction().commit();
         return result;
     }
 
     @Override
-    public void save(Course e) {
-        return;
+    public void save(Course course) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(course);
+        entityManager.getTransaction().commit();
     }
 
     @Override
-    public void delete(Course e) {
-        // TODO Auto-generated method stub
-
+    public void delete(Course course) {
+        entityManager.getTransaction().begin();
+        entityManager.remove(course);
+        entityManager.getTransaction().commit();
     }
 
     @Override
@@ -41,20 +45,20 @@ public class CourseRepository implements Repository<Course> {
 
     public Course findByTitle(String titleToFind) {
         entityManager.getTransaction().begin();
-        List<Course> result = entityManager.createQuery("from Course "
-                + "where title = :title ", Course.class).
-                setParameter("title",titleToFind).
-                setMaxResults(1).
-                getResultList();
+        List<Course> result = entityManager
+                .createQuery("from Course " + "where title = :title ",
+                        Course.class)
+                .setParameter("title", titleToFind).setMaxResults(1)
+                .getResultList();
         entityManager.getTransaction().commit();
-    
-        if(result.size()==0) {
+
+        if (result.size() == 0) {
             return null;
         }
-        
+
         return result.get(0);
     }
-    
+
     public void deleteByTitle(String titleToDelete) {
         return;
     }
