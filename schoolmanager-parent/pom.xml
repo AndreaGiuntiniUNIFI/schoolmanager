@@ -75,6 +75,7 @@
       </dependency>
 
     </dependencies>
+
   </dependencyManagement>
 
   <build>
@@ -155,10 +156,12 @@
           <version>1.4.3</version>
           <configuration>
             <targetClasses>
-              <param>com.example.Greeter</param>
+              <param>apt.project.backend.repository.*</param>
+              <param>apt.project.frontend.controller.*</param>
             </targetClasses>
             <targetTests>
-              <param>com.example.GreeterTest</param>
+              <param>apt.project.backend.repository.*</param>
+              <param>apt.project.frontend.controller.*</param>
             </targetTests>
             <mutators>
               <mutator>ALL</mutator>
@@ -248,28 +251,28 @@
         </pluginManagement>
       </build>
     </profile>
-  </profiles>
 
-  <profile>
-    <id>enable-coveralls</id>
-    <build>
-      <pluginManagement>
-        <plugins>
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <phase>verify</phase>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </pluginManagement>
-    </build>
-  </profile>
+    <profile>
+      <id>enable-coveralls</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.eluder.coveralls</groupId>
+              <artifactId>coveralls-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>report</goal>
+                  </goals>
+                  <phase>verify</phase>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
 
+    </profiles>
 </project>
