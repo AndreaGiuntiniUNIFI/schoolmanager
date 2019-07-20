@@ -142,4 +142,17 @@ public class CourseRepositoryTest {
         assertThat(retrievedCourse)
                 .isEqualToComparingFieldByField(existingCourse);
     }
+
+    @Test
+    public void testFindById() {
+        // setup
+        Course course = new Course("Course1");
+        entityManager.getTransaction().begin();
+        entityManager.persist(course);
+        entityManager.getTransaction().commit();
+        // exercise
+        Course retrievedCourse = courseRepository.findById(course.getId());
+        // verify
+        assertThat(course).isEqualTo(retrievedCourse);
+    }
 }

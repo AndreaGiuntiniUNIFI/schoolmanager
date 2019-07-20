@@ -13,4 +13,6 @@ public interface Repository<T extends BaseEntity> {
     void delete(T e);
 
     public void update(T modifiedEntity);
+
+    public T findById(Long id);
 }

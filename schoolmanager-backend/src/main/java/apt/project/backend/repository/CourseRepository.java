@@ -64,4 +64,12 @@ public class CourseRepository implements Repository<Course> {
         return;
     }
 
+    @Override
+    public Course findById(Long id) {
+        entityManager.getTransaction().begin();
+        Course course = entityManager.find(Course.class, id);
+        entityManager.getTransaction().commit();
+
+        return course;
+    }
 }
