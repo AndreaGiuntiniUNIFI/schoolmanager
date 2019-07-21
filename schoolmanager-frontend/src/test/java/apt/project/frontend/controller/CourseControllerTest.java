@@ -1,6 +1,7 @@
 package apt.project.frontend.controller;
 
 import static java.util.Arrays.asList;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -76,13 +77,13 @@ public class CourseControllerTest {
     public void testDeleteCourseWhenCourseExists() {
         // setup
         Course courseToDelete = new Course("Course_1");
-        when(courseRepository.findByTitle("Course_1"))
+        when(courseRepository.findById((Long) any()))
                 .thenReturn(courseToDelete);
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
         InOrder inOrder = inOrder(courseRepository, courseView);
-        inOrder.verify(courseRepository).deleteByTitle("Course_1");
+        inOrder.verify(courseRepository).delete(courseToDelete);
         inOrder.verify(courseView).entityDeleted(courseToDelete);
     }
 
@@ -90,7 +91,7 @@ public class CourseControllerTest {
     public void testDeleteCourseWhenCourseDoesNotExists() {
         // setup
         Course courseToDelete = new Course("Course_2");
-        when(courseRepository.findByTitle("Course_2")).thenReturn(null);
+        when(courseRepository.findById((Long) any())).thenReturn(null);
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
@@ -104,7 +105,7 @@ public class CourseControllerTest {
         // setup
         Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
-        when(courseRepository.findByTitle("existingTitle"))
+        when(courseRepository.findById((Long) any()))
                 .thenReturn(existingCourse);
         // exercise
         courseController.updateEntity(existingCourse, modifiedCourse);
@@ -120,7 +121,7 @@ public class CourseControllerTest {
         // setup
         Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
-        when(courseRepository.findByTitle("existingTitle")).thenReturn(null);
+        when(courseRepository.findById((Long) any())).thenReturn(null);
         // exercise
         courseController.updateEntity(existingCourse, modifiedCourse);
         // verify

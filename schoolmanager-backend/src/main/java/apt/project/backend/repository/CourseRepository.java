@@ -60,10 +60,6 @@ public class CourseRepository implements Repository<Course> {
         return result.get(0);
     }
 
-    public void deleteByTitle(String titleToDelete) {
-        return;
-    }
-
     @Override
     public Course findById(Long id) {
         entityManager.getTransaction().begin();
