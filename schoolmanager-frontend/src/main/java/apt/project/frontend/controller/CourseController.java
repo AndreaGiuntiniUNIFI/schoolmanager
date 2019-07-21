@@ -36,18 +36,18 @@ public class CourseController implements Controller<Course> {
 
     @Override
     public void deleteEntity(Course courseToDelete) {
-        if (courseRepository.findByTitle(courseToDelete.getTitle()) == null) {
+        if (courseRepository.findById(courseToDelete.getId()) == null) {
             courseView.showError("No existing course with title "
                     + courseToDelete.getTitle(), courseToDelete);
             return;
         }
-        courseRepository.deleteByTitle(courseToDelete.getTitle());
+        courseRepository.delete(courseToDelete);
         courseView.entityDeleted(courseToDelete);
     }
 
     @Override
     public void updateEntity(Course existingCourse, Course modifiedCourse) {
-        if (courseRepository.findByTitle(existingCourse.getTitle()) == null) {
+        if (courseRepository.findById(existingCourse.getId()) == null) {
             courseView.showError("No existing course with title "
                     + existingCourse.getTitle(), existingCourse);
             return;
