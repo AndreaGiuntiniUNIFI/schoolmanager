@@ -178,6 +178,13 @@
           </executions>
         </plugin>
 
+        <!-- Sonar maven plugin -->
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.6.0.1398</version>
+        </plugin>
+
         <!-- Maven-generated configuration: lock down plugins versions to enhance 
           reproducibility -->
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -274,5 +281,5 @@
       </build>
     </profile>
 
-    </profiles>
+  </profiles>
 </project>
