@@ -19,6 +19,7 @@
     <assertj.version>3.11.1</assertj.version>
     <mockito.version>2.28.2</mockito.version>
     <h2-driver.version>1.4.199</h2-driver.version>
+    <sonar.coverage.exclusions>**/domain/*.*</sonar.coverage.exclusions>
   </properties>
 
   <dependencyManagement>
@@ -129,7 +130,7 @@
           <version>0.8.3</version>
           <configuration>
             <excludes>
-              <exclude>**/Main.*</exclude>
+              <exclude>**/domain/*.*</exclude>
             </excludes>
           </configuration>
           <executions>
