@@ -1,0 +1,22 @@
+language: java
+
+matrix:
+  include:
+  - jdk: openjdk8
+    env: ADDITIONAL_MAVEN_ARGS="-P enable-jacoco -P enable-mutation-testing -P enable-coveralls"
+
+addons:
+  sonarcloud:
+    organization: leonardoscommegna
+    token:
+      secure: $SONAR_TOKEN
+
+install: true
+
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.sonar/cache
+
+script:
+  - mvn -f schoolmanager-aggregator/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS sonar:sonar -Dsonar.projectKey=LeonardoScommegna_schoolmanager
