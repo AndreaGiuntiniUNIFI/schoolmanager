@@ -1,57 +1,55 @@
 package apt.project.backend.repository;
 
-import java.util.List;
+import static java.util.Arrays.asList;
 
-import javax.persistence.EntityManager;
+import java.util.List;
 
 import apt.project.backend.domain.Course;
 
 public class CourseRepository implements Repository<Course> {
 
-    private EntityManager entityManager;
+    private TransactionManager transactionManager;
 
-    public CourseRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public CourseRepository(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
     }
 
     @Override
-    public List<Course> findAll() {
-        entityManager.getTransaction().begin();
-        List<Course> result = entityManager
-                .createQuery("from Course", Course.class).getResultList();
-        entityManager.getTransaction().commit();
-        return result;
+    public List<Course> findAll() throws RepositoryException {
+        return transactionManager.doInTransaction(em -> em
+                .createQuery("from Course", Course.class).getResultList());
     }
 
     @Override
-    public void save(Course course) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(course);
-        entityManager.getTransaction().commit();
+    public void save(Course course) throws RepositoryException {
+        transactionManager.doInTransaction(em -> {
+            em.persist(course);
+            return null;
+        });
     }
 
     @Override
-    public void delete(Course course) {
-        entityManager.getTransaction().begin();
-        entityManager.remove(course);
-        entityManager.getTransaction().commit();
+    public void delete(Course course) throws RepositoryException {
+        transactionManager.doInTransaction(em -> {
+            em.remove(em.contains(course) ? course : em.merge(course));
+            return null;
+        });
     }
 
     @Override
-    public void update(Course existingCourse) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(existingCourse);
-        entityManager.getTransaction().commit();
+    public void update(Course existingCourse) throws RepositoryException {
+        transactionManager.doInTransaction(em -> {
+            em.merge(existingCourse);
+            return null;
+        });
     }
 
-    public Course findByTitle(String titleToFind) {
-        entityManager.getTransaction().begin();
-        List<Course> result = entityManager
+    public Course findByTitle(String titleToFind) throws RepositoryException {
+        List<Course> result = transactionManager.doInTransaction(em -> em
                 .createQuery("from Course " + "where title = :title ",
                         Course.class)
                 .setParameter("title", titleToFind).setMaxResults(1)
-                .getResultList();
-        entityManager.getTransaction().commit();
+                .getResultList());
 
         if (result.isEmpty()) {
             return null;
@@ -61,11 +59,11 @@ public class CourseRepository implements Repository<Course> {
     }
 
     @Override
-    public Course findById(Long id) {
-        entityManager.getTransaction().begin();
-        Course course = entityManager.find(Course.class, id);
-        entityManager.getTransaction().commit();
+    public Course findById(Long id) throws RepositoryException {
+        List<Course> result = transactionManager
+                .doInTransaction(em -> asList(em.find(Course.class, id)));
 
-        return course;
+        return result.get(0);
     }
+
 }
