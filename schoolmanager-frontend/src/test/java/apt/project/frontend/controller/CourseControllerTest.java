@@ -139,12 +139,46 @@ public class CourseControllerTest {
     public void testDeleteCourseWhenCourseDoesNotExists()
             throws RepositoryException {
         // setup
-        Course courseToDelete = new Course("Course_2");
+        Course courseToDelete = new Course("Course_1");
         when(courseRepository.findById((Long) any())).thenReturn(null);
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
-        verify(courseView).showError("No existing course with title Course_2",
+        verify(courseView).showError("No existing course with title Course_1",
+                courseToDelete);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
+    }
+
+    @Test
+    public void testDeleteCourseWhenRepositoryExceptionIsThrownInFindByIdShouldShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Course courseToDelete = new Course("Course_1");
+        when(courseRepository.findById((Long) any()))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        courseController.deleteEntity(courseToDelete);
+        // verify
+        verify(courseView).showError("Repository exception: " + message,
+                courseToDelete);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
+    }
+
+    @Test
+    public void testDeleteCourseWhenRepositoryExceptionIsThrownInDeleteShouldShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Course courseToDelete = new Course("Course_1");
+        when(courseRepository.findById((Long) any()))
+                .thenReturn(courseToDelete);
+        doThrow(new RepositoryException(message)).when(courseRepository)
+                .delete(courseToDelete);
+        // exercise
+        courseController.deleteEntity(courseToDelete);
+        // verify
+        verify(courseView).showError("Repository exception: " + message,
                 courseToDelete);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
@@ -177,6 +211,44 @@ public class CourseControllerTest {
         // verify
         verify(courseView).showError(
                 "No existing course with title existingTitle", existingCourse);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
+    }
+
+    @Test
+    public void testUpdateCourseWhenRepositoryExceptionIsThrownInFindByIdShouldShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Course existingCourse = new Course("existingTitle");
+        Course modifiedCourse = new Course("modifiedTitle");
+        when(courseRepository.findById((Long) any()))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        courseController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        verify(courseView).showError("Repository exception: " + message,
+                existingCourse);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
+    }
+
+    @Test
+    public void testUpdateCourseWhenRepositoryExceptionIsThrownUpdateShouldShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Course existingCourse = new Course("existingTitle");
+        Course modifiedCourse = new Course("modifiedTitle");
+        when(courseRepository.findById((Long) any()))
+                .thenReturn(existingCourse);
+        doThrow(new RepositoryException(message)).when(courseRepository)
+                .update(modifiedCourse);
+        when(courseRepository.findById((Long) any()))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        courseController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        verify(courseView).showError("Repository exception: " + message,
+                existingCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 }

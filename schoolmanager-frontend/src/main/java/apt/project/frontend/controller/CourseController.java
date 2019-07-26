@@ -54,8 +54,7 @@ public class CourseController implements Controller<Course> {
             }
             courseRepository.delete(courseToDelete);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            courseView.showError(e.getMessage(), courseToDelete);
         }
         courseView.entityDeleted(courseToDelete);
     }
@@ -70,8 +69,7 @@ public class CourseController implements Controller<Course> {
             }
             courseRepository.update(modifiedCourse);
         } catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            courseView.showError(e.getMessage(), existingCourse);
         }
         courseView.entityUpdated(existingCourse, modifiedCourse);
     }
