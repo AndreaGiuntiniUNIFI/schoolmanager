@@ -19,7 +19,8 @@
     <assertj.version>3.11.1</assertj.version>
     <mockito.version>2.28.2</mockito.version>
     <h2-driver.version>1.4.199</h2-driver.version>
-    <sonar.coverage.exclusions>**/domain/*.*</sonar.coverage.exclusions>
+
+    <sonar.coverage.exclusions>**/backend/domain/*.*,**/backend/repository/TransactionManager.java,**/backend/repository/RepositoryException.java,**/frontend/controller/ExceptionManager.java</sonar.coverage.exclusions>
   </properties>
 
   <dependencyManagement>

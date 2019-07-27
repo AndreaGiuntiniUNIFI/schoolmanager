@@ -18,42 +18,62 @@ public class CourseController implements Controller<Course> {
 
     @Override
     public void allEntities() {
-        courseView.showAll(courseRepository.findAll());
+        ExceptionManager.catcher(() -> {
+            courseView.showAll(courseRepository.findAll());
+            return null;
+        }, courseView);
     }
 
     @Override
     public void newEntity(Course course) {
-        Course existingCourse = courseRepository.findByTitle(course.getTitle());
+        Course existingCourse;
+
+        existingCourse = ExceptionManager.catcher(
+                () -> courseRepository.findByTitle(course.getTitle()),
+                courseView, course);
         if (existingCourse != null) {
             courseView.showError(
                     "Already existing course with title " + course.getTitle(),
                     course);
             return;
         }
-        courseRepository.save(course);
+        ExceptionManager.catcher(() -> {
+            courseRepository.save(course);
+            return null;
+        }, courseView, course);
+
         courseView.entityAdded(course);
     }
 
     @Override
     public void deleteEntity(Course courseToDelete) {
-        if (courseRepository.findById(courseToDelete.getId()) == null) {
+        if (ExceptionManager.catcher(
+                () -> courseRepository.findById(courseToDelete.getId()),
+                courseView, courseToDelete) == null) {
             courseView.showError("No existing course with title "
                     + courseToDelete.getTitle(), courseToDelete);
             return;
         }
-        courseRepository.delete(courseToDelete);
+        ExceptionManager.catcher(() -> {
+            courseRepository.delete(courseToDelete);
+            return null;
+        }, courseView, courseToDelete);
         courseView.entityDeleted(courseToDelete);
     }
 
     @Override
     public void updateEntity(Course existingCourse, Course modifiedCourse) {
-        if (courseRepository.findById(existingCourse.getId()) == null) {
+        if (ExceptionManager.catcher(
+                () -> courseRepository.findById(existingCourse.getId()),
+                courseView, existingCourse) == null) {
             courseView.showError("No existing course with title "
                     + existingCourse.getTitle(), existingCourse);
             return;
         }
-        courseRepository.update(modifiedCourse);
+        ExceptionManager.catcher(() -> {
+            courseRepository.update(modifiedCourse);
+            return null;
+        }, courseView, modifiedCourse);
         courseView.entityUpdated(existingCourse, modifiedCourse);
     }
-
 }

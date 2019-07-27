@@ -21,10 +21,12 @@ public class CourseRepositoryTest {
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
     private CourseRepository courseRepository;
+    private static TransactionManager transactionManager;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         entityManagerFactory = Persistence.createEntityManagerFactory("H2");
+        transactionManager = new TransactionManager(entityManagerFactory);
     }
 
     @AfterClass
@@ -39,27 +41,24 @@ public class CourseRepositoryTest {
         entityManager.createNativeQuery("TRUNCATE TABLE public.Course")
                 .executeUpdate();
         entityManager.getTransaction().commit();
-        courseRepository = new CourseRepository(entityManager);
+        courseRepository = new CourseRepository(transactionManager);
 
     }
 
     @After
     public void tearDown() {
         entityManager.clear();
-//        if ( entityManager.getTransaction().isActive() ) {
-//            entityManager.getTransaction().rollback();
-//        }
         entityManager.close();
     }
 
     @Test
-    public void testFindAllWhenDataBaseIsEmpty() {
+    public void testFindAllWhenDataBaseIsEmpty() throws RepositoryException {
         // exercise and verify
         assertThat(courseRepository.findAll()).isEmpty();
     }
 
     @Test
-    public void testFindAllWhenDataBaseIsNotEmpty() {
+    public void testFindAllWhenDataBaseIsNotEmpty() throws RepositoryException {
         // setUp
         Course course1 = new Course("Course1");
         Course course2 = new Course("Course2");
@@ -73,7 +72,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    public void testFindByTitleWhenCourseExist() {
+    public void testFindByTitleWhenCourseExist() throws RepositoryException {
         // setUp
         Course course1 = new Course("Course1");
         Course course2 = new Course("Course2");
@@ -86,13 +85,14 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    public void testFindByTitleWhenTheCourseDoesNotExist() {
+    public void testFindByTitleWhenTheCourseDoesNotExist()
+            throws RepositoryException {
         // exercise and verify
         assertThat(courseRepository.findByTitle("Course1")).isNull();
     }
 
     @Test
-    public void testSave() {
+    public void testSave() throws RepositoryException {
         // setup
         Course course = new Course("Course1");
         // exercise
@@ -106,7 +106,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws RepositoryException {
         // setup
         Course courseToDelete = new Course("Course1");
         entityManager.getTransaction().begin();
@@ -123,13 +123,14 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws RepositoryException {
         // setup
         Course existingCourse = new Course("Course1");
         entityManager.getTransaction().begin();
         entityManager.persist(existingCourse);
         entityManager.getTransaction().commit();
-        entityManager.clear();
+        entityManager.clear(); // this is done because otherwise Hibernate would
+                               // update the entity automatically.
         existingCourse.setTitle("Course1Modified");
         // exercise
         courseRepository.update(existingCourse);
@@ -144,7 +145,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    public void testFindById() {
+    public void testFindById() throws RepositoryException {
         // setup
         Course course = new Course("Course1");
         entityManager.getTransaction().begin();
