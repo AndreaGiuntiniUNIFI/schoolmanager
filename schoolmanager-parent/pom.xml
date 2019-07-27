@@ -170,6 +170,9 @@
               <mutator>ALL</mutator>
             </mutators>
             <mutationThreshold>85</mutationThreshold>
+            <outputFormats>
+              <outputFormat>XML</outputFormat>
+            </outputFormats>
           </configuration>
           <executions>
             <execution>
