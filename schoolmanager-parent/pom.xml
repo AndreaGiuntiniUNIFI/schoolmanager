@@ -132,6 +132,9 @@
           <configuration>
             <excludes>
               <exclude>**/domain/*.*</exclude>
+              <exclude>**/repository/TransactionManager.java</exclude>
+              <exclude>**/Repository/RepositoryException.java</exclude>
+              <exclude>**/controller/ExceptionManager.java</exclude>
             </excludes>
           </configuration>
           <executions>
@@ -157,14 +160,12 @@
           <artifactId>pitest-maven</artifactId>
           <version>1.4.3</version>
           <configuration>
-            <targetClasses>
-              <param>apt.project.backend.repository.*</param>
-              <param>apt.project.frontend.controller.*</param>
-            </targetClasses>
-            <targetTests>
-              <param>apt.project.backend.repository.*</param>
-              <param>apt.project.frontend.controller.*</param>
-            </targetTests>
+            <excludedClasses>
+              <param>apt.project.backend.domain.*</param>
+              <param>apt.project.backend.repository.TransactionManager</param>
+              <param>apt.project.backend.repository.RepositoryException</param>
+              <param>apt.project.frontend.controller.ExceptionManager</param>
+            </excludedClasses>
             <mutators>
               <mutator>ALL</mutator>
             </mutators>
