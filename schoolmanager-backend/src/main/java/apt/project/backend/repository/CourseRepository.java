@@ -31,7 +31,7 @@ public class CourseRepository implements Repository<Course> {
     @Override
     public void delete(Course course) throws RepositoryException {
         transactionManager.doInTransaction(em -> {
-            em.remove(em.contains(course) ? course : em.merge(course));
+            em.remove(em.merge(course));
             return null;
         });
     }
