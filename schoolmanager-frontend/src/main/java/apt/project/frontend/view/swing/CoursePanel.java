@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.view.View;
@@ -95,15 +97,37 @@ public class CoursePanel extends JPanel implements View<Course> {
         JLabel label = new JLabel(field);
         panel.add(label);
 
-        JTextField textField = new JTextField(10);
-        panel.add(textField);
-
         JButton okBtn = new JButton("OK");
         okBtn.setEnabled(false);
         panel.add(okBtn);
 
         JButton cancelBtn = new JButton("Cancel");
         panel.add(cancelBtn);
+
+        JTextField textField = new JTextField(10);
+        textField.setName(field + "TxtField");
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void update() {
+                okBtn.setEnabled(textField.getText().length() > 0);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+
+        panel.add(textField);
 
         int choice = JOptionPane.showOptionDialog(null, panel, title,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,

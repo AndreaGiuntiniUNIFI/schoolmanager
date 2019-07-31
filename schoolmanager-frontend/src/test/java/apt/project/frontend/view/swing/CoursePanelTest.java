@@ -55,15 +55,28 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
                 .requireDisabled();
         panelFixture.list("coursesList");
     }
-    
+
     @Test
     @GUITest
     public void TestWhenAddButtonIsPressedThenShowEmptyDialog() {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
-        JOptionPaneFixture optionFixture = panelFixture.optionPane(timeout(1000));
+        JOptionPaneFixture optionFixture = panelFixture
+                .optionPane(timeout(1000));
         optionFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
-        optionFixture.button(JButtonMatcher.withText("Cancel")).requireEnabled();
+        optionFixture.button(JButtonMatcher.withText("Cancel"))
+                .requireEnabled();
+    }
 
+    @Test
+    @GUITest
+    public void TestWhenDialogFieldIsCompiledAddIsEnabled() {
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        JOptionPaneFixture optionFixture = panelFixture
+                .optionPane(timeout(1000));
+
+        optionFixture.textBox("TitleTxtField").enterText("test");
+
+        optionFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
     }
 
 }
