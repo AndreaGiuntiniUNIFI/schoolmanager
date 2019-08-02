@@ -2,6 +2,8 @@ package apt.project.frontend.view.swing;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,6 +20,8 @@ public class CustomDialog extends JDialog {
      * 
      */
     private static final long serialVersionUID = 1L;
+
+    private String outcome;
 
     private final JPanel contentPanel = new JPanel();
 
@@ -38,6 +42,8 @@ public class CustomDialog extends JDialog {
      * Create the dialog.
      */
     public CustomDialog(String labelText) {
+        JTextField textField = new JTextField(10);
+
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
 
@@ -46,11 +52,24 @@ public class CustomDialog extends JDialog {
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
         JButton okButton = new JButton("OK");
+        okButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                outcome = textField.getText();
+                setVisible(false);
+            }
+        });
         okButton.setEnabled(false);
         okButton.setActionCommand("OK");
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                setVisible(false);
+            }
+        });
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
 
@@ -58,7 +77,6 @@ public class CustomDialog extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         JLabel label = new JLabel(labelText);
-        JTextField textField = new JTextField(10);
         textField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {
@@ -85,6 +103,10 @@ public class CustomDialog extends JDialog {
         contentPanel.add(textField);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
+    }
+
+    public String getOutcome() {
+        return outcome;
     }
 
 }

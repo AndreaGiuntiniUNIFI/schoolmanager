@@ -1,5 +1,8 @@
 package apt.project.frontend.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -27,6 +30,7 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void testControlsInitialStates() {
 
         myDialogFixture.label(JLabelMatcher.withText("label"));
@@ -41,6 +45,7 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void testWhenTheFieldIsCompiledOkButtonIsEnabled() {
 
         myDialogFixture.textBox("labelTextField").enterText("test");
@@ -48,4 +53,32 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
         myDialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
 
     }
+
+    @Test
+    @GUITest
+    public void testWhenOkButtonIsClickedThenInputIsSavedBeforeClosing() {
+        // exercise
+        String input = "test";
+        myDialogFixture.textBox("labelTextField").enterText(input);
+        myDialogFixture.button(JButtonMatcher.withText("OK")).click();
+
+        // verify
+        assertThat(customDialog.getOutcome()).isEqualTo(input);
+        assertThat(customDialog.isVisible()).isFalse();
+    }
+
+    @Test
+    @GUITest
+    public void testWhenCancelButtonIsClickedThenDialogIsCLosedWithoutSavingInput() {
+        // exercise
+        String input = "test";
+        myDialogFixture.textBox("labelTextField").enterText(input);
+        myDialogFixture.button(JButtonMatcher.withText("Cancel")).click();
+
+        // verify
+        assertThat(customDialog.getOutcome()).isNull();
+        ;
+        assertThat(customDialog.isVisible()).isFalse();
+    }
+
 }
