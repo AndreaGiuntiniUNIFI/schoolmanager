@@ -2,6 +2,7 @@ package apt.project.frontend.view.swing;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import javax.swing.JFrame;
 
@@ -15,6 +16,9 @@ import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import apt.project.backend.domain.Course;
+import apt.project.frontend.controller.CourseController;
+
 @RunWith(GUITestRunner.class)
 public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
@@ -26,13 +30,17 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
     private DialogManager dialogManager;
 
+    private CourseController courseController;
+
     @Override
     protected void onSetUp() {
 
         dialogManager = mock(DialogManager.class);
+        courseController = mock(CourseController.class);
 
         GuiActionRunner.execute(() -> {
             coursePanel = new CoursePanel(dialogManager);
+            coursePanel.setCourseController(courseController);
             return coursePanel;
         });
 
@@ -66,6 +74,15 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
     public void testWhenAddButtonIsClickedDialogManagerIsCalled() {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
         verify(dialogManager).manageDialog("Title");
+    }
+
+    @Test
+    @GUITest
+    public void testWhenDialogManagerReturnsOutcomeThenControllerIsCalled() {
+        when(dialogManager.manageDialog("Title")).thenReturn("title1");
+
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        verify(courseController).newEntity(new Course("title1"));
     }
 
 }

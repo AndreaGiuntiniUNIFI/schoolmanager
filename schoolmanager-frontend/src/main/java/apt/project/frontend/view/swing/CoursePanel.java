@@ -3,8 +3,6 @@ package apt.project.frontend.view.swing;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import apt.project.backend.domain.Course;
+import apt.project.frontend.controller.CourseController;
 import apt.project.frontend.view.View;
 
 public class CoursePanel extends JPanel implements View<Course> {
@@ -24,8 +23,12 @@ public class CoursePanel extends JPanel implements View<Course> {
      */
     private static final long serialVersionUID = 1L;
 
+    private CourseController courseController;
+
     /**
      * Create the panel.
+     * 
+     * @param courseController
      * 
      * @param dialogManager
      */
@@ -56,11 +59,10 @@ public class CoursePanel extends JPanel implements View<Course> {
         scrollPane.setColumnHeaderView(lblListOfCourses);
 
         JButton btnAdd = new JButton("Add");
-        btnAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                dialogManager.manageDialog("Title");
-            }
+        btnAdd.addActionListener(e -> {
+            String title = dialogManager.manageDialog("Title");
+            courseController.newEntity(new Course(title));
+
         });
 
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
@@ -114,6 +116,10 @@ public class CoursePanel extends JPanel implements View<Course> {
     public void entityUpdated(Course existingEntity, Course modifiedEntity) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void setCourseController(CourseController courseController) {
+        this.courseController = courseController;
     }
 
 }
