@@ -26,7 +26,14 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
 
         myDialogFixture = new DialogFixture(robot(), customDialog);
 
-        customDialog.setVisible(true);
+        myDialogFixture.show();
+    }
+
+    @Override
+    protected void onTearDown() {
+        customDialog.setVisible(false);
+        customDialog.dispose();
+        super.onTearDown();
     }
 
     @Test
@@ -71,6 +78,7 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testWhenCancelButtonIsClickedThenDialogIsCLosedWithoutSavingInput() {
         // exercise
+        customDialog.setOutcome("outcome");
         String input = "test";
         myDialogFixture.textBox("labelTextField").enterText(input);
         myDialogFixture.button(JButtonMatcher.withText("Cancel")).click();

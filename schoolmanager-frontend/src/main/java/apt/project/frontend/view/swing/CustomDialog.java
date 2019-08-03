@@ -42,6 +42,7 @@ public class CustomDialog extends JDialog {
      * Create the dialog.
      */
     public CustomDialog(String labelText) {
+        super();
         JTextField textField = new JTextField(10);
 
         setBounds(100, 100, 450, 300);
@@ -55,7 +56,7 @@ public class CustomDialog extends JDialog {
         okButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                outcome = textField.getText();
+                setOutcome(textField.getText());
                 setVisible(false);
             }
         });
@@ -67,6 +68,7 @@ public class CustomDialog extends JDialog {
         cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                outcome = null;
                 setVisible(false);
             }
         });
@@ -107,6 +109,10 @@ public class CustomDialog extends JDialog {
 
     public String getOutcome() {
         return outcome;
+    }
+
+    public void setOutcome(String outcome) {
+        this.outcome = outcome;
     }
 
 }
