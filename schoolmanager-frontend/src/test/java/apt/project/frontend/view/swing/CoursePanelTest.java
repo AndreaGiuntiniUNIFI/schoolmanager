@@ -10,6 +10,7 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
+import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -83,6 +84,46 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
         panelFixture.button(JButtonMatcher.withText("Add")).click();
         verify(courseController).newEntity(new Course("title1"));
+    }
+
+    @Test
+    @GUITest
+    public void testWhenCourseIsSelectedDeleteIsEnabled() {
+        GuiActionRunner.execute(() -> {
+            coursePanel.getListModel().addElement(new Course("title1"));
+        });
+
+        panelFixture.list("coursesList").selectItem(0);
+
+        JButtonFixture buttonDelete = panelFixture
+                .button(JButtonMatcher.withText("Delete"));
+
+        buttonDelete.requireEnabled();
+
+        panelFixture.list("coursesList").clearSelection();
+
+        buttonDelete.requireDisabled();
+
+    }
+
+    @Test
+    @GUITest
+    public void testWhenCourseIsSelectedModifyIsEnabled() {
+        GuiActionRunner.execute(() -> {
+            coursePanel.getListModel().addElement(new Course("title1"));
+        });
+
+        panelFixture.list("coursesList").selectItem(0);
+
+        JButtonFixture buttonModify = panelFixture
+                .button(JButtonMatcher.withText("Modify"));
+
+        buttonModify.requireEnabled();
+
+        panelFixture.list("coursesList").clearSelection();
+
+        buttonModify.requireDisabled();
+
     }
 
 }

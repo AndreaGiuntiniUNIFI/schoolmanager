@@ -5,12 +5,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
@@ -24,6 +27,10 @@ public class CoursePanel extends JPanel implements View<Course> {
     private static final long serialVersionUID = 1L;
 
     private CourseController courseController;
+
+    private JList<Course> list;
+
+    private DefaultListModel<Course> listModel;
 
     /**
      * Create the panel.
@@ -40,23 +47,6 @@ public class CoursePanel extends JPanel implements View<Course> {
                 Double.MIN_VALUE };
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
-
-        JScrollPane scrollPane = new JScrollPane();
-        GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-        gbc_scrollPane.fill = GridBagConstraints.BOTH;
-        gbc_scrollPane.gridwidth = 3;
-        gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-        gbc_scrollPane.gridx = 0;
-        gbc_scrollPane.gridy = 0;
-        add(scrollPane, gbc_scrollPane);
-
-        JList list = new JList();
-        list.setName("coursesList");
-        scrollPane.setViewportView(list);
-
-        JLabel lblListOfCourses = new JLabel("List of Courses");
-        lblListOfCourses.setHorizontalAlignment(SwingConstants.CENTER);
-        scrollPane.setColumnHeaderView(lblListOfCourses);
 
         JButton btnAdd = new JButton("Add");
         btnAdd.addActionListener(e -> {
@@ -85,6 +75,33 @@ public class CoursePanel extends JPanel implements View<Course> {
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
+
+        JScrollPane scrollPane = new JScrollPane();
+        GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+        gbc_scrollPane.fill = GridBagConstraints.BOTH;
+        gbc_scrollPane.gridwidth = 3;
+        gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+        gbc_scrollPane.gridx = 0;
+        gbc_scrollPane.gridy = 0;
+        add(scrollPane, gbc_scrollPane);
+
+        listModel = new DefaultListModel<>();
+        list = new JList<>(listModel);
+        list.setName("coursesList");
+        scrollPane.setViewportView(list);
+        list.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                boolean enable = list.getSelectedIndex() != -1;
+                btnDelete.setEnabled(enable);
+                btnModify.setEnabled(enable);
+            }
+        });
+
+        JLabel lblListOfCourses = new JLabel("List of Courses");
+        lblListOfCourses.setHorizontalAlignment(SwingConstants.CENTER);
+        scrollPane.setColumnHeaderView(lblListOfCourses);
 
     }
 
@@ -120,6 +137,10 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     public void setCourseController(CourseController courseController) {
         this.courseController = courseController;
+    }
+
+    public DefaultListModel<Course> getListModel() {
+        return listModel;
     }
 
 }
