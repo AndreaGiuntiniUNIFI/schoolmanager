@@ -123,9 +123,8 @@ public class CoursePanel extends JPanel implements View<Course> {
     }
 
     @Override
-    public void showAll(List<Course> entity) {
-        // TODO Auto-generated method stub
-
+    public void showAll(List<Course> courses) {
+        courses.stream().forEach(listModel::addElement);
     }
 
     @Override

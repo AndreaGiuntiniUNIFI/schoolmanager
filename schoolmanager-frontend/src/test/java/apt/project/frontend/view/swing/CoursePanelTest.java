@@ -1,5 +1,7 @@
 package apt.project.frontend.view.swing;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -199,6 +201,21 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
         verifyZeroInteractions(courseController);
+    }
+
+    @Test
+    @GUITest
+    public void testShowAllShouldAddCoursesToTheList() {
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+
+        GuiActionRunner
+                .execute(() -> coursePanel.showAll(asList(course1, course2)));
+
+        String[] listContents = panelFixture.list("coursesList").contents();
+
+        assertThat(listContents).containsExactly(course1.toString(),
+                course2.toString());
     }
 
 }
