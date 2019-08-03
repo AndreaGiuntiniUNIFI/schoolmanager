@@ -1,6 +1,7 @@
 package apt.project.frontend.view.swing;
 
-import static org.assertj.swing.timing.Timeout.timeout;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import javax.swing.JFrame;
 
@@ -8,7 +9,6 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
-import org.assertj.swing.fixture.JOptionPaneFixture;
 import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -24,10 +24,15 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
     private JFrame jframe;
 
+    private DialogManager dialogManager;
+
     @Override
     protected void onSetUp() {
+
+        dialogManager = mock(DialogManager.class);
+
         GuiActionRunner.execute(() -> {
-            coursePanel = new CoursePanel();
+            coursePanel = new CoursePanel(dialogManager);
             return coursePanel;
         });
 
@@ -58,25 +63,9 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void TestWhenAddButtonIsPressedThenShowEmptyDialog() {
+    public void testWhenAddButtonIsClickedDialogManagerIsCalled() {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
-        JOptionPaneFixture optionFixture = panelFixture
-                .optionPane(timeout(1000));
-        optionFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
-        optionFixture.button(JButtonMatcher.withText("Cancel"))
-                .requireEnabled();
-    }
-
-    @Test
-    @GUITest
-    public void TestWhenDialogFieldIsCompiledAddIsEnabled() {
-        panelFixture.button(JButtonMatcher.withText("Add")).click();
-        JOptionPaneFixture optionFixture = panelFixture
-                .optionPane(timeout(1000));
-
-        optionFixture.textBox("TitleTxtField").enterText("test");
-
-        optionFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
+        verify(dialogManager).manageDialog("Title");
     }
 
 }

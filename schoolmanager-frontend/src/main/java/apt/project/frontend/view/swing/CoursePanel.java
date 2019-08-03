@@ -1,27 +1,21 @@
 package apt.project.frontend.view.swing;
 
-import static java.util.Arrays.asList;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.view.View;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class CoursePanel extends JPanel implements View<Course> {
 
@@ -32,8 +26,10 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     /**
      * Create the panel.
+     * 
+     * @param dialogManager
      */
-    public CoursePanel() {
+    public CoursePanel(DialogManager dialogManager) {
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0 };
         gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
@@ -63,7 +59,7 @@ public class CoursePanel extends JPanel implements View<Course> {
         btnAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                getCustomInputDialog("Title", "Add Course");
+                dialogManager.manageDialog("Title");
             }
         });
 
@@ -87,53 +83,6 @@ public class CoursePanel extends JPanel implements View<Course> {
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
-
-    }
-
-    public String getCustomInputDialog(String field, String title) {
-
-        JPanel panel = new JPanel();
-
-        JLabel label = new JLabel(field);
-        panel.add(label);
-
-        JButton okBtn = new JButton("OK");
-        okBtn.setEnabled(false);
-        panel.add(okBtn);
-
-        JButton cancelBtn = new JButton("Cancel");
-        panel.add(cancelBtn);
-
-        JTextField textField = new JTextField(10);
-        textField.setName(field + "TxtField");
-        textField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void update() {
-                okBtn.setEnabled(textField.getText().length() > 0);
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
-        panel.add(textField);
-
-        int choice = JOptionPane.showOptionDialog(null, panel, title,
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-                new JButton[] { okBtn, cancelBtn }, okBtn);
-
-        return " ";
 
     }
 
