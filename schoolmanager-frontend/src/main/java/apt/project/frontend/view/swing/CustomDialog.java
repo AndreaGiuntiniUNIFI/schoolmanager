@@ -1,6 +1,7 @@
 package apt.project.frontend.view.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -43,6 +44,7 @@ public class CustomDialog extends JDialog {
      */
     public CustomDialog(String labelText) {
         super();
+        setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         JTextField textField = new JTextField(10);
 
         setBounds(100, 100, 450, 300);
@@ -105,6 +107,11 @@ public class CustomDialog extends JDialog {
         contentPanel.add(textField);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
+    }
+
+    public void showDialog() {
+        pack();
+        setVisible(true);
     }
 
     public String getOutcome() {

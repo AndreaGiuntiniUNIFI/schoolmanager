@@ -2,6 +2,8 @@ package apt.project.frontend.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dialog;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
@@ -26,7 +28,9 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
 
         myDialogFixture = new DialogFixture(robot(), customDialog);
 
-        myDialogFixture.show();
+        customDialog.setModalityType(Dialog.ModalityType.MODELESS);
+
+        customDialog.showDialog();
     }
 
     @Override
