@@ -32,6 +32,12 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     private DefaultListModel<Course> listModel;
 
+    private JButton btnModify;
+
+    private JButton btnAdd;
+
+    private JButton btnDelete;
+
     /**
      * Create the panel.
      * 
@@ -48,33 +54,44 @@ public class CoursePanel extends JPanel implements View<Course> {
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
 
-        JButton btnAdd = new JButton("Add");
+        btnAdd = new JButton("Add");
         btnAdd.addActionListener(e -> {
             String title = dialogManager.manageDialog("Title");
-            courseController.newEntity(new Course(title));
-
+            if (title != null) {
+                courseController.newEntity(new Course(title));
+            }
         });
-
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
         gbc_btnAdd.insets = new Insets(0, 0, 0, 5);
         gbc_btnAdd.gridx = 0;
         gbc_btnAdd.gridy = 1;
         add(btnAdd, gbc_btnAdd);
 
-        JButton btnModify = new JButton("Modify");
+        btnModify = new JButton("Modify");
         btnModify.setEnabled(false);
+        btnModify.addActionListener(e -> {
+            Course selectedCourse = list.getSelectedValue();
+            String title = dialogManager.manageDialog("Title", selectedCourse);
+            if (title != null) {
+                courseController.updateEntity(selectedCourse,
+                        new Course(title));
+            }
+        });
         GridBagConstraints gbc_btnModify = new GridBagConstraints();
         gbc_btnModify.insets = new Insets(0, 0, 0, 5);
         gbc_btnModify.gridx = 1;
         gbc_btnModify.gridy = 1;
         add(btnModify, gbc_btnModify);
 
-        JButton btnDelete = new JButton("Delete");
+        btnDelete = new JButton("Delete");
         btnDelete.setEnabled(false);
         GridBagConstraints gbc_btnDelete = new GridBagConstraints();
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
+        btnDelete.addActionListener(e -> {
+            courseController.deleteEntity(list.getSelectedValue());
+        });
 
         JScrollPane scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();

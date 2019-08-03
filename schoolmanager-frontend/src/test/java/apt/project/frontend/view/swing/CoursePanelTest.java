@@ -2,6 +2,7 @@ package apt.project.frontend.view.swing;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import javax.swing.JFrame;
@@ -79,11 +80,20 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void testWhenDialogManagerReturnsOutcomeThenControllerIsCalled() {
+    public void testWhenAddButtonIsClickedAndDialogManagerReturnsOutcomeThenControllerIsCalled() {
         when(dialogManager.manageDialog("Title")).thenReturn("title1");
 
         panelFixture.button(JButtonMatcher.withText("Add")).click();
         verify(courseController).newEntity(new Course("title1"));
+    }
+
+    @Test
+    @GUITest
+    public void testWhenAddButtonIsClickedAndDialogManagerReturnsNullThenControllerIsNotCalled() {
+        when(dialogManager.manageDialog("Title")).thenReturn(null);
+
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        verifyZeroInteractions(courseController);
     }
 
     @Test
@@ -124,6 +134,71 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
         buttonModify.requireDisabled();
 
+    }
+
+    @Test
+    @GUITest
+    public void testWhenDeleteButtonIsClickedThenControllerIsCalled() {
+        GuiActionRunner.execute(() -> {
+            coursePanel.getListModel().addElement(new Course("title1"));
+        });
+
+        panelFixture.list("coursesList").selectItem(0);
+
+        panelFixture.button(JButtonMatcher.withText("Delete")).click();
+        verify(courseController).deleteEntity(new Course("title1"));
+
+    }
+
+    @Test
+    @GUITest
+    public void testWhenModifyButtonIsClickedDialogManagerIsCalled() {
+        GuiActionRunner.execute(() -> {
+            coursePanel.getListModel().addElement(new Course("title1"));
+        });
+
+        panelFixture.list("coursesList").selectItem(0);
+
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        verify(dialogManager).manageDialog("Title", new Course("title1"));
+    }
+
+    @Test
+    @GUITest
+    public void testWhenModifyButtonIsClickedAndDialogManagerReturnsOutcomeThenControllerIsCalled() {
+        String title = "title1";
+        String modifiedTitle = "modifiedTitle";
+
+        GuiActionRunner.execute(() -> {
+            coursePanel.getListModel().addElement(new Course(title));
+        });
+
+        panelFixture.list("coursesList").selectItem(0);
+
+        when(dialogManager.manageDialog("Title", new Course(title)))
+                .thenReturn(modifiedTitle);
+
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        verify(courseController).updateEntity(new Course(title),
+                new Course(modifiedTitle));
+    }
+
+    @Test
+    @GUITest
+    public void testWhenModifyButtonIsClickedAndDialogManagerReturnsNullThenControllerIsNotCalled() {
+        String title = "title1";
+
+        GuiActionRunner.execute(() -> {
+            coursePanel.getListModel().addElement(new Course(title));
+        });
+
+        panelFixture.list("coursesList").selectItem(0);
+
+        when(dialogManager.manageDialog("Title", new Course(title)))
+                .thenReturn(null);
+
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        verifyZeroInteractions(courseController);
     }
 
 }
