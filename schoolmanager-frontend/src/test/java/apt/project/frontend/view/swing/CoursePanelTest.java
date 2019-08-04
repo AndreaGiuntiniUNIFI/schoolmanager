@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
 import org.assertj.swing.annotation.GUITest;
@@ -22,6 +23,7 @@ import org.junit.runner.RunWith;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
+import apt.project.frontend.view.MainFrame;
 
 @RunWith(GUITestRunner.class)
 public class CoursePanelTest extends AssertJSwingJUnitTestCase {
@@ -34,6 +36,8 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
     private DialogManager dialogManager;
 
+    private MainFrame mainFrame;
+
     private CourseController courseController;
 
     @Override
@@ -41,9 +45,10 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
         dialogManager = mock(DialogManager.class);
         courseController = mock(CourseController.class);
+        mainFrame = mock(MainFrame.class);
 
         GuiActionRunner.execute(() -> {
-            coursePanel = new CoursePanel(dialogManager);
+            coursePanel = new CoursePanel(mainFrame, dialogManager);
             coursePanel.setCourseController(courseController);
             return coursePanel;
         });
@@ -218,4 +223,64 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
                 course2.toString());
     }
 
+    @Test
+    @GUITest
+    public void testShowErrorShouldCallSetErrorLabelInParent() {
+        Course course = new Course("course1");
+        GuiActionRunner
+                .execute(() -> coursePanel.showError("error message", course));
+        verify(coursePanel.getParentMainFrame())
+                .setErrorLabel("error message: " + course);
+    }
+
+    @Test
+    @GUITest
+    public void testEntityAddedShouldAddCourseToListAndCallResetErrorLabelInParent() {
+        Course course = new Course("course1");
+        GuiActionRunner.execute(() -> {
+            coursePanel.entityAdded(course);
+        });
+
+        String[] listContents = panelFixture.list("coursesList").contents();
+
+        assertThat(listContents).containsExactly(course.toString());
+        verify(coursePanel.getParentMainFrame()).resetErrorLabel();
+    }
+
+    @Test
+    @GUITest
+    public void testEntityDeletedShouldRemoveCourseFromListAndCallResetErrorLabelInParent() {
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+        GuiActionRunner.execute(() -> {
+            DefaultListModel<Course> listModel = coursePanel.getListModel();
+            listModel.addElement(course1);
+            listModel.addElement(course2);
+        });
+
+        GuiActionRunner.execute(
+                () -> coursePanel.entityDeleted(new Course("course2")));
+
+        String[] listContents = panelFixture.list("coursesList").contents();
+        assertThat(listContents).containsExactly(course2.toString());
+        verify(coursePanel.getParentMainFrame()).resetErrorLabel();
+    }
+
+    @Test
+    @GUITest
+    public void testEntityUpdatedShouldUpdateCourseInListAndCallResetErrorLabelInParent() {
+        Course course = new Course("course1");
+        Course modifiedCourse = new Course("modifiedCourse1");
+        GuiActionRunner.execute(() -> {
+            DefaultListModel<Course> listModel = coursePanel.getListModel();
+            listModel.addElement(course);
+        });
+
+        GuiActionRunner.execute(
+                () -> coursePanel.entityUpdated(course, modifiedCourse));
+
+        String[] listContents = panelFixture.list("coursesList").contents();
+        assertThat(listContents).containsExactly(modifiedCourse.toString());
+        verify(coursePanel.getParentMainFrame()).resetErrorLabel();
+    }
 }

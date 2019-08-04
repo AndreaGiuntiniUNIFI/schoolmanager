@@ -17,6 +17,7 @@ import javax.swing.event.ListSelectionListener;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
+import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.View;
 
 public class CoursePanel extends JPanel implements View<Course> {
@@ -38,6 +39,8 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     private JButton btnDelete;
 
+    private MainFrame parentMainFrame;
+
     /**
      * Create the panel.
      * 
@@ -45,7 +48,10 @@ public class CoursePanel extends JPanel implements View<Course> {
      * 
      * @param dialogManager
      */
-    public CoursePanel(DialogManager dialogManager) {
+    public CoursePanel(MainFrame parentMainFrame, DialogManager dialogManager) {
+
+        this.setParentMainFrame(parentMainFrame);
+
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0 };
         gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
@@ -129,26 +135,25 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     @Override
     public void entityAdded(Course entity) {
-        // TODO Auto-generated method stub
-
+        listModel.addElement(entity);
+        parentMainFrame.resetErrorLabel();
     }
 
     @Override
     public void showError(String string, Course entity) {
-        // TODO Auto-generated method stub
-
+        parentMainFrame.setErrorLabel(string + ": " + entity);
     }
 
     @Override
     public void entityDeleted(Course entity) {
-        // TODO Auto-generated method stub
-
+        listModel.removeElement(entity);
+        parentMainFrame.resetErrorLabel();
     }
 
     @Override
     public void entityUpdated(Course existingEntity, Course modifiedEntity) {
-        // TODO Auto-generated method stub
-
+        listModel.set(listModel.indexOf(existingEntity), modifiedEntity);
+        parentMainFrame.resetErrorLabel();
     }
 
     public void setCourseController(CourseController courseController) {
@@ -157,6 +162,14 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     public DefaultListModel<Course> getListModel() {
         return listModel;
+    }
+
+    MainFrame getParentMainFrame() {
+        return parentMainFrame;
+    }
+
+    void setParentMainFrame(MainFrame parentMainFrame) {
+        this.parentMainFrame = parentMainFrame;
     }
 
 }
