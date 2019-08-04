@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
+import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.View;
 
 public class StudentPanel extends JPanel implements View<Student> {
@@ -29,8 +30,12 @@ public class StudentPanel extends JPanel implements View<Student> {
     private DefaultListModel<Student> listModel;
     private JList<Student> list;
     private StudentController studentController;
+    private MainFrame parentMainFrame;
 
-    public StudentPanel(DialogManager dialogManager) {
+    public StudentPanel(MainFrame parentMainFrame,
+            DialogManager dialogManager) {
+
+        this.setParentMainFrame(parentMainFrame);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0 };
@@ -60,6 +65,15 @@ public class StudentPanel extends JPanel implements View<Student> {
         gbc_btnModify.gridx = 1;
         gbc_btnModify.gridy = 1;
         add(btnModify, gbc_btnModify);
+        btnModify.addActionListener(e -> {
+            Student selectedStudent = list.getSelectedValue();
+            String name = dialogManager.manageDialog("Name",
+                    selectedStudent.getName());
+            if (name != null) {
+                studentController.updateEntity(selectedStudent,
+                        new Student(name));
+            }
+        });
 
         btnDelete = new JButton("Delete");
         btnDelete.setEnabled(false);
@@ -67,6 +81,8 @@ public class StudentPanel extends JPanel implements View<Student> {
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
+        btnDelete.addActionListener(
+                e -> studentController.deleteEntity(list.getSelectedValue()));
 
         JScrollPane scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -94,33 +110,31 @@ public class StudentPanel extends JPanel implements View<Student> {
     }
 
     @Override
-    public void showAll(List<Student> entity) {
-        // TODO Auto-generated method stub
-
+    public void showAll(List<Student> students) {
+        students.stream().forEach(listModel::addElement);
     }
 
     @Override
     public void entityAdded(Student entity) {
-        // TODO Auto-generated method stub
-
+        listModel.addElement(entity);
+        parentMainFrame.resetErrorLabel();
     }
 
     @Override
-    public void showError(String string, Student entity) {
-        // TODO Auto-generated method stub
-
+    public void showError(String label, Student entity) {
+        parentMainFrame.displayErrorLabel(label + ": " + entity);
     }
 
     @Override
     public void entityDeleted(Student entity) {
-        // TODO Auto-generated method stub
-
+        listModel.removeElement(entity);
+        parentMainFrame.resetErrorLabel();
     }
 
     @Override
     public void entityUpdated(Student existingEntity, Student modifiedEntity) {
-        // TODO Auto-generated method stub
-
+        listModel.set(listModel.indexOf(existingEntity), modifiedEntity);
+        parentMainFrame.resetErrorLabel();
     }
 
     public StudentController getStudentController() {
@@ -133,6 +147,14 @@ public class StudentPanel extends JPanel implements View<Student> {
 
     DefaultListModel<Student> getListModel() {
         return listModel;
+    }
+
+    public MainFrame getParentMainFrame() {
+        return parentMainFrame;
+    }
+
+    public void setParentMainFrame(MainFrame parentMainFrame) {
+        this.parentMainFrame = parentMainFrame;
     }
 
 }
