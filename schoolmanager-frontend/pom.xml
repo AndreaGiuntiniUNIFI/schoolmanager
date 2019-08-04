@@ -26,7 +26,13 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
     </dependency>
+
     <!-- Test scope dependencies -->
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-swing-junit</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
