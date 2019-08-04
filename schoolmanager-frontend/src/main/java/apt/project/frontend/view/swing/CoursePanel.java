@@ -12,8 +12,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
@@ -95,9 +93,8 @@ public class CoursePanel extends JPanel implements View<Course> {
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
-        btnDelete.addActionListener(e -> {
-            courseController.deleteEntity(list.getSelectedValue());
-        });
+        btnDelete.addActionListener(
+                e -> courseController.deleteEntity(list.getSelectedValue()));
 
         JScrollPane scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -112,14 +109,10 @@ public class CoursePanel extends JPanel implements View<Course> {
         list = new JList<>(listModel);
         list.setName("coursesList");
         scrollPane.setViewportView(list);
-        list.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                boolean enable = list.getSelectedIndex() != -1;
-                btnDelete.setEnabled(enable);
-                btnModify.setEnabled(enable);
-            }
+        list.addListSelectionListener(e -> {
+            boolean enable = list.getSelectedIndex() != -1;
+            btnDelete.setEnabled(enable);
+            btnModify.setEnabled(enable);
         });
 
         JLabel lblListOfCourses = new JLabel("List of Courses");

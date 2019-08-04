@@ -15,11 +15,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class CustomDialog extends JDialog {
 
-    /**
-     * 
-     */
+    private static final Logger LOGGER = LogManager
+            .getLogger(CustomDialog.class);
+
     private static final long serialVersionUID = 1L;
 
     private String outcome;
@@ -35,7 +38,7 @@ public class CustomDialog extends JDialog {
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
 
@@ -99,6 +102,7 @@ public class CustomDialog extends JDialog {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
+                update();
             }
         });
 

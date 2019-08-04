@@ -22,6 +22,17 @@
     <h2-driver.version>1.4.199</h2-driver.version>
 
     <sonar.coverage.exclusions>**/backend/domain/*.*,**/backend/repository/TransactionManager.java,**/backend/repository/RepositoryException.java,**/frontend/controller/ExceptionManager.java,**/frontend/view/swing/*.*</sonar.coverage.exclusions>
+
+    <sonar.issue.ignore.multicriteria>e1,e2</sonar.issue.ignore.multicriteria>
+    <!-- Disable rule for "Inheritance tree of classes should not be too deep" (just 
+      an example) -->
+    <sonar.issue.ignore.multicriteria.e1.ruleKey>squid:MaximumInheritanceDepth</sonar.issue.ignore.multicriteria.e1.ruleKey>
+    <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
+    <!-- Disable rule for "Local variable and method parameter names should comply 
+      with a naming convention" (just an example) -->
+    <sonar.issue.ignore.multicriteria.e2.ruleKey>squid:S00117</sonar.issue.ignore.multicriteria.e2.ruleKey>
+    <sonar.issue.ignore.multicriteria.e2.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e2.resourceKey>
+
   </properties>
 
   <dependencyManagement>

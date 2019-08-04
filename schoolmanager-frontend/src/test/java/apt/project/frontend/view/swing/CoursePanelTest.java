@@ -262,7 +262,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
                 () -> coursePanel.entityDeleted(new Course("course2")));
 
         String[] listContents = panelFixture.list("coursesList").contents();
-        assertThat(listContents).containsExactly(course2.toString());
+        assertThat(listContents).containsExactly(course1.toString());
         verify(coursePanel.getParentMainFrame()).resetErrorLabel();
     }
 
