@@ -75,7 +75,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
                 .requireDisabled();
         panelFixture.button(JButtonMatcher.withText("Modify"))
                 .requireDisabled();
-        panelFixture.list("coursesList");
+        panelFixture.list("courseList");
     }
 
     @Test
@@ -110,14 +110,14 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
             coursePanel.getListModel().addElement(new Course("title1"));
         });
 
-        panelFixture.list("coursesList").selectItem(0);
+        panelFixture.list("courseList").selectItem(0);
 
         JButtonFixture buttonDelete = panelFixture
                 .button(JButtonMatcher.withText("Delete"));
 
         buttonDelete.requireEnabled();
 
-        panelFixture.list("coursesList").clearSelection();
+        panelFixture.list("courseList").clearSelection();
 
         buttonDelete.requireDisabled();
 
@@ -130,14 +130,14 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
             coursePanel.getListModel().addElement(new Course("title1"));
         });
 
-        panelFixture.list("coursesList").selectItem(0);
+        panelFixture.list("courseList").selectItem(0);
 
         JButtonFixture buttonModify = panelFixture
                 .button(JButtonMatcher.withText("Modify"));
 
         buttonModify.requireEnabled();
 
-        panelFixture.list("coursesList").clearSelection();
+        panelFixture.list("courseList").clearSelection();
 
         buttonModify.requireDisabled();
 
@@ -150,7 +150,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
             coursePanel.getListModel().addElement(new Course("title1"));
         });
 
-        panelFixture.list("coursesList").selectItem(0);
+        panelFixture.list("courseList").selectItem(0);
 
         panelFixture.button(JButtonMatcher.withText("Delete")).click();
         verify(courseController).deleteEntity(new Course("title1"));
@@ -160,14 +160,15 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testWhenModifyButtonIsClickedDialogManagerIsCalled() {
+        String title = "title1";
         GuiActionRunner.execute(() -> {
-            coursePanel.getListModel().addElement(new Course("title1"));
+            coursePanel.getListModel().addElement(new Course(title));
         });
 
-        panelFixture.list("coursesList").selectItem(0);
+        panelFixture.list("courseList").selectItem(0);
 
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
-        verify(dialogManager).manageDialog("Title", new Course("title1"));
+        verify(dialogManager).manageDialog("Title", title);
     }
 
     @Test
@@ -180,9 +181,9 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
             coursePanel.getListModel().addElement(new Course(title));
         });
 
-        panelFixture.list("coursesList").selectItem(0);
+        panelFixture.list("courseList").selectItem(0);
 
-        when(dialogManager.manageDialog("Title", new Course(title)))
+        when(dialogManager.manageDialog("Title", title))
                 .thenReturn(modifiedTitle);
 
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
@@ -199,10 +200,9 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
             coursePanel.getListModel().addElement(new Course(title));
         });
 
-        panelFixture.list("coursesList").selectItem(0);
+        panelFixture.list("courseList").selectItem(0);
 
-        when(dialogManager.manageDialog("Title", new Course(title)))
-                .thenReturn(null);
+        when(dialogManager.manageDialog("Title", title)).thenReturn(null);
 
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
         verifyZeroInteractions(courseController);
@@ -217,7 +217,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
         GuiActionRunner
                 .execute(() -> coursePanel.showAll(asList(course1, course2)));
 
-        String[] listContents = panelFixture.list("coursesList").contents();
+        String[] listContents = panelFixture.list("courseList").contents();
 
         assertThat(listContents).containsExactly(course1.toString(),
                 course2.toString());
@@ -241,7 +241,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
             coursePanel.entityAdded(course);
         });
 
-        String[] listContents = panelFixture.list("coursesList").contents();
+        String[] listContents = panelFixture.list("courseList").contents();
 
         assertThat(listContents).containsExactly(course.toString());
         verify(coursePanel.getParentMainFrame()).resetErrorLabel();
@@ -261,7 +261,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
         GuiActionRunner.execute(
                 () -> coursePanel.entityDeleted(new Course("course2")));
 
-        String[] listContents = panelFixture.list("coursesList").contents();
+        String[] listContents = panelFixture.list("courseList").contents();
         assertThat(listContents).containsExactly(course1.toString());
         verify(coursePanel.getParentMainFrame()).resetErrorLabel();
     }
@@ -279,7 +279,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
         GuiActionRunner.execute(
                 () -> coursePanel.entityUpdated(course, modifiedCourse));
 
-        String[] listContents = panelFixture.list("coursesList").contents();
+        String[] listContents = panelFixture.list("courseList").contents();
         assertThat(listContents).containsExactly(modifiedCourse.toString());
         verify(coursePanel.getParentMainFrame()).resetErrorLabel();
     }

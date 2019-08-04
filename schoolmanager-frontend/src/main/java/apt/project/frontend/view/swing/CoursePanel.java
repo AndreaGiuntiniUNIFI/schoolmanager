@@ -39,13 +39,6 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     private MainFrame parentMainFrame;
 
-    /**
-     * Create the panel.
-     * 
-     * @param courseController
-     * 
-     * @param dialogManager
-     */
     public CoursePanel(MainFrame parentMainFrame, DialogManager dialogManager) {
 
         this.setParentMainFrame(parentMainFrame);
@@ -75,7 +68,8 @@ public class CoursePanel extends JPanel implements View<Course> {
         btnModify.setEnabled(false);
         btnModify.addActionListener(e -> {
             Course selectedCourse = list.getSelectedValue();
-            String title = dialogManager.manageDialog("Title", selectedCourse);
+            String title = dialogManager.manageDialog("Title",
+                    selectedCourse.getTitle());
             if (title != null) {
                 courseController.updateEntity(selectedCourse,
                         new Course(title));
@@ -107,7 +101,7 @@ public class CoursePanel extends JPanel implements View<Course> {
 
         listModel = new DefaultListModel<>();
         list = new JList<>(listModel);
-        list.setName("coursesList");
+        list.setName("courseList");
         scrollPane.setViewportView(list);
         list.addListSelectionListener(e -> {
             boolean enable = list.getSelectedIndex() != -1;
@@ -153,7 +147,7 @@ public class CoursePanel extends JPanel implements View<Course> {
         this.courseController = courseController;
     }
 
-    public DefaultListModel<Course> getListModel() {
+    DefaultListModel<Course> getListModel() {
         return listModel;
     }
 

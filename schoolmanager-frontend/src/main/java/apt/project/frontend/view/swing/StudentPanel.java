@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.View;
 
 public class StudentPanel extends JPanel implements View<Student> {
@@ -25,13 +26,11 @@ public class StudentPanel extends JPanel implements View<Student> {
     private JButton btnAdd;
     private JButton btnModify;
     private JButton btnDelete;
-    private DefaultListModel listModel;
-    private JList list;
+    private DefaultListModel<Student> listModel;
+    private JList<Student> list;
+    private StudentController studentController;
 
-    /**
-     * Create the panel.
-     */
-    public StudentPanel() {
+    public StudentPanel(DialogManager dialogManager) {
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0 };
@@ -42,6 +41,12 @@ public class StudentPanel extends JPanel implements View<Student> {
         setLayout(gridBagLayout);
 
         btnAdd = new JButton("Add");
+        btnAdd.addActionListener(e -> {
+            String name = dialogManager.manageDialog("Name");
+            if (name != null) {
+                studentController.newEntity(new Student(name));
+            }
+        });
         GridBagConstraints gbc_btnAdd = new GridBagConstraints();
         gbc_btnAdd.insets = new Insets(0, 0, 0, 5);
         gbc_btnAdd.gridx = 0;
@@ -73,7 +78,7 @@ public class StudentPanel extends JPanel implements View<Student> {
         add(scrollPane, gbc_scrollPane);
 
         listModel = new DefaultListModel<>();
-        list = new JList<>(listModel);
+        list = new JList<>(getListModel());
         list.setName("studentList");
         scrollPane.setViewportView(list);
         list.addListSelectionListener(e -> {
@@ -116,6 +121,18 @@ public class StudentPanel extends JPanel implements View<Student> {
     public void entityUpdated(Student existingEntity, Student modifiedEntity) {
         // TODO Auto-generated method stub
 
+    }
+
+    public StudentController getStudentController() {
+        return studentController;
+    }
+
+    public void setStudentController(StudentController studentController) {
+        this.studentController = studentController;
+    }
+
+    DefaultListModel<Student> getListModel() {
+        return listModel;
     }
 
 }
