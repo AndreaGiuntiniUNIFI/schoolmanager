@@ -134,7 +134,7 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     @Override
     public void showError(String string, Course entity) {
-        parentMainFrame.setErrorLabel(string + ": " + entity);
+        parentMainFrame.displayErrorLabel(string + ": " + entity);
     }
 
     @Override

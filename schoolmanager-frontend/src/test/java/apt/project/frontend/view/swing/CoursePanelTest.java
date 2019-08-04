@@ -230,7 +230,7 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
         GuiActionRunner
                 .execute(() -> coursePanel.showError("error message", course));
         verify(coursePanel.getParentMainFrame())
-                .setErrorLabel("error message: " + course);
+                .displayErrorLabel("error message: " + course);
     }
 
     @Test
