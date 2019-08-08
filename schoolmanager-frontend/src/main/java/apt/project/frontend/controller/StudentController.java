@@ -25,8 +25,23 @@ public class StudentController implements Controller<Student> {
 
     @Override
     public void updateEntity(Student existingEntity, Student modifiedEntity) {
-        // TODO Auto-generated method stub
-
+        try {
+            if (studentRepository.findById(existingEntity.getId()) == null) {
+                studentView.showError("No existing student with name "
+                        + existingEntity.getName(), existingEntity);
+                return;
+            }
+        } catch (RepositoryException e) {
+            studentView.showError(e.getMessage(), existingEntity);
+            return;
+        }
+        try {
+            studentRepository.update(modifiedEntity);
+        } catch (RepositoryException e) {
+            studentView.showError(e.getMessage(), existingEntity);
+            return;
+        }
+        studentView.entityUpdated(existingEntity, modifiedEntity);
     }
 
     @Override

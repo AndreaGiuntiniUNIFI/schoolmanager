@@ -153,4 +153,70 @@ public class StudentControllerTest {
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
+    @Test
+    public void testUpdateEntityWhenEntityExists() throws RepositoryException {
+        // setup
+        Student existingStudent = new Student("John");
+        Student modifiedStudent = new Student("Jane");
+        when(studentRepository.findById((Long) any()))
+                .thenReturn(existingStudent);
+        // exercise
+        studentController.updateEntity(existingStudent, modifiedStudent);
+        // verify
+        InOrder inOrder = inOrder(studentRepository, studentView);
+        inOrder.verify(studentRepository).update(modifiedStudent);
+        inOrder.verify(studentView).entityUpdated(existingStudent,
+                modifiedStudent);
+    }
+
+    @Test
+    public void testUpdateEntityWhenEntityDoesNotExist()
+            throws RepositoryException {
+        // setup
+        Student existingStudent = new Student("John");
+        Student modifiedStudent = new Student("Jane");
+        when(studentRepository.findById((Long) any())).thenReturn(null);
+        // exercise
+        studentController.updateEntity(existingStudent, modifiedStudent);
+        // verify
+        verify(studentView).showError("No existing student with name John",
+                existingStudent);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByIdShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Student existingStudent = new Student("John");
+        Student modifiedStudent = new Student("Jane");
+        when(studentRepository.findById((Long) any()))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        studentController.updateEntity(existingStudent, modifiedStudent);
+        // verify
+        verify(studentView).showError("Repository exception: " + message,
+                existingStudent);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInUpdateShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Student existingStudent = new Student("John");
+        Student modifiedStudent = new Student("Jane");
+        when(studentRepository.findById((Long) any()))
+                .thenReturn(existingStudent);
+        doThrow(new RepositoryException(message)).when(studentRepository)
+                .update(modifiedStudent);
+        // exercise
+        studentController.updateEntity(existingStudent, modifiedStudent);
+        // verify
+        verify(studentView).showError("Repository exception: " + message,
+                existingStudent);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
 }
