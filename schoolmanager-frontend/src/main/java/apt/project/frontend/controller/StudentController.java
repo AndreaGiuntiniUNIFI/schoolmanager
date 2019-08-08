@@ -1,13 +1,26 @@
 package apt.project.frontend.controller;
 
+import java.util.List;
+
 import apt.project.backend.domain.Student;
+import apt.project.backend.repository.RepositoryException;
+import apt.project.backend.repository.StudentRepository;
+import apt.project.frontend.view.View;
 
 public class StudentController implements Controller<Student> {
 
+    private StudentRepository studentRepository;
+    private View<Student> studentView;
+
     @Override
     public void allEntities() {
-        // TODO Auto-generated method stub
-
+        List<Student> studentList = null;
+        try {
+            studentList = studentRepository.findAll();
+        } catch (RepositoryException e) {
+            studentView.showError(e.getMessage(), null);
+        }
+        studentView.showAll(studentList);
     }
 
     @Override
