@@ -1,9 +1,12 @@
 package apt.project.frontend.controller;
 
 import static java.util.Arrays.asList;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -87,6 +90,67 @@ public class StudentControllerTest {
         // verify
         verify(studentView).showError("Repository exception: " + message,
                 student);
+    }
+
+    @Test
+    public void testDeleteEntityWhenEntityExists() throws RepositoryException {
+        // setup
+        Student studentToDelete = new Student("John");
+        when(studentRepository.findById((Long) any()))
+                .thenReturn(studentToDelete);
+        // exercise
+        studentController.deleteEntity(studentToDelete);
+        // verify
+        InOrder inOrder = inOrder(studentRepository, studentView);
+        inOrder.verify(studentRepository).delete(studentToDelete);
+        inOrder.verify(studentView).entityDeleted(studentToDelete);
+    }
+
+    @Test
+    public void testDeleteEntityWhenEntityDoesNotExist()
+            throws RepositoryException {
+        // setup
+        Student studentToDelete = new Student("John");
+        when(studentRepository.findById((Long) any())).thenReturn(null);
+        // exercise
+        studentController.deleteEntity(studentToDelete);
+        // verify
+        verify(studentView).showError("No existing student with name John",
+                studentToDelete);
+    }
+
+    @Test
+    public void testDeleteEntityWhenRepositoryExceptionIsThrownInFindByIdShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Student studentToDelete = new Student("John");
+        when(studentRepository.findById((Long) any()))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        studentController.deleteEntity(studentToDelete);
+        // verify
+        verify(studentView).showError("Repository exception: " + message,
+                studentToDelete);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
+
+    @Test
+    public void testDeleteEntityWhenRepositoryExceptionIsThrownInDeleteShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Student studentToDelete = new Student("John");
+        when(studentRepository.findById((Long) any()))
+                .thenReturn(studentToDelete);
+        doThrow(new RepositoryException(message)).when(studentRepository)
+                .delete(studentToDelete);
+        // exercise
+        studentController.deleteEntity(studentToDelete);
+        // verify
+        verify(studentView).showError("Repository exception: " + message,
+                studentToDelete);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
 }

@@ -42,7 +42,24 @@ public class StudentController implements Controller<Student> {
 
     @Override
     public void deleteEntity(Student entityToDelete) {
-        // TODO Auto-generated method stub
+        Student foundEntity = null;
+        try {
+            foundEntity = studentRepository.findById(entityToDelete.getId());
+        } catch (RepositoryException e) {
+            studentView.showError(e.getMessage(), entityToDelete);
+        }
+        if (foundEntity == null) {
+            studentView.showError(
+                    "No existing student with name " + entityToDelete.getName(),
+                    entityToDelete);
+            return;
+        }
+        try {
+            studentRepository.delete(entityToDelete);
+        } catch (RepositoryException e) {
+            studentView.showError(e.getMessage(), entityToDelete);
+        }
+        studentView.entityDeleted(entityToDelete);
 
     }
 
