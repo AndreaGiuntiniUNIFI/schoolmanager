@@ -69,4 +69,24 @@ public class StudentRepositoryTest {
                 student2);
     }
 
+    @Test
+    public void testFindByNameWhenStudentExists() throws RepositoryException {
+        // setUp
+        Student student1 = new Student("John");
+        Student student2 = new Student("Jane");
+        entityManager.getTransaction().begin();
+        entityManager.persist(student1);
+        entityManager.persist(student2);
+        entityManager.getTransaction().commit();
+        // exercise and verify
+        assertThat(studentRepository.findByName("John")).isEqualTo(student1);
+    }
+
+    @Test
+    public void testFindByNameWhenStudentDoesNotExist()
+            throws RepositoryException {
+        // exercise and verify
+        assertThat(studentRepository.findByName("John")).isNull();
+    }
+
 }

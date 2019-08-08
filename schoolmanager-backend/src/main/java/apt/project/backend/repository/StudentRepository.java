@@ -42,9 +42,16 @@ public class StudentRepository implements Repository<Student> {
         return null;
     }
 
-    public Student findByName(String name) {
-        // TODO Auto-generated method stub
-        return null;
+    public Student findByName(String name) throws RepositoryException {
+        List<Student> result = transactionManager.doInTransaction(em -> em
+                .createQuery("from Student " + "where name = :name ",
+                        Student.class)
+                .setParameter("name", name).setMaxResults(1).getResultList());
+
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
 
 }
