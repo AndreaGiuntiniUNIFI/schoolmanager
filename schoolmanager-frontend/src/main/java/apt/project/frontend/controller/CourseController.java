@@ -73,7 +73,7 @@ public class CourseController implements Controller<Course> {
         ExceptionManager.catcher(() -> {
             courseRepository.update(modifiedCourse);
             return null;
-        }, courseView, modifiedCourse);
+        }, courseView, existingCourse);
         courseView.entityUpdated(existingCourse, modifiedCourse);
     }
 }

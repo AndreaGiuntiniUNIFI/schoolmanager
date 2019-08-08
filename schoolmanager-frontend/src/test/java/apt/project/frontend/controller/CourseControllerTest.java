@@ -40,7 +40,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testAllCourses() throws RepositoryException {
+    public void testAllEntitiesShouldCallView() throws RepositoryException {
         // setup
         List<Course> courses = asList(new Course("test"));
         when(courseRepository.findAll()).thenReturn(courses);
@@ -51,7 +51,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testAllCoursesWhenRepositoryExceptionIsThrownInFindAllShouldShowError()
+    public void testAllEntitiesWhenRepositoryExceptionIsThrownInFindAllShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -64,7 +64,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testNewCourseWhenCourseDoesNotAlreadyExist()
+    public void testNewEntityWhenEntityDoesNotAlreadyExist()
             throws RepositoryException {
         // setup
         Course course = new Course("Course_1");
@@ -78,7 +78,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testNewCourseWhenCourseAlreadyExists()
+    public void testNewEntityWhenEntityAlreadyExists()
             throws RepositoryException {
         // setup
         Course course = new Course("Course_1");
@@ -92,7 +92,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testNewCourseWhenRepositoryExceptionIsThrownInFindByTitleShouldShowError()
+    public void testNewEntityWhenRepositoryExceptionIsThrownInFindByTitleShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -107,7 +107,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testNewCourseWhenRepositoryExceptionIsThrownInSaveShouldShowError()
+    public void testNewEntityWhenRepositoryExceptionIsThrownInSaveShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -122,7 +122,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testDeleteCourseWhenCourseExists() throws RepositoryException {
+    public void testDeleteEntityWhenEntityExists() throws RepositoryException {
         // setup
         Course courseToDelete = new Course("Course_1");
         when(courseRepository.findById((Long) any()))
@@ -136,7 +136,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testDeleteCourseWhenCourseDoesNotExists()
+    public void testDeleteEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
         Course courseToDelete = new Course("Course_1");
@@ -150,7 +150,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testDeleteCourseWhenRepositoryExceptionIsThrownInFindByIdShouldShowError()
+    public void testDeleteEntityWhenRepositoryExceptionIsThrownInFindByIdShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -166,7 +166,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testDeleteCourseWhenRepositoryExceptionIsThrownInDeleteShouldShowError()
+    public void testDeleteEntityWhenRepositoryExceptionIsThrownInDeleteShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -184,7 +184,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testUpdateCourseWhenCourseExists() throws RepositoryException {
+    public void testUpdateEntityWhenEntityExists() throws RepositoryException {
         // setup
         Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
@@ -200,7 +200,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testUpdateCourseWhenCourseDoesNotExist()
+    public void testUpdateEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
         Course existingCourse = new Course("existingTitle");
@@ -215,7 +215,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testUpdateCourseWhenRepositoryExceptionIsThrownInFindByIdShouldShowError()
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByIdShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -232,7 +232,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testUpdateCourseWhenRepositoryExceptionIsThrownUpdateShouldShowError()
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInUpdateShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -242,8 +242,6 @@ public class CourseControllerTest {
                 .thenReturn(existingCourse);
         doThrow(new RepositoryException(message)).when(courseRepository)
                 .update(modifiedCourse);
-        when(courseRepository.findById((Long) any()))
-                .thenThrow(new RepositoryException(message));
         // exercise
         courseController.updateEntity(existingCourse, modifiedCourse);
         // verify
