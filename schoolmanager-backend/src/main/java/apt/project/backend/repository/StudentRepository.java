@@ -1,5 +1,7 @@
 package apt.project.backend.repository;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import apt.project.backend.domain.Student;
@@ -20,26 +22,33 @@ public class StudentRepository implements Repository<Student> {
 
     @Override
     public void save(Student e) throws RepositoryException {
-        // TODO Auto-generated method stub
-
+        transactionManager.doInTransaction(em -> {
+            em.persist(e);
+            return null;
+        });
     }
 
     @Override
     public void delete(Student e) throws RepositoryException {
-        // TODO Auto-generated method stub
-
+        transactionManager.doInTransaction(em -> {
+            em.remove(em.merge(e));
+            return null;
+        });
     }
 
     @Override
     public void update(Student modifiedEntity) throws RepositoryException {
-        // TODO Auto-generated method stub
-
+        transactionManager.doInTransaction(em -> {
+            em.merge(modifiedEntity);
+            return null;
+        });
     }
 
     @Override
     public Student findById(Long id) throws RepositoryException {
-        // TODO Auto-generated method stub
-        return null;
+        List<Student> result = transactionManager
+                .doInTransaction(em -> asList(em.find(Student.class, id)));
+        return result.get(0);
     }
 
     public Student findByName(String name) throws RepositoryException {
