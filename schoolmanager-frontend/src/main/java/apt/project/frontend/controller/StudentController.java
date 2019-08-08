@@ -31,8 +31,13 @@ public class StudentController implements Controller<Student> {
 
     @Override
     public void newEntity(Student entity) {
-        // TODO Auto-generated method stub
 
+        try {
+            studentRepository.save(entity);
+        } catch (RepositoryException e) {
+            studentView.showError(e.getMessage(), entity);
+        }
+        studentView.entityAdded(entity);
     }
 
     @Override

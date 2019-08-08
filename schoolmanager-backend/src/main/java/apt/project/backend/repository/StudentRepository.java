@@ -36,4 +36,9 @@ public class StudentRepository implements Repository<Student> {
         return null;
     }
 
+    public Student findByName(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
