@@ -6,16 +6,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
-import apt.project.backend.domain.Course;
+import apt.project.backend.domain.BaseEntity;
 
-public class TransactionManager {
+public class TransactionManager<T extends BaseEntity> {
     private EntityManagerFactory emf;
 
     public TransactionManager(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
-    List<Course> doInTransaction(TransactionFunction func)
+    List<T> doInTransaction(TransactionFunction<T> func)
             throws RepositoryException {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = null;
@@ -23,7 +23,7 @@ public class TransactionManager {
             tx = em.getTransaction();
             tx.begin();
 
-            List<Course> result = func.execute(em);
+            List<T> result = func.execute(em);
 
             tx.commit();
             return result;

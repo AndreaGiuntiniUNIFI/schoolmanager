@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import apt.project.backend.domain.Course;
+import apt.project.backend.domain.BaseEntity;
 
 @FunctionalInterface
-public interface TransactionFunction {
-    List<Course> execute(EntityManager em);
+public interface TransactionFunction<T extends BaseEntity> {
+    List<T> execute(EntityManager em);
 }

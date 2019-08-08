@@ -21,12 +21,12 @@ public class CourseRepositoryTest {
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
     private CourseRepository courseRepository;
-    private static TransactionManager transactionManager;
+    private static TransactionManager<Course> transactionManager;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         entityManagerFactory = Persistence.createEntityManagerFactory("H2");
-        transactionManager = new TransactionManager(entityManagerFactory);
+        transactionManager = new TransactionManager<>(entityManagerFactory);
     }
 
     @AfterClass

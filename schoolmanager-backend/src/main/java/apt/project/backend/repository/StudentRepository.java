@@ -6,10 +6,16 @@ import apt.project.backend.domain.Student;
 
 public class StudentRepository implements Repository<Student> {
 
+    private TransactionManager<Student> transactionManager;
+
+    public StudentRepository(TransactionManager<Student> transactionManager) {
+        this.transactionManager = transactionManager;
+    }
+
     @Override
     public List<Student> findAll() throws RepositoryException {
-        // TODO Auto-generated method stub
-        return null;
+        return transactionManager.doInTransaction(em -> em
+                .createQuery("from Student", Student.class).getResultList());
     }
 
     @Override

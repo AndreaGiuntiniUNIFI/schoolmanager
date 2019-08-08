@@ -8,9 +8,9 @@ import apt.project.backend.domain.Course;
 
 public class CourseRepository implements Repository<Course> {
 
-    private TransactionManager transactionManager;
+    private TransactionManager<Course> transactionManager;
 
-    public CourseRepository(TransactionManager transactionManager) {
+    public CourseRepository(TransactionManager<Course> transactionManager) {
         this.transactionManager = transactionManager;
     }
 
