@@ -1,9 +1,6 @@
 package apt.project.frontend.controller;
 
-import java.util.List;
-
 import apt.project.backend.domain.Student;
-import apt.project.backend.repository.RepositoryException;
 import apt.project.backend.repository.StudentRepository;
 import apt.project.frontend.view.View;
 
@@ -14,66 +11,57 @@ public class StudentController implements Controller<Student> {
 
     @Override
     public void allEntities() {
-        List<Student> studentList = null;
-        try {
-            studentList = studentRepository.findAll();
-        } catch (RepositoryException e) {
-            studentView.showError(e.getMessage(), null);
-        }
-        studentView.showAll(studentList);
+        ExceptionManager.catcher(() -> {
+            studentView.showAll(studentRepository.findAll());
+            return null;
+        }, studentView);
     }
 
     @Override
     public void updateEntity(Student existingEntity, Student modifiedEntity) {
-        try {
-            if (studentRepository.findById(existingEntity.getId()) == null) {
-                studentView.showError("No existing student with name "
-                        + existingEntity.getName(), existingEntity);
-                return;
-            }
-        } catch (RepositoryException e) {
-            studentView.showError(e.getMessage(), existingEntity);
+
+        if (ExceptionManager.catcher(
+                () -> studentRepository.findById(existingEntity.getId()),
+                studentView, existingEntity) == null) {
+            studentView.showError(
+                    "No existing student with name " + existingEntity.getName(),
+                    existingEntity);
             return;
         }
-        try {
+
+        ExceptionManager.catcher(() -> {
             studentRepository.update(modifiedEntity);
-        } catch (RepositoryException e) {
-            studentView.showError(e.getMessage(), existingEntity);
-            return;
-        }
+            return null;
+        }, studentView, existingEntity);
         studentView.entityUpdated(existingEntity, modifiedEntity);
     }
 
     @Override
     public void newEntity(Student entity) {
 
-        try {
+        ExceptionManager.catcher(() -> {
             studentRepository.save(entity);
-        } catch (RepositoryException e) {
-            studentView.showError(e.getMessage(), entity);
-        }
+            return null;
+        }, studentView, entity);
+
         studentView.entityAdded(entity);
     }
 
     @Override
     public void deleteEntity(Student entityToDelete) {
-        Student foundEntity = null;
-        try {
-            foundEntity = studentRepository.findById(entityToDelete.getId());
-        } catch (RepositoryException e) {
-            studentView.showError(e.getMessage(), entityToDelete);
-        }
-        if (foundEntity == null) {
+
+        if (ExceptionManager.catcher(
+                () -> studentRepository.findById(entityToDelete.getId()),
+                studentView, entityToDelete) == null) {
             studentView.showError(
                     "No existing student with name " + entityToDelete.getName(),
                     entityToDelete);
             return;
         }
-        try {
+        ExceptionManager.catcher(() -> {
             studentRepository.delete(entityToDelete);
-        } catch (RepositoryException e) {
-            studentView.showError(e.getMessage(), entityToDelete);
-        }
+            return null;
+        }, studentView, entityToDelete);
         studentView.entityDeleted(entityToDelete);
 
     }
