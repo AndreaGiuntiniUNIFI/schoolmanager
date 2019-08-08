@@ -232,7 +232,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void testUpdateEntityWhenRepositoryExceptionIsThrownUpdateShouldCallShowError()
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInUpdateShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
@@ -242,8 +242,6 @@ public class CourseControllerTest {
                 .thenReturn(existingCourse);
         doThrow(new RepositoryException(message)).when(courseRepository)
                 .update(modifiedCourse);
-        when(courseRepository.findById((Long) any()))
-                .thenThrow(new RepositoryException(message));
         // exercise
         courseController.updateEntity(existingCourse, modifiedCourse);
         // verify
