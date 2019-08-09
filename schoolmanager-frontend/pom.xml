@@ -10,6 +10,12 @@
   </parent>
   <artifactId>schoolmanager-frontend</artifactId>
 
+  <properties>
+    <!-- Property added to turn off SonarQube warning about jacoco binary report 
+      files -->
+    <sonar.coverage.jacoco.xmlReportPaths>${sonar.jacocoXmlReportPathForChildern}</sonar.coverage.jacoco.xmlReportPaths>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
