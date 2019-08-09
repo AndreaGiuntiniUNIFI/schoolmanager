@@ -25,7 +25,7 @@ public class CoursePanel extends JPanel implements View<Course> {
      */
     private static final long serialVersionUID = 1L;
 
-    private CourseController courseController;
+    private transient CourseController courseController;
 
     private JList<Course> list;
 
@@ -37,7 +37,7 @@ public class CoursePanel extends JPanel implements View<Course> {
 
     private JButton btnDelete;
 
-    private MainFrame parentMainFrame;
+    private transient MainFrame parentMainFrame;
 
     public CoursePanel(MainFrame parentMainFrame, DialogManager dialogManager) {
 

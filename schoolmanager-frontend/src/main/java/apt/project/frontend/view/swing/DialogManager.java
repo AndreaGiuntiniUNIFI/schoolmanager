@@ -3,6 +3,7 @@ package apt.project.frontend.view.swing;
 public class DialogManager {
 
     public DialogManager() {
+        //
     }
 
     public String manageDialog(String label) {

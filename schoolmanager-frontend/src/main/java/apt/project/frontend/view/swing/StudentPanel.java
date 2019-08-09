@@ -29,8 +29,8 @@ public class StudentPanel extends JPanel implements View<Student> {
     private JButton btnDelete;
     private DefaultListModel<Student> listModel;
     private JList<Student> list;
-    private StudentController studentController;
-    private MainFrame parentMainFrame;
+    private transient StudentController studentController;
+    private transient MainFrame parentMainFrame;
 
     public StudentPanel(MainFrame parentMainFrame,
             DialogManager dialogManager) {
