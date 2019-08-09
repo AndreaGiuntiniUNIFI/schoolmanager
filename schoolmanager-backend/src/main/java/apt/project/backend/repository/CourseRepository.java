@@ -16,40 +16,32 @@ public class CourseRepository implements Repository<Course> {
 
     @Override
     public List<Course> findAll() throws RepositoryException {
-        return transactionManager.doInTransaction(em -> em
+        return transactionManager.doInTransactionAndReturn(em -> em
                 .createQuery("from Course", Course.class).getResultList());
     }
 
     @Override
     public void save(Course course) throws RepositoryException {
-        transactionManager.doInTransaction(em -> {
-            em.persist(course);
-            return null;
-        });
+        transactionManager.doInTransaction(em -> em.persist(course));
     }
 
     @Override
     public void delete(Course course) throws RepositoryException {
-        transactionManager.doInTransaction(em -> {
-            em.remove(em.merge(course));
-            return null;
-        });
+        transactionManager.doInTransaction(em -> em.remove(em.merge(course)));
     }
 
     @Override
     public void update(Course existingCourse) throws RepositoryException {
-        transactionManager.doInTransaction(em -> {
-            em.merge(existingCourse);
-            return null;
-        });
+        transactionManager.doInTransaction(em -> em.merge(existingCourse));
     }
 
     public Course findByTitle(String titleToFind) throws RepositoryException {
-        List<Course> result = transactionManager.doInTransaction(em -> em
-                .createQuery("from Course " + "where title = :title ",
-                        Course.class)
-                .setParameter("title", titleToFind).setMaxResults(1)
-                .getResultList());
+        List<Course> result = transactionManager
+                .doInTransactionAndReturn(em -> em
+                        .createQuery("from Course " + "where title = :title ",
+                                Course.class)
+                        .setParameter("title", titleToFind).setMaxResults(1)
+                        .getResultList());
 
         if (result.isEmpty()) {
             return null;
@@ -60,8 +52,8 @@ public class CourseRepository implements Repository<Course> {
 
     @Override
     public Course findById(Long id) throws RepositoryException {
-        List<Course> result = transactionManager
-                .doInTransaction(em -> asList(em.find(Course.class, id)));
+        List<Course> result = transactionManager.doInTransactionAndReturn(
+                em -> asList(em.find(Course.class, id)));
 
         return result.get(0);
     }
