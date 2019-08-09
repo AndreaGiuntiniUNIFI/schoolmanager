@@ -14,14 +14,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Student;
 
-public class CourseRepositoryTest {
+public class StudentRepositoryTest {
 
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    private CourseRepository courseRepository;
-    private static TransactionManager<Course> transactionManager;
+    private StudentRepository studentRepository;
+    private static TransactionManager<Student> transactionManager;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -38,10 +38,10 @@ public class CourseRepositoryTest {
     public void setUp() {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("TRUNCATE TABLE public.Course")
+        entityManager.createNativeQuery("TRUNCATE TABLE public.Student")
                 .executeUpdate();
         entityManager.getTransaction().commit();
-        courseRepository = new CourseRepository(transactionManager);
+        studentRepository = new StudentRepository(transactionManager);
 
     }
 
@@ -54,106 +54,107 @@ public class CourseRepositoryTest {
     @Test
     public void testFindAllWhenDataBaseIsEmpty() throws RepositoryException {
         // exercise and verify
-        assertThat(courseRepository.findAll()).isEmpty();
+        assertThat(studentRepository.findAll()).isEmpty();
     }
 
     @Test
     public void testFindAllWhenDataBaseIsNotEmpty() throws RepositoryException {
         // setUp
-        Course course1 = new Course("Course1");
-        Course course2 = new Course("Course2");
+        Student student1 = new Student("John");
+        Student student2 = new Student("Jane");
         entityManager.getTransaction().begin();
-        entityManager.persist(course1);
-        entityManager.persist(course2);
+        entityManager.persist(student1);
+        entityManager.persist(student2);
         entityManager.getTransaction().commit();
         // exercise and verify
-        assertThat(courseRepository.findAll()).containsExactly(course1,
-                course2);
+        assertThat(studentRepository.findAll()).containsExactly(student1,
+                student2);
     }
 
     @Test
-    public void testFindByTitleWhenCourseExist() throws RepositoryException {
+    public void testFindByNameWhenStudentExists() throws RepositoryException {
         // setUp
-        Course course1 = new Course("Course1");
-        Course course2 = new Course("Course2");
+        Student student1 = new Student("John");
+        Student student2 = new Student("Jane");
         entityManager.getTransaction().begin();
-        entityManager.persist(course1);
-        entityManager.persist(course2);
+        entityManager.persist(student1);
+        entityManager.persist(student2);
         entityManager.getTransaction().commit();
         // exercise and verify
-        assertThat(courseRepository.findByTitle("Course1")).isEqualTo(course1);
+        assertThat(studentRepository.findByName("John")).isEqualTo(student1);
     }
 
     @Test
-    public void testFindByTitleWhenTheCourseDoesNotExist()
+    public void testFindByNameWhenStudentDoesNotExist()
             throws RepositoryException {
         // exercise and verify
-        assertThat(courseRepository.findByTitle("Course1")).isNull();
+        assertThat(studentRepository.findByName("John")).isNull();
     }
 
     @Test
     public void testSave() throws RepositoryException {
         // setup
-        Course course = new Course("Course1");
+        Student student = new Student("John");
         // exercise
-        courseRepository.save(course);
+        studentRepository.save(student);
         // verify
         entityManager.getTransaction().begin();
-        List<Course> courses = entityManager
-                .createQuery("from Course", Course.class).getResultList();
+        List<Student> students = entityManager
+                .createQuery("from Student", Student.class).getResultList();
         entityManager.getTransaction().commit();
-        assertThat(courses).containsExactly(course);
+        assertThat(students).containsExactly(student);
     }
 
     @Test
     public void testDelete() throws RepositoryException {
         // setup
-        Course courseToDelete = new Course("Course1");
+        Student studentToDelete = new Student("John");
         entityManager.getTransaction().begin();
-        entityManager.persist(courseToDelete);
+        entityManager.persist(studentToDelete);
         entityManager.getTransaction().commit();
         // exercise
-        courseRepository.delete(courseToDelete);
+        studentRepository.delete(studentToDelete);
         // verify
         entityManager.getTransaction().begin();
-        List<Course> courses = entityManager
-                .createQuery("from Course", Course.class).getResultList();
+        List<Student> students = entityManager
+                .createQuery("from Student", Student.class).getResultList();
         entityManager.getTransaction().commit();
-        assertThat(courses).isEmpty();
+        assertThat(students).isEmpty();
     }
 
     @Test
     public void testUpdate() throws RepositoryException {
         // setup
-        Course existingCourse = new Course("Course1");
+        Student existingStudent = new Student("John");
         entityManager.getTransaction().begin();
-        entityManager.persist(existingCourse);
+        entityManager.persist(existingStudent);
         entityManager.getTransaction().commit();
         entityManager.clear(); // this is done because otherwise Hibernate would
                                // update the entity automatically.
-        existingCourse.setTitle("Course1Modified");
+        existingStudent.setName("Jane");
         // exercise
-        courseRepository.update(existingCourse);
+        studentRepository.update(existingStudent);
         // verify
         entityManager.getTransaction().begin();
-        Course retrievedCourse = entityManager.find(Course.class,
-                existingCourse.getId());
+        Student retrievedStudent = entityManager.find(Student.class,
+                existingStudent.getId());
         entityManager.getTransaction().commit();
 
-        assertThat(retrievedCourse)
-                .isEqualToComparingFieldByField(existingCourse);
+        assertThat(retrievedStudent)
+                .isEqualToComparingFieldByField(existingStudent);
     }
 
     @Test
     public void testFindById() throws RepositoryException {
         // setup
-        Course course = new Course("Course1");
+        Student student = new Student("John");
         entityManager.getTransaction().begin();
-        entityManager.persist(course);
+        entityManager.persist(student);
         entityManager.getTransaction().commit();
         // exercise
-        Course retrievedCourse = courseRepository.findById(course.getId());
+        Student retrievedCourse = studentRepository.findById(student.getId());
         // verify
-        assertThat(course).isEqualTo(retrievedCourse);
+        assertThat(student).isEqualTo(retrievedCourse);
     }
+
 }

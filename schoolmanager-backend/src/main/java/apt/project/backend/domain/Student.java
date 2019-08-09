@@ -1,8 +1,14 @@
 package apt.project.backend.domain;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Student extends BaseEntity {
 
     private String name;
+
+    public Student() {
+    }
 
     public Student(String name) {
         this.name = name;
