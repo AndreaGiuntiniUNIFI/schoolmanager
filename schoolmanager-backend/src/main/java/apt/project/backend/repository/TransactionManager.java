@@ -15,7 +15,7 @@ public class TransactionManager<T extends BaseEntity> {
         this.emf = emf;
     }
 
-    List<T> doInTransaction(TransactionFunction<T> func)
+    List<T> doInTransactionAndReturn(TransactionFunction<T> func)
             throws RepositoryException {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = null;
@@ -36,4 +36,12 @@ public class TransactionManager<T extends BaseEntity> {
             em.close();
         }
     }
+
+    void doInTransaction(TransactionConsumer func) throws RepositoryException {
+        this.doInTransactionAndReturn(em -> {
+            func.accept(em);
+            return null;
+        });
+    }
+
 }
