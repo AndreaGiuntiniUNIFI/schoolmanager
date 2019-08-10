@@ -56,9 +56,11 @@ public class SwingMainFrame extends JFrame implements MainFrame {
 
         DialogManager dialogManager = new DialogManager();
 
-        JPanel studentPanel = new StudentPanel(this, dialogManager);
-        studentPanel.setName("studentPanel");
-        tabbedPane.addTab("Students", null, studentPanel, null);
+        StudentPanel studentPanel = new StudentPanel(new JPanel(), this,
+                dialogManager, "List of Students");
+
+        studentPanel.getPanel().setName("studentPanel");
+        tabbedPane.addTab("Students", null, studentPanel.getPanel(), null);
 
         JPanel coursePanel = new CoursePanel(this, dialogManager);
         coursePanel.setName("coursePanel");

@@ -37,15 +37,9 @@ public class SwingMainFrameTest extends AssertJSwingJUnitTestCase {
                 return "coursePanel".equals(panel.getName());
             }
         };
-        GenericTypeMatcher<StudentPanel> studentPanelNameMatcher = new GenericTypeMatcher<StudentPanel>(
-                StudentPanel.class) {
-            @Override
-            protected boolean isMatching(StudentPanel panel) {
-                return "studentPanel".equals(panel.getName());
-            }
-        };
+
         frameFixture.panel(coursePanelNameMatcher);
-        frameFixture.panel(studentPanelNameMatcher);
+        frameFixture.panel("studentPanel");
 
         frameFixture.label("errorLabel").requireText(" ");
     }
