@@ -20,16 +20,17 @@ import apt.project.frontend.view.View;
 
 public class StudentPanel extends JPanel implements View<Student> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+
+    private transient StudentController studentController;
+
+    private DefaultListModel<Student> listModel;
+    private JList<Student> list;
+
     private JButton btnAdd;
     private JButton btnModify;
     private JButton btnDelete;
-    private DefaultListModel<Student> listModel;
-    private JList<Student> list;
-    private transient StudentController studentController;
+
     private transient MainFrame parentMainFrame;
 
     public StudentPanel(MainFrame parentMainFrame,
@@ -60,11 +61,6 @@ public class StudentPanel extends JPanel implements View<Student> {
 
         btnModify = new JButton("Modify");
         btnModify.setEnabled(false);
-        GridBagConstraints gbc_btnModify = new GridBagConstraints();
-        gbc_btnModify.insets = new Insets(0, 0, 0, 5);
-        gbc_btnModify.gridx = 1;
-        gbc_btnModify.gridy = 1;
-        add(btnModify, gbc_btnModify);
         btnModify.addActionListener(e -> {
             Student selectedStudent = list.getSelectedValue();
             String name = dialogManager.manageDialog("Name",
@@ -74,15 +70,20 @@ public class StudentPanel extends JPanel implements View<Student> {
                         new Student(name));
             }
         });
+        GridBagConstraints gbc_btnModify = new GridBagConstraints();
+        gbc_btnModify.insets = new Insets(0, 0, 0, 5);
+        gbc_btnModify.gridx = 1;
+        gbc_btnModify.gridy = 1;
+        add(btnModify, gbc_btnModify);
 
         btnDelete = new JButton("Delete");
         btnDelete.setEnabled(false);
+        btnDelete.addActionListener(
+                e -> studentController.deleteEntity(list.getSelectedValue()));
         GridBagConstraints gbc_btnDelete = new GridBagConstraints();
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
-        btnDelete.addActionListener(
-                e -> studentController.deleteEntity(list.getSelectedValue()));
 
         JScrollPane scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -94,7 +95,7 @@ public class StudentPanel extends JPanel implements View<Student> {
         add(scrollPane, gbc_scrollPane);
 
         listModel = new DefaultListModel<>();
-        list = new JList<>(getListModel());
+        list = new JList<>(listModel);
         list.setName("studentList");
         scrollPane.setViewportView(list);
         list.addListSelectionListener(e -> {
@@ -103,9 +104,9 @@ public class StudentPanel extends JPanel implements View<Student> {
             btnModify.setEnabled(enable);
         });
 
-        JLabel lblListOfCourses = new JLabel("List of Students");
-        lblListOfCourses.setHorizontalAlignment(SwingConstants.CENTER);
-        scrollPane.setColumnHeaderView(lblListOfCourses);
+        JLabel lblListOfStudents = new JLabel("List of Students");
+        lblListOfStudents.setHorizontalAlignment(SwingConstants.CENTER);
+        scrollPane.setColumnHeaderView(lblListOfStudents);
 
     }
 
@@ -121,11 +122,6 @@ public class StudentPanel extends JPanel implements View<Student> {
     }
 
     @Override
-    public void showError(String label, Student entity) {
-        parentMainFrame.displayErrorLabel(label + ": " + entity);
-    }
-
-    @Override
     public void entityDeleted(Student entity) {
         listModel.removeElement(entity);
         parentMainFrame.resetErrorLabel();
@@ -137,8 +133,9 @@ public class StudentPanel extends JPanel implements View<Student> {
         parentMainFrame.resetErrorLabel();
     }
 
-    public StudentController getStudentController() {
-        return studentController;
+    @Override
+    public void showError(String label, Student entity) {
+        parentMainFrame.displayErrorLabel(label + ": " + entity);
     }
 
     public void setStudentController(StudentController studentController) {

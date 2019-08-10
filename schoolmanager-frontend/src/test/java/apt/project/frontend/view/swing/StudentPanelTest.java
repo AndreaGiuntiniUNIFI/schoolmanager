@@ -50,7 +50,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
         GuiActionRunner.execute(() -> {
             jframe = new JFrame();
-            jframe.getContentPane().add(studentPanel);
+            jframe.add(studentPanel);
             jframe.pack();
             jframe.setVisible(true);
             return jframe;
@@ -229,7 +229,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void testEntityAddedShouldAddCourseToListAndCallResetErrorLabelInParent() {
+    public void testEntityAddedShouldAddStudentToListAndCallResetErrorLabelInParent() {
         Student student = new Student("name1");
         GuiActionRunner.execute(() -> {
             studentPanel.entityAdded(student);
@@ -243,7 +243,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void testEntityDeletedShouldRemoveCourseFromListAndCallResetErrorLabelInParent() {
+    public void testEntityDeletedShouldRemoveStudentFromListAndCallResetErrorLabelInParent() {
         Student student1 = new Student("name1");
         Student student2 = new Student("name2");
         GuiActionRunner.execute(() -> {
@@ -262,7 +262,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void testEntityUpdatedShouldUpdateCourseInListAndCallResetErrorLabelInParent() {
+    public void testEntityUpdatedShouldUpdateStudentInListAndCallResetErrorLabelInParent() {
         Student student = new Student("name1");
         Student modifiedStudent = new Student("modifiedName");
         GuiActionRunner.execute(() -> {

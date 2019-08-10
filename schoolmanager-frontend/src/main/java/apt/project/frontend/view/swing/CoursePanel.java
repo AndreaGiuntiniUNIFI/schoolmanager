@@ -20,21 +20,15 @@ import apt.project.frontend.view.View;
 
 public class CoursePanel extends JPanel implements View<Course> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     private transient CourseController courseController;
 
     private JList<Course> list;
-
     private DefaultListModel<Course> listModel;
 
-    private JButton btnModify;
-
     private JButton btnAdd;
-
+    private JButton btnModify;
     private JButton btnDelete;
 
     private transient MainFrame parentMainFrame;
@@ -83,12 +77,12 @@ public class CoursePanel extends JPanel implements View<Course> {
 
         btnDelete = new JButton("Delete");
         btnDelete.setEnabled(false);
+        btnDelete.addActionListener(
+                e -> courseController.deleteEntity(list.getSelectedValue()));
         GridBagConstraints gbc_btnDelete = new GridBagConstraints();
         gbc_btnDelete.gridx = 2;
         gbc_btnDelete.gridy = 1;
         add(btnDelete, gbc_btnDelete);
-        btnDelete.addActionListener(
-                e -> courseController.deleteEntity(list.getSelectedValue()));
 
         JScrollPane scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -127,11 +121,6 @@ public class CoursePanel extends JPanel implements View<Course> {
     }
 
     @Override
-    public void showError(String label, Course entity) {
-        parentMainFrame.displayErrorLabel(label + ": " + entity);
-    }
-
-    @Override
     public void entityDeleted(Course entity) {
         listModel.removeElement(entity);
         parentMainFrame.resetErrorLabel();
@@ -141,6 +130,11 @@ public class CoursePanel extends JPanel implements View<Course> {
     public void entityUpdated(Course existingEntity, Course modifiedEntity) {
         listModel.set(listModel.indexOf(existingEntity), modifiedEntity);
         parentMainFrame.resetErrorLabel();
+    }
+
+    @Override
+    public void showError(String label, Course entity) {
+        parentMainFrame.displayErrorLabel(label + ": " + entity);
     }
 
     public void setCourseController(CourseController courseController) {
