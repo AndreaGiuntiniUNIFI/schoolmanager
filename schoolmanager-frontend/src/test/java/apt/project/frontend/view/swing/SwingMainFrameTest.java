@@ -1,7 +1,6 @@
 package apt.project.frontend.view.swing;
 
 import org.assertj.swing.annotation.GUITest;
-import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -28,24 +27,13 @@ public class SwingMainFrameTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testInitalFrameContent() {
 
-        frameFixture.tabbedPane("mainTabbedPane");
+        frameFixture.tabbedPane("mainTabbedPane").requireTabTitles("Students",
+                "Courses");
 
-        GenericTypeMatcher<CoursePanel> coursePanelNameMatcher = new GenericTypeMatcher<CoursePanel>(
-                CoursePanel.class) {
-            @Override
-            protected boolean isMatching(CoursePanel panel) {
-                return "coursePanel".equals(panel.getName());
-            }
-        };
-        GenericTypeMatcher<StudentPanel> studentPanelNameMatcher = new GenericTypeMatcher<StudentPanel>(
-                StudentPanel.class) {
-            @Override
-            protected boolean isMatching(StudentPanel panel) {
-                return "studentPanel".equals(panel.getName());
-            }
-        };
-        frameFixture.panel(coursePanelNameMatcher);
-        frameFixture.panel(studentPanelNameMatcher);
+        frameFixture.tabbedPane("mainTabbedPane").selectTab(0);
+        frameFixture.panel("studentPanel");
+        frameFixture.tabbedPane("mainTabbedPane").selectTab(1);
+        frameFixture.panel("coursePanel");
 
         frameFixture.label("errorLabel").requireText(" ");
     }
