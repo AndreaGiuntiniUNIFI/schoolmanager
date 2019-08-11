@@ -18,19 +18,24 @@ import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 
-import apt.project.backend.domain.Student;
+import apt.project.backend.domain.BaseEntity;
 import apt.project.frontend.view.MainFrame;
 
 public class BasePanelTest extends AssertJSwingJUnitTestCase {
 
     private static final String HEADER_TEXT = "Base panel";
 
-    private BasePanel<Student> basePanel;
+    private BasePanel<BaseEntity> basePanel;
 
     private JPanel internalPanel;
     private JPanelFixture panelFixture;
     private JFrame frame;
     private MainFrame mainFrame;
+
+    private class TestEntity extends BaseEntity {
+        // This entity has the only purpose to represent a concrete class
+        // extending BaseEntity.
+    }
 
     @Override
     protected void onSetUp() {
@@ -40,8 +45,8 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
 
         GuiActionRunner.execute(() -> {
             internalPanel = new JPanel();
-            basePanel = new BasePanel<Student>(internalPanel, mainFrame,
-                    dialogManager, HEADER_TEXT);
+            basePanel = new BasePanel<>(internalPanel, mainFrame, dialogManager,
+                    HEADER_TEXT);
             frame = new JFrame();
             frame.add(internalPanel);
             frame.pack();
@@ -69,7 +74,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     public void testWhenEntityIsSelectedDeleteIsEnabled() {
         // setup
         GuiActionRunner.execute(() -> {
-            basePanel.getListModel().addElement(new Student("name1"));
+            basePanel.getListModel().addElement(new TestEntity());
         });
         JButtonFixture buttonDelete = panelFixture
                 .button(JButtonMatcher.withText("Delete"));
@@ -91,7 +96,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     public void testWhenEntityIsSelectedModifyIsEnabled() {
         // setup
         GuiActionRunner.execute(() -> {
-            basePanel.getListModel().addElement(new Student("name1"));
+            basePanel.getListModel().addElement(new TestEntity());
         });
         JButtonFixture buttonModify = panelFixture
                 .button(JButtonMatcher.withText("Modify"));
@@ -112,48 +117,48 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testShowAllShouldAddEntitiesToTheList() {
         // setup
-        Student student1 = new Student("name1");
-        Student student2 = new Student("name2");
+        TestEntity entity1 = new TestEntity();
+        TestEntity entity2 = new TestEntity();
 
         // exercise
         GuiActionRunner
-                .execute(() -> basePanel.showAll(asList(student1, student2)));
+                .execute(() -> basePanel.showAll(asList(entity1, entity2)));
 
         // verify
         String[] listContents = panelFixture.list("entityList").contents();
-        assertThat(listContents).containsExactly(student1.toString(),
-                student2.toString());
+        assertThat(listContents).containsExactly(entity1.toString(),
+                entity2.toString());
     }
 
     @Test
     @GUITest
     public void testShowErrorShouldCallSetErrorLabelInParent() {
         // setup
-        Student student = new Student("name1");
+        TestEntity entity = new TestEntity();
 
         // exercise
         GuiActionRunner
-                .execute(() -> basePanel.showError("error message", student));
+                .execute(() -> basePanel.showError("error message", entity));
 
         // verify
         verify(basePanel.getParentMainFrame())
-                .displayErrorLabel("error message: " + student);
+                .displayErrorLabel("error message: " + entity);
     }
 
     @Test
     @GUITest
     public void testEntityAddedShouldAddEntityToListAndCallResetErrorLabelInParent() {
         // setup
-        Student student = new Student("name1");
+        TestEntity entity = new TestEntity();
 
         // exercise
         GuiActionRunner.execute(() -> {
-            basePanel.entityAdded(student);
+            basePanel.entityAdded(entity);
         });
 
         // verify
         String[] listContents = panelFixture.list("entityList").contents();
-        assertThat(listContents).containsExactly(student.toString());
+        assertThat(listContents).containsExactly(entity.toString());
         verify(basePanel.getParentMainFrame()).resetErrorLabel();
     }
 
@@ -161,21 +166,21 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testEntityDeletedShouldRemoveEntityFromListAndCallResetErrorLabelInParent() {
         // setup
-        Student student1 = new Student("name1");
-        Student student2 = new Student("name2");
+        TestEntity entity1 = new TestEntity();
+        TestEntity entity2 = new TestEntity();
         GuiActionRunner.execute(() -> {
-            DefaultListModel<Student> listModel = basePanel.getListModel();
-            listModel.addElement(student1);
-            listModel.addElement(student2);
+            DefaultListModel<BaseEntity> listModel = basePanel.getListModel();
+            listModel.addElement(entity1);
+            listModel.addElement(entity2);
         });
 
         // exercise
         GuiActionRunner
-                .execute(() -> basePanel.entityDeleted(new Student("name2")));
+                .execute(() -> basePanel.entityDeleted(new TestEntity()));
 
         // verify
         String[] listContents = panelFixture.list("entityList").contents();
-        assertThat(listContents).containsExactly(student1.toString());
+        assertThat(listContents).containsExactly(entity1.toString());
         verify(basePanel.getParentMainFrame()).resetErrorLabel();
     }
 
@@ -183,20 +188,20 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testEntityUpdatedShouldUpdateEntityInListAndCallResetErrorLabelInParent() {
         // setup
-        Student student = new Student("name1");
-        Student modifiedStudent = new Student("modifiedName");
+        TestEntity entity = new TestEntity();
+        TestEntity modifiedMagi = new TestEntity();
         GuiActionRunner.execute(() -> {
-            DefaultListModel<Student> listModel = basePanel.getListModel();
-            listModel.addElement(student);
+            DefaultListModel<BaseEntity> listModel = basePanel.getListModel();
+            listModel.addElement(entity);
         });
 
         // exercise
-        GuiActionRunner.execute(
-                () -> basePanel.entityUpdated(student, modifiedStudent));
+        GuiActionRunner
+                .execute(() -> basePanel.entityUpdated(entity, modifiedMagi));
 
         // verify
         String[] listContents = panelFixture.list("entityList").contents();
-        assertThat(listContents).containsExactly(modifiedStudent.toString());
+        assertThat(listContents).containsExactly(modifiedMagi.toString());
         verify(basePanel.getParentMainFrame()).resetErrorLabel();
     }
 
