@@ -22,7 +22,6 @@ import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 
 @RunWith(GUITestRunner.class)
-
 public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
     private static final String HEADER_TEXT = "List of Students";
