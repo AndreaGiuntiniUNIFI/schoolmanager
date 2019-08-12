@@ -152,4 +152,68 @@ public class BaseControllerTest {
         verifyNoMoreInteractions(ignoreStubs(repository));
     }
 
+    @Test
+    public void testUpdateEntityWhenEntityExists() throws RepositoryException {
+        // setup
+        TestEntity existingEntity = new TestEntity();
+        TestEntity modifiedEntity = new TestEntity();
+        when(repository.findById((Long) any())).thenReturn(existingEntity);
+        // exercise
+        controller.updateEntity(existingEntity, modifiedEntity);
+        // verify
+        InOrder inOrder = inOrder(repository, view);
+        inOrder.verify(repository).update(modifiedEntity);
+        inOrder.verify(view).entityUpdated(existingEntity, modifiedEntity);
+    }
+
+    @Test
+    public void testUpdateEntityWhenEntityDoesNotExist()
+            throws RepositoryException {
+        // setup
+        TestEntity existingEntity = new TestEntity();
+        TestEntity modifiedEntity = new TestEntity();
+        when(repository.findById((Long) any())).thenReturn(null);
+        // exercise
+        controller.updateEntity(existingEntity, modifiedEntity);
+        // verify
+        verify(view).showError("No existing entity: " + existingEntity,
+                existingEntity);
+        verifyNoMoreInteractions(ignoreStubs(repository));
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByIdShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        TestEntity existingEntity = new TestEntity();
+        TestEntity modifiedEntity = new TestEntity();
+        when(repository.findById((Long) any()))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        controller.updateEntity(existingEntity, modifiedEntity);
+        // verify
+        verify(view).showError("Repository exception: " + message,
+                existingEntity);
+        verifyNoMoreInteractions(ignoreStubs(repository));
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInUpdateShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        TestEntity existingEntity = new TestEntity();
+        TestEntity modifiedEntity = new TestEntity();
+        when(repository.findById((Long) any())).thenReturn(existingEntity);
+        doThrow(new RepositoryException(message)).when(repository)
+                .update(modifiedEntity);
+        // exercise
+        controller.updateEntity(existingEntity, modifiedEntity);
+        // verify
+        verify(view).showError("Repository exception: " + message,
+                existingEntity);
+        verifyNoMoreInteractions(ignoreStubs(repository));
+    }
+
 }

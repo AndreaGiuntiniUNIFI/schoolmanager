@@ -19,8 +19,18 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
 
     @Override
     public void updateEntity(T existingEntity, T modifiedEntity) {
-        // TODO Auto-generated method stub
-
+        if (ExceptionManager.catcher(
+                () -> repository.findById(existingEntity.getId()), view,
+                existingEntity) == null) {
+            view.showError("No existing entity: " + existingEntity,
+                    existingEntity);
+            return;
+        }
+        ExceptionManager.catcher(() -> {
+            repository.update(modifiedEntity);
+            return null;
+        }, view, existingEntity);
+        view.entityUpdated(existingEntity, modifiedEntity);
     }
 
     @Override
