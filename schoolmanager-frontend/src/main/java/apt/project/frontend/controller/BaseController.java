@@ -25,8 +25,11 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
 
     @Override
     public void newEntity(T entity) {
-        // TODO Auto-generated method stub
-
+        ExceptionManager.catcher(() -> {
+            repository.save(entity);
+            return null;
+        }, view, entity);
+        view.entityAdded(entity);
     }
 
     @Override

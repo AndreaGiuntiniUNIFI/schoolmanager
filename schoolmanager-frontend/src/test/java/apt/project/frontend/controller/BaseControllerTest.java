@@ -1,6 +1,7 @@
 package apt.project.frontend.controller;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -26,7 +28,7 @@ public class BaseControllerTest {
     private View<BaseEntity> view;
 
     @InjectMocks
-    private BaseController controller;
+    private BaseController<BaseEntity> controller;
 
     private class TestEntity extends BaseEntity {
         // This entity has the only purpose to represent a concrete class
@@ -59,6 +61,18 @@ public class BaseControllerTest {
         controller.allEntities();
         // verify
         verify(view).showError("Repository exception: " + message, null);
+    }
+
+    @Test
+    public void testNewEntity() throws RepositoryException {
+        // setup
+        TestEntity entity = new TestEntity();
+        // exercise
+        controller.newEntity(entity);
+        // verify
+        InOrder inOrder = inOrder(repository, view);
+        inOrder.verify(repository).save(entity);
+        inOrder.verify(view).entityAdded(entity);
     }
 
 }
