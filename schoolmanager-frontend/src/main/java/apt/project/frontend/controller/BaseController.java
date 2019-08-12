@@ -34,8 +34,18 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
 
     @Override
     public void deleteEntity(T entityToDelete) {
-        // TODO Auto-generated method stub
-
+        if (ExceptionManager.catcher(
+                () -> repository.findById(entityToDelete.getId()), view,
+                entityToDelete) == null) {
+            view.showError("No existing entity: " + entityToDelete,
+                    entityToDelete);
+            return;
+        }
+        ExceptionManager.catcher(() -> {
+            repository.delete(entityToDelete);
+            return null;
+        }, view, entityToDelete);
+        view.entityDeleted(entityToDelete);
     }
 
 }
