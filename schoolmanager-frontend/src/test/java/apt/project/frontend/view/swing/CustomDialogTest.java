@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 public class CustomDialogTest extends AssertJSwingJUnitTestCase {
 
     private CustomDialog customDialog;
-    private DialogFixture myDialogFixture;
+    private DialogFixture dialogFixture;
 
     @Override
     protected void onSetUp() {
@@ -26,7 +26,7 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
             customDialog = new CustomDialog("label");
         });
 
-        myDialogFixture = new DialogFixture(robot(), customDialog);
+        dialogFixture = new DialogFixture(robot(), customDialog);
 
         customDialog.setModalityType(Dialog.ModalityType.MODELESS);
 
@@ -35,6 +35,14 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
 
     @Override
     protected void onTearDown() {
+
+        // This should not be necessary, but there is a bug in current Assertj
+        // Swing PanelFixture, and this manual cleanup seems to prevent it. See
+        // issue #157 on GitHub for further references.
+        if (dialogFixture != null) {
+            dialogFixture.cleanUp();
+        }
+
         customDialog.setVisible(false);
         customDialog.dispose();
         super.onTearDown();
@@ -44,14 +52,13 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testControlsInitialStates() {
 
-        myDialogFixture.label(JLabelMatcher.withText("label"));
+        dialogFixture.label(JLabelMatcher.withText("label"));
 
-        myDialogFixture.textBox("labelTextField").requireEnabled()
-                .requireEmpty();
+        dialogFixture.textBox("labelTextField").requireEnabled().requireEmpty();
 
-        myDialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
+        dialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
 
-        myDialogFixture.button(JButtonMatcher.withText("Cancel"))
+        dialogFixture.button(JButtonMatcher.withText("Cancel"))
                 .requireEnabled();
     }
 
@@ -59,9 +66,9 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testWhenTheFieldIsCompiledOkButtonIsEnabled() {
 
-        myDialogFixture.textBox("labelTextField").enterText("test");
+        dialogFixture.textBox("labelTextField").enterText("test");
 
-        myDialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
+        dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
 
     }
 
@@ -70,8 +77,8 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     public void testWhenOkButtonIsClickedThenInputIsSavedBeforeClosing() {
         // exercise
         String input = "test";
-        myDialogFixture.textBox("labelTextField").enterText(input);
-        myDialogFixture.button(JButtonMatcher.withText("OK")).click();
+        dialogFixture.textBox("labelTextField").enterText(input);
+        dialogFixture.button(JButtonMatcher.withText("OK")).click();
 
         // verify
         assertThat(customDialog.getOutcome()).isEqualTo(input);
@@ -84,8 +91,8 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
         // exercise
         customDialog.setOutcome("outcome");
         String input = "test";
-        myDialogFixture.textBox("labelTextField").enterText(input);
-        myDialogFixture.button(JButtonMatcher.withText("Cancel")).click();
+        dialogFixture.textBox("labelTextField").enterText(input);
+        dialogFixture.button(JButtonMatcher.withText("Cancel")).click();
 
         // verify
         assertThat(customDialog.getOutcome()).isNull();
