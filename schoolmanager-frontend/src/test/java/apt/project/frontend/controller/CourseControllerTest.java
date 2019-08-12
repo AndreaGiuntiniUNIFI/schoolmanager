@@ -205,6 +205,7 @@ public class CourseControllerTest {
         // setup
         Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
+        when(courseRepository.findByTitle("modifiedTitle")).thenReturn(null);
         when(courseRepository.findById((Long) any())).thenReturn(null);
         // exercise
         courseController.updateEntity(existingCourse, modifiedCourse);
@@ -221,6 +222,7 @@ public class CourseControllerTest {
         String message = "message";
         Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
+        when(courseRepository.findByTitle("modifiedTitle")).thenReturn(null);
         when(courseRepository.findById((Long) any()))
                 .thenThrow(new RepositoryException(message));
         // exercise
@@ -240,6 +242,7 @@ public class CourseControllerTest {
         Course modifiedCourse = new Course("modifiedTitle");
         when(courseRepository.findById((Long) any()))
                 .thenReturn(existingCourse);
+        when(courseRepository.findByTitle("modifiedTitle")).thenReturn(null);
         doThrow(new RepositoryException(message)).when(courseRepository)
                 .update(modifiedCourse);
         // exercise
@@ -249,4 +252,42 @@ public class CourseControllerTest {
                 existingCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
+
+    @Test
+    public void testUpdateEntityWhenModifiedTitleAlreadyExist()
+            throws RepositoryException {
+        // setup
+
+        String modifiedTitle = "modifiedTitle";
+        Course existingCourse = new Course("existingTitle");
+        Course modifiedCourse = new Course(modifiedTitle);
+        when(courseRepository.findByTitle(modifiedTitle))
+                .thenReturn(new Course(modifiedTitle));
+
+        // exercise
+        courseController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        verify(courseView).showError(
+                "Already existing entity: " + modifiedCourse, modifiedCourse);
+        verifyNoMoreInteractions(ignoreStubs(courseRepository));
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByTitleShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        String modifiedTitle = "modifiedTitle";
+        Course existingCourse = new Course("existingTitle");
+        Course modifiedCourse = new Course(modifiedTitle);
+
+        when(courseRepository.findByTitle(modifiedTitle))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        courseController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        verify(courseView).showError("Repository exception: " + message,
+                modifiedCourse);
+    }
+
 }
