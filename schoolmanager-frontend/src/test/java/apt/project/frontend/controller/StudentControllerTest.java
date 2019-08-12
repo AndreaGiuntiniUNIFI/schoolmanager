@@ -115,7 +115,7 @@ public class StudentControllerTest {
         // exercise
         studentController.deleteEntity(studentToDelete);
         // verify
-        verify(studentView).showError("No existing student with name John",
+        verify(studentView).showError("No existing entity: " + studentToDelete,
                 studentToDelete);
     }
 
@@ -179,7 +179,7 @@ public class StudentControllerTest {
         // exercise
         studentController.updateEntity(existingStudent, modifiedStudent);
         // verify
-        verify(studentView).showError("No existing student with name John",
+        verify(studentView).showError("No existing entity: " + existingStudent,
                 existingStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
