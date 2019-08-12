@@ -25,4 +25,20 @@ public class StudentController extends BaseController<Student> {
         super.newEntity(entity);
     }
 
+    @Override
+    public void updateEntity(Student existingStudent, Student modifiedStudent) {
+        Student studentWithNewName;
+
+        studentWithNewName = ExceptionManager.catcher(
+                () -> ((StudentRepository) repository)
+                        .findByName(modifiedStudent.getName()),
+                view, modifiedStudent);
+        if (studentWithNewName != null) {
+            view.showError("Already existing entity: " + modifiedStudent,
+                    modifiedStudent);
+            return;
+        }
+        super.updateEntity(existingStudent, modifiedStudent);
+    }
+
 }

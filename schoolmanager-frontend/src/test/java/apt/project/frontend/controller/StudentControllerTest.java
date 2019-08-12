@@ -202,8 +202,10 @@ public class StudentControllerTest {
     public void testUpdateEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
+        String modifiedName = "Jane";
         Student existingStudent = new Student("John");
-        Student modifiedStudent = new Student("Jane");
+        Student modifiedStudent = new Student(modifiedName);
+        when(studentRepository.findByName(modifiedName)).thenReturn(null);
         when(studentRepository.findById((Long) any())).thenReturn(null);
         // exercise
         studentController.updateEntity(existingStudent, modifiedStudent);
@@ -218,8 +220,10 @@ public class StudentControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
+        String modifiedName = "Jane";
         Student existingStudent = new Student("John");
-        Student modifiedStudent = new Student("Jane");
+        Student modifiedStudent = new Student(modifiedName);
+        when(studentRepository.findByName(modifiedName)).thenReturn(null);
         when(studentRepository.findById((Long) any()))
                 .thenThrow(new RepositoryException(message));
         // exercise
@@ -235,8 +239,10 @@ public class StudentControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
+        String modifiedName = "Jane";
         Student existingStudent = new Student("John");
-        Student modifiedStudent = new Student("Jane");
+        Student modifiedStudent = new Student(modifiedName);
+        when(studentRepository.findByName(modifiedName)).thenReturn(null);
         when(studentRepository.findById((Long) any()))
                 .thenReturn(existingStudent);
         doThrow(new RepositoryException(message)).when(studentRepository)
@@ -248,4 +254,42 @@ public class StudentControllerTest {
                 existingStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
+
+    @Test
+    public void testUpdateEntityWhenModifiedTitleAlreadyExist()
+            throws RepositoryException {
+        // setup
+
+        String modifiedName = "Jane";
+        Student existingStudent = new Student("John");
+        Student modifiedStudent = new Student(modifiedName);
+        when(studentRepository.findByName(modifiedName))
+                .thenReturn(new Student(modifiedName));
+
+        // exercise
+        studentController.updateEntity(existingStudent, modifiedStudent);
+        // verify
+        verify(studentView).showError(
+                "Already existing entity: " + modifiedStudent, modifiedStudent);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByTitleShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        String modifiedTitle = "Jane";
+        Student existingCourse = new Student("John");
+        Student modifiedCourse = new Student(modifiedTitle);
+
+        when(studentRepository.findByName(modifiedTitle))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        studentController.updateEntity(existingCourse, modifiedCourse);
+        // verify
+        verify(studentView).showError("Repository exception: " + message,
+                modifiedCourse);
+    }
+
 }
