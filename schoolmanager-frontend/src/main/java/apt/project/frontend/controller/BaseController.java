@@ -6,8 +6,13 @@ import apt.project.frontend.view.View;
 
 public class BaseController<T extends BaseEntity> implements Controller<T> {
 
-    private View<T> view;
-    private Repository<T> repository;
+    protected View<T> view;
+    protected Repository<T> repository;
+
+    public BaseController(View<T> view, Repository<T> repository) {
+        this.view = view;
+        this.repository = repository;
+    }
 
     @Override
     public void allEntities() {

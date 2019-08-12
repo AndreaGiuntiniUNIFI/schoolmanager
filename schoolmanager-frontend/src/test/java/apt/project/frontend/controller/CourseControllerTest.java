@@ -86,8 +86,8 @@ public class CourseControllerTest {
         // exercise
         courseController.newEntity(course);
         // verify
-        verify(courseView).showError(
-                "Already existing course with title Course_1", course);
+        verify(courseView).showError("Already existing entity: " + course,
+                course);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -144,7 +144,7 @@ public class CourseControllerTest {
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
-        verify(courseView).showError("No existing course with title Course_1",
+        verify(courseView).showError("No existing entity: " + courseToDelete,
                 courseToDelete);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
@@ -209,8 +209,8 @@ public class CourseControllerTest {
         // exercise
         courseController.updateEntity(existingCourse, modifiedCourse);
         // verify
-        verify(courseView).showError(
-                "No existing course with title existingTitle", existingCourse);
+        verify(courseView).showError("No existing entity: " + existingCourse,
+                existingCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
