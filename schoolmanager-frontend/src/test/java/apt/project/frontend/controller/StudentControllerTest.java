@@ -64,10 +64,10 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testNewEntityShouldCallRepositoryAndView()
+    public void testNewEntityWhenEntityDoesNotAlreadyExist()
             throws RepositoryException {
         // setup
-        Student student = new Student("John");
+        Student student = new Student("Jhon");
         when(studentRepository.findByName("John")).thenReturn(null);
         // exercise
         studentController.newEntity(student);
@@ -75,6 +75,35 @@ public class StudentControllerTest {
         InOrder inOrder = inOrder(studentRepository, studentView);
         inOrder.verify(studentRepository).save(student);
         inOrder.verify(studentView).entityAdded(student);
+    }
+
+    @Test
+    public void testNewEntityWhenEntityAlreadyExists()
+            throws RepositoryException {
+        // setup
+        Student student = new Student("Jhon");
+        when(studentRepository.findByName("Jhon")).thenReturn(student);
+        // exercise
+        studentController.newEntity(student);
+        // verify
+        verify(studentView).showError("Already existing entity: " + student,
+                student);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
+
+    @Test
+    public void testNewEntityWhenRepositoryExceptionIsThrownInFindByNameShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        String message = "message";
+        Student student = new Student("Jhon");
+        when(studentRepository.findByName("Jhon"))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        studentController.newEntity(student);
+        // verify
+        verify(studentView).showError("Repository exception: " + message,
+                student);
     }
 
     @Test
