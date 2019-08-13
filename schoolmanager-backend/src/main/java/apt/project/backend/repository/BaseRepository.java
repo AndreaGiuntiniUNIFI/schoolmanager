@@ -18,14 +18,14 @@ public class BaseRepository<T extends BaseEntity> implements Repository<T> {
             Class<T> typeParameterClass) {
         this.transactionManager = transactionManager;
         this.typeParameterClass = typeParameterClass;
-        this.nameTable = typeParameterClass.getName();
+        this.setNameTable(typeParameterClass.getName());
     }
 
     @Override
     public List<T> findAll() throws RepositoryException {
-        return transactionManager.doInTransactionAndReturn(
-                em -> em.createQuery("from " + nameTable, typeParameterClass)
-                        .getResultList());
+        return transactionManager.doInTransactionAndReturn(em -> em
+                .createQuery("from " + getNameTable(), typeParameterClass)
+                .getResultList());
 
     }
 
@@ -51,9 +51,12 @@ public class BaseRepository<T extends BaseEntity> implements Repository<T> {
         return result.get(0);
     }
 
-    @Override
     public String getNameTable() {
         return nameTable;
+    }
+
+    public void setNameTable(String nameTable) {
+        this.nameTable = nameTable;
     }
 
 }

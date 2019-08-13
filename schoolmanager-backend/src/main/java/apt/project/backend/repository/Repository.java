@@ -15,6 +15,4 @@ public interface Repository<T extends BaseEntity> {
     public void update(T modifiedEntity) throws RepositoryException;
 
     public T findById(Long id) throws RepositoryException;
-
-    String getNameTable();
 }
