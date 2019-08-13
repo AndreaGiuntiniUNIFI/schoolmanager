@@ -7,6 +7,7 @@
 
     <class>apt.project.backend.domain.Course</class>
     <class>apt.project.backend.domain.Student</class>
+    <!-- This Class is only for Testing purpose   -->
 
     <properties>
       <property name="javax.persistence.jdbc.driver"

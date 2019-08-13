@@ -8,6 +8,7 @@ import apt.project.backend.domain.Student;
 
 public class StudentRepository implements Repository<Student> {
 
+    private static final String TABLENAME = "Student";
     private TransactionManager<Student> transactionManager;
 
     public StudentRepository(TransactionManager<Student> transactionManager) {
@@ -54,6 +55,11 @@ public class StudentRepository implements Repository<Student> {
             return null;
         }
         return result.get(0);
+    }
+
+    @Override
+    public String getNameTable() {
+        return TABLENAME;
     }
 
 }

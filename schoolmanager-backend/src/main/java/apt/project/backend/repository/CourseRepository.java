@@ -8,6 +8,7 @@ import apt.project.backend.domain.Course;
 
 public class CourseRepository implements Repository<Course> {
 
+    private static final String TABLENAME = "Course";
     private TransactionManager<Course> transactionManager;
 
     public CourseRepository(TransactionManager<Course> transactionManager) {
@@ -56,6 +57,11 @@ public class CourseRepository implements Repository<Course> {
                 em -> asList(em.find(Course.class, id)));
 
         return result.get(0);
+    }
+
+    @Override
+    public String getNameTable() {
+        return TABLENAME;
     }
 
 }
