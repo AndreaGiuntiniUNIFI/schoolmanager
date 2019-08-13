@@ -2,6 +2,8 @@ package apt.project.backend.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -66,6 +68,39 @@ public class BaseRepositoryTest {
         // exercise and verify
         assertThat(repository.findAll()).containsExactly(testEntity1,
                 testEntity2);
+    }
+
+    @Test
+    public void testSave() throws RepositoryException {
+        // setup
+        TestEntity entity = new TestEntity();
+        // exercise
+        repository.save(entity);
+        // verify
+        entityManager.getTransaction().begin();
+        List<TestEntity> entities = entityManager
+                .createQuery("from TestEntity", TestEntity.class)
+                .getResultList();
+        entityManager.getTransaction().commit();
+        assertThat(entities).containsExactly(entity);
+    }
+
+    @Test
+    public void testDelete() throws RepositoryException {
+        // setup
+        TestEntity entityToDelete = new TestEntity();
+        entityManager.getTransaction().begin();
+        entityManager.persist(entityToDelete);
+        entityManager.getTransaction().commit();
+        // exercise
+        repository.delete(entityToDelete);
+        // verify
+        entityManager.getTransaction().begin();
+        List<TestEntity> entities = entityManager
+                .createQuery("from TestEntity", TestEntity.class)
+                .getResultList();
+        entityManager.getTransaction().commit();
+        assertThat(entities).isEmpty();
     }
 
 }

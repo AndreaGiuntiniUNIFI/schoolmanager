@@ -29,14 +29,12 @@ public class BaseRepository<T extends BaseEntity> implements Repository<T> {
 
     @Override
     public void save(T e) throws RepositoryException {
-        // TODO Auto-generated method stub
-
+        transactionManager.doInTransaction(em -> em.persist(e));
     }
 
     @Override
     public void delete(T e) throws RepositoryException {
-        // TODO Auto-generated method stub
-
+        transactionManager.doInTransaction(em -> em.remove(em.merge(e)));
     }
 
     @Override
