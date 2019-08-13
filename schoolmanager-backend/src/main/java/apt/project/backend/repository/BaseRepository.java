@@ -1,5 +1,7 @@
 package apt.project.backend.repository;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import apt.project.backend.domain.BaseEntity;
@@ -39,14 +41,14 @@ public class BaseRepository<T extends BaseEntity> implements Repository<T> {
 
     @Override
     public void update(T modifiedEntity) throws RepositoryException {
-        // TODO Auto-generated method stub
-
+        transactionManager.doInTransaction(em -> em.merge(modifiedEntity));
     }
 
     @Override
     public T findById(Long id) throws RepositoryException {
-        // TODO Auto-generated method stub
-        return null;
+        List<T> result = transactionManager.doInTransactionAndReturn(
+                em -> asList(em.find(typeParameterClass, id)));
+        return result.get(0);
     }
 
     @Override

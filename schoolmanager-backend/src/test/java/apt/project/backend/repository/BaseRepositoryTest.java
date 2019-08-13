@@ -103,4 +103,39 @@ public class BaseRepositoryTest {
         assertThat(entities).isEmpty();
     }
 
+    @Test
+    public void testUpdate() throws RepositoryException {
+        // setup
+        TestEntity existingEntity = new TestEntity();
+        existingEntity.setaField("originalField");
+        entityManager.getTransaction().begin();
+        entityManager.persist(existingEntity);
+        entityManager.getTransaction().commit();
+        entityManager.clear(); // this is done because otherwise Hibernate would
+                               // update the entity automatically.
+        existingEntity.setaField("modifiedField");
+        // exercise
+        repository.update(existingEntity);
+        // verify
+        entityManager.getTransaction().begin();
+        TestEntity retrievedCourse = entityManager.find(TestEntity.class,
+                existingEntity.getId());
+        entityManager.getTransaction().commit();
+
+        assertThat(retrievedCourse)
+                .isEqualToComparingFieldByField(existingEntity);
+    }
+
+    @Test
+    public void testFindById() throws RepositoryException {
+        // setup
+        TestEntity entity = new TestEntity();
+        entityManager.getTransaction().begin();
+        entityManager.persist(entity);
+        entityManager.getTransaction().commit();
+        // exercise
+        TestEntity retrievedEntity = repository.findById(entity.getId());
+        // verify
+        assertThat(entity).isEqualTo(retrievedEntity);
+    }
 }
