@@ -8,9 +8,9 @@ import apt.project.backend.domain.BaseEntity;
 
 public class BaseRepository<T extends BaseEntity> implements Repository<T> {
 
-    private TransactionManager<T> transactionManager;
+    protected TransactionManager<T> transactionManager;
 
-    final Class<T> typeParameterClass;
+    protected final Class<T> typeParameterClass;
 
     private String nameTable;
 
