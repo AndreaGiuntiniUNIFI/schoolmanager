@@ -18,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.backend.repository.StudentRepository;
@@ -290,6 +292,34 @@ public class StudentControllerTest {
         // verify
         verify(studentView).showError("Repository exception: " + message,
                 modifiedCourse);
+    }
+
+    @Test
+    public void testExamCouldNotHasDuplicateCourseForEachStudent()
+            throws RepositoryException {
+        Course course1 = new Course("course1");
+        Exam exam1 = new Exam(course1);
+        exam1.setRate(18);
+        String studentName = "John";
+        Student existingStudent = new Student(studentName);
+        existingStudent.getExams().add(exam1);
+
+        Student modifiedStudent = new Student(studentName);
+        Exam exam2 = new Exam(course1);
+        exam1.setRate(28);
+        modifiedStudent.getExams().add(exam1);
+        modifiedStudent.getExams().add(exam2);
+
+        when(studentRepository.findById((Long) any()))
+                .thenReturn(existingStudent);
+
+        // exercise
+        studentController.updateEntity(existingStudent, modifiedStudent);
+        // verify
+        verify(studentView).showError(
+                "Duplicate Exams in Student: " + modifiedStudent,
+                modifiedStudent);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
 }

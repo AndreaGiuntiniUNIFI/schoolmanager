@@ -1,13 +1,24 @@
 package apt.project.backend.domain;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.TableGenerator;
 
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Id @GeneratedValue   
+    @TableGenerator(
+            name = "table_generator",
+            table = "sequence_table",
+            pkColumnName = "entity",
+            valueColumnName = "next_id")
+
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.TABLE,
+            generator = "table_generator")
     private Long id;
 
     public Long getId() {
