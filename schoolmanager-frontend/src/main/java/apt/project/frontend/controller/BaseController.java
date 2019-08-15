@@ -16,10 +16,8 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
 
     @Override
     public void allEntities() {
-        ExceptionManager.catcher(() -> {
-            view.showAll(repository.findAll());
-            return null;
-        }, view);
+        ExceptionManager.voidCatcher(() -> view.showAll(repository.findAll()),
+                view);
     }
 
     @Override
@@ -31,19 +29,15 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
                     existingEntity);
             return;
         }
-        ExceptionManager.catcher(() -> {
-            repository.update(modifiedEntity);
-            return null;
-        }, view, existingEntity);
+        ExceptionManager.voidCatcher(() -> repository.update(modifiedEntity),
+                view, existingEntity);
         view.entityUpdated(existingEntity, modifiedEntity);
     }
 
     @Override
     public void newEntity(T entity) {
-        ExceptionManager.catcher(() -> {
-            repository.save(entity);
-            return null;
-        }, view, entity);
+        ExceptionManager.voidCatcher(() -> repository.save(entity), view,
+                entity);
         view.entityAdded(entity);
     }
 
@@ -56,10 +50,8 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
                     entityToDelete);
             return;
         }
-        ExceptionManager.catcher(() -> {
-            repository.delete(entityToDelete);
-            return null;
-        }, view, entityToDelete);
+        ExceptionManager.voidCatcher(() -> repository.delete(entityToDelete),
+                view, entityToDelete);
         view.entityDeleted(entityToDelete);
     }
 

@@ -23,4 +23,20 @@ public final class ExceptionManager {
             View<T> view) {
         return catcher(supplier, view, null);
     }
+
+    static <T extends BaseEntity> void voidCatcher(ThrowingRunnable runnable,
+            View<T> view, T entity) {
+        catcher(() -> {
+            runnable.run();
+            return null;
+        }, view, entity);
+    }
+
+    static <T extends BaseEntity> void voidCatcher(ThrowingRunnable runnable,
+            View<T> view) {
+        catcher(() -> {
+            runnable.run();
+            return null;
+        }, view);
+    }
 }
