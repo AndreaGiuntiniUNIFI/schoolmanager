@@ -1,5 +1,9 @@
 package apt.project.backend.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 
 @Entity
@@ -7,11 +11,16 @@ public class Student extends BaseEntity {
 
     private String name;
 
+    @ElementCollection
+    private List<Exam> exams;
+
     public Student() {
+        this.setExams(new ArrayList<>());
     }
 
     public Student(String name) {
         this.name = name;
+        this.setExams(new ArrayList<>());
     }
 
     public String getName() {
@@ -50,6 +59,14 @@ public class Student extends BaseEntity {
         } else if (!name.equals(other.name))
             return false;
         return true;
+    }
+
+    public List<Exam> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<Exam> exams) {
+        this.exams = exams;
     }
 
 }

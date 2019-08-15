@@ -38,7 +38,7 @@ public class CourseRepositoryTest {
     public void setUp() {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("TRUNCATE TABLE public.Course")
+        entityManager.createNativeQuery("DELETE FROM public.Course")
                 .executeUpdate();
         entityManager.getTransaction().commit();
         courseRepository = new CourseRepository(transactionManager);

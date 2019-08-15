@@ -38,7 +38,7 @@ public class StudentRepositoryTest {
     public void setUp() {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("TRUNCATE TABLE public.Student")
+        entityManager.createNativeQuery("DELETE FROM public.Student")
                 .executeUpdate();
         entityManager.getTransaction().commit();
         studentRepository = new StudentRepository(transactionManager);
@@ -140,8 +140,10 @@ public class StudentRepositoryTest {
                 existingStudent.getId());
         entityManager.getTransaction().commit();
 
-        assertThat(retrievedStudent)
-                .isEqualToComparingFieldByField(existingStudent);
+        entityManager.getTransaction().begin();
+        assertThat(retrievedStudent).isEqualTo(existingStudent);
+        // assertThat(retrievedStudent).isEqualTo(existingStudent);
+        entityManager.getTransaction().commit();
     }
 
     @Test
@@ -152,9 +154,9 @@ public class StudentRepositoryTest {
         entityManager.persist(student);
         entityManager.getTransaction().commit();
         // exercise
-        Student retrievedCourse = studentRepository.findById(student.getId());
+        Student retrievedStudent = studentRepository.findById(student.getId());
         // verify
-        assertThat(student).isEqualTo(retrievedCourse);
+        assertThat(student).isEqualTo(retrievedStudent);
     }
 
 }

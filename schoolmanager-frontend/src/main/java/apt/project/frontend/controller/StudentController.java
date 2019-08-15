@@ -1,5 +1,10 @@
 package apt.project.frontend.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.backend.repository.Repository;
 import apt.project.backend.repository.StudentRepository;
@@ -27,6 +32,12 @@ public class StudentController extends BaseController<Student> {
 
     @Override
     public void updateEntity(Student existingStudent, Student modifiedStudent) {
+
+        if (duplicatedExam(modifiedStudent.getExams()).size() > 0) {
+            view.showError("Duplicate Exams in Student: " + modifiedStudent,
+                    modifiedStudent);
+            return;
+        }
         Student studentWithNewName;
 
         studentWithNewName = ExceptionManager.catcher(
@@ -39,6 +50,14 @@ public class StudentController extends BaseController<Student> {
             return;
         }
         super.updateEntity(existingStudent, modifiedStudent);
+    }
+
+    public List<Course> duplicatedExam(List<Exam> list) {
+        return list.stream()
+                .collect(Collectors.groupingBy(Exam::getCourse,
+                        Collectors.counting()))
+                .entrySet().stream().filter(e -> e.getValue() > 1L)
+                .map(e -> e.getKey()).collect(Collectors.toList());
     }
 
 }
