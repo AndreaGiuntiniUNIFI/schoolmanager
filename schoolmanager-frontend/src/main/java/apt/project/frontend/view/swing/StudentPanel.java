@@ -44,11 +44,12 @@ public class StudentPanel extends BasePanel<Student> {
         btnDelete.addActionListener(
                 e -> controller.deleteEntity(list.getSelectedValue()));
 
+        // These lines must be put where in the actual exam panel
         examPanel.setName("examPanel");
-        // JButton btnBack = new JButton("Back");
-        // examPanel.add(btnBack);
+        JButton btnBack = new JButton("Back");
+        examPanel.add(btnBack);
         ActionListener switchPanel = e -> cardLayout.next(cardsPanel);
-        // btnBack.addActionListener(switchPanel);
+        btnBack.addActionListener(switchPanel);
 
         cardsPanel = new JPanel();
         cardsPanel.setName("cardsPanel");
