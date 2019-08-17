@@ -29,6 +29,8 @@ public class CustomDialog extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
 
+    private JTextField textField;
+
     /**
      * Launch the application.
      */
@@ -48,7 +50,7 @@ public class CustomDialog extends JDialog {
     public CustomDialog(String labelText) {
         super();
         setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        JTextField textField = new JTextField(10);
+        textField = new JTextField(10);
 
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
@@ -111,6 +113,11 @@ public class CustomDialog extends JDialog {
         contentPanel.add(textField);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
+    }
+
+    public CustomDialog(String labelText, String defaultValue) {
+        this(labelText);
+        this.textField.setText(defaultValue);
     }
 
     public void showDialog() {

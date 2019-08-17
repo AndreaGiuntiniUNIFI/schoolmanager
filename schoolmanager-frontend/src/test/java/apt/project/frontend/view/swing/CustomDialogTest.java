@@ -100,4 +100,30 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
         assertThat(customDialog.isVisible()).isFalse();
     }
 
+    @Test
+    @GUITest
+    public void testControlsInitialStatesWithDefaultValue() {
+
+        String defaultVal = "default";
+        GuiActionRunner.execute(() -> {
+            customDialog = new CustomDialog("label", defaultVal);
+        });
+
+        dialogFixture = new DialogFixture(robot(), customDialog);
+
+        customDialog.setModalityType(Dialog.ModalityType.MODELESS);
+
+        customDialog.showDialog();
+
+        dialogFixture.label(JLabelMatcher.withText("label"));
+
+        dialogFixture.textBox("labelTextField").requireEnabled()
+                .requireText(defaultVal);
+
+        dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
+
+        dialogFixture.button(JButtonMatcher.withText("Cancel"))
+                .requireEnabled();
+    }
+
 }

@@ -17,8 +17,9 @@ public class DialogManager {
     }
 
     public String manageDialog(String label, String value) {
-        // TODO Auto-generated method stub
-        return null;
+        CustomDialog dialog = new CustomDialog(label, value);
+        dialog.showDialog();
+        return dialog.getOutcome();
     }
 
     // per questo metodo serve il repository di course e fare la diff con la
