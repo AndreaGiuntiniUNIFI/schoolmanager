@@ -6,7 +6,7 @@ public interface Controller<T extends BaseEntity> {
 
     void allEntities();
 
-    void updateEntity(T existingEntity, T modifiedEntity);
+    void updateEntity(T modifiedEntity);
 
     void newEntity(T entity);
 

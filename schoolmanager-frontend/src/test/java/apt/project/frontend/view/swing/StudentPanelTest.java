@@ -1,5 +1,6 @@
 package apt.project.frontend.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -17,6 +18,7 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
@@ -126,9 +128,10 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
     public void testWhenModifyButtonIsClickedAndDialogManagerReturnsOutcomeThenControllerIsCalled() {
         String name = "name1";
         String modifiedName = "modifiedName";
+        Student student = new Student(name);
 
         GuiActionRunner.execute(() -> {
-            studentPanel.getListModel().addElement(new Student(name));
+            studentPanel.getListModel().addElement(student);
         });
 
         panelFixture.list("entityList").selectItem(0);
@@ -136,8 +139,14 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
         when(dialogManager.manageDialog("Name", name)).thenReturn(modifiedName);
 
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
-        verify(studentController).updateEntity(new Student(name),
-                new Student(modifiedName));
+
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor
+                .forClass(Student.class);
+
+        verify(studentController).updateEntity(studentCaptor.capture());
+        assertThat(studentCaptor.getValue().getName()).isEqualTo(modifiedName);
+        assertThat(studentCaptor.getValue()).isEqualTo(student);
+
     }
 
     @Test

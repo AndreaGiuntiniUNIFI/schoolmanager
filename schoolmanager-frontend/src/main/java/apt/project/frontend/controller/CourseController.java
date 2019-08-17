@@ -25,7 +25,7 @@ public class CourseController extends BaseController<Course> {
     }
 
     @Override
-    public void updateEntity(Course existingCourse, Course modifiedCourse) {
+    public void updateEntity(Course modifiedCourse) {
         Course courseWithNewTitle;
 
         courseWithNewTitle = ExceptionManager.catcher(
@@ -38,7 +38,7 @@ public class CourseController extends BaseController<Course> {
             return;
         }
 
-        super.updateEntity(existingCourse, modifiedCourse);
+        super.updateEntity(modifiedCourse);
     }
 
 }

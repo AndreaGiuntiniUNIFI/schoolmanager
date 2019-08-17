@@ -3,15 +3,16 @@ package apt.project.backend.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Student extends BaseEntity {
 
     private String name;
 
-    @ElementCollection
+    @OneToMany(cascade = { CascadeType.ALL })
     private List<Exam> exams;
 
     public Student() {
@@ -21,6 +22,19 @@ public class Student extends BaseEntity {
     public Student(String name) {
         this.name = name;
         this.setExams(new ArrayList<>());
+    }
+
+    public void merge(Student entity) {
+        if (entity.getName() != null) {
+            this.name = entity.getName();
+        }
+        if (!entity.getExams().isEmpty()) {
+            this.exams = entity.getExams();
+        }
+    }
+
+    public void addExam(Exam exam) {
+        this.exams.add(exam);
     }
 
     public String getName() {

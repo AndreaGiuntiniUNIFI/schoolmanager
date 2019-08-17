@@ -191,27 +191,25 @@ public class CourseControllerTest {
         when(courseRepository.findById((Long) any()))
                 .thenReturn(existingCourse);
         // exercise
-        courseController.updateEntity(existingCourse, modifiedCourse);
+        courseController.updateEntity(modifiedCourse);
         // verify
         InOrder inOrder = inOrder(courseRepository, courseView);
         inOrder.verify(courseRepository).update(modifiedCourse);
-        inOrder.verify(courseView).entityUpdated(existingCourse,
-                modifiedCourse);
+        inOrder.verify(courseView).entityUpdated(modifiedCourse);
     }
 
     @Test
     public void testUpdateEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
-        Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
         when(courseRepository.findByTitle("modifiedTitle")).thenReturn(null);
         when(courseRepository.findById((Long) any())).thenReturn(null);
         // exercise
-        courseController.updateEntity(existingCourse, modifiedCourse);
+        courseController.updateEntity(modifiedCourse);
         // verify
-        verify(courseView).showError("No existing entity: " + existingCourse,
-                existingCourse);
+        verify(courseView).showError("No existing entity: " + modifiedCourse,
+                modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -220,16 +218,15 @@ public class CourseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course("modifiedTitle");
         when(courseRepository.findByTitle("modifiedTitle")).thenReturn(null);
         when(courseRepository.findById((Long) any()))
                 .thenThrow(new RepositoryException(message));
         // exercise
-        courseController.updateEntity(existingCourse, modifiedCourse);
+        courseController.updateEntity(modifiedCourse);
         // verify
         verify(courseView).showError("Repository exception: " + message,
-                existingCourse);
+                modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -246,10 +243,10 @@ public class CourseControllerTest {
         doThrow(new RepositoryException(message)).when(courseRepository)
                 .update(modifiedCourse);
         // exercise
-        courseController.updateEntity(existingCourse, modifiedCourse);
+        courseController.updateEntity(modifiedCourse);
         // verify
         verify(courseView).showError("Repository exception: " + message,
-                existingCourse);
+                modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -259,13 +256,12 @@ public class CourseControllerTest {
         // setup
 
         String modifiedTitle = "modifiedTitle";
-        Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course(modifiedTitle);
         when(courseRepository.findByTitle(modifiedTitle))
                 .thenReturn(new Course(modifiedTitle));
 
         // exercise
-        courseController.updateEntity(existingCourse, modifiedCourse);
+        courseController.updateEntity(modifiedCourse);
         // verify
         verify(courseView).showError(
                 "Already existing entity: " + modifiedCourse, modifiedCourse);
@@ -278,13 +274,12 @@ public class CourseControllerTest {
         // setup
         String message = "message";
         String modifiedTitle = "modifiedTitle";
-        Course existingCourse = new Course("existingTitle");
         Course modifiedCourse = new Course(modifiedTitle);
 
         when(courseRepository.findByTitle(modifiedTitle))
                 .thenThrow(new RepositoryException(message));
         // exercise
-        courseController.updateEntity(existingCourse, modifiedCourse);
+        courseController.updateEntity(modifiedCourse);
         // verify
         verify(courseView).showError("Repository exception: " + message,
                 modifiedCourse);

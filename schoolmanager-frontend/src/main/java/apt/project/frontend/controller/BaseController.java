@@ -21,17 +21,17 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
     }
 
     @Override
-    public void updateEntity(T existingEntity, T modifiedEntity) {
+    public void updateEntity(T modifiedEntity) {
         if (ExceptionManager.catcher(
-                () -> repository.findById(existingEntity.getId()), view,
-                existingEntity) == null) {
-            view.showError("No existing entity: " + existingEntity,
-                    existingEntity);
+                () -> repository.findById(modifiedEntity.getId()), view,
+                modifiedEntity) == null) {
+            view.showError("No existing entity: " + modifiedEntity,
+                    modifiedEntity);
             return;
         }
         ExceptionManager.voidCatcher(() -> repository.update(modifiedEntity),
-                view, existingEntity);
-        view.entityUpdated(existingEntity, modifiedEntity);
+                view, modifiedEntity);
+        view.entityUpdated(modifiedEntity);
     }
 
     @Override

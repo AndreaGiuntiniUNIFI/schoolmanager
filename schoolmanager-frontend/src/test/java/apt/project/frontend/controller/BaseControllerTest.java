@@ -37,6 +37,20 @@ public class BaseControllerTest {
     private class TestEntity extends BaseEntity {
         // This entity has the only purpose to represent a concrete class
         // extending BaseEntity
+        private int aField;
+
+        public TestEntity() {
+        }
+
+        public TestEntity(int field) {
+            aField = field;
+        }
+
+        @Override
+        public String toString() {
+            return "TestEntity [aField=" + aField + "]";
+        }
+
     };
 
     @Before
@@ -155,29 +169,28 @@ public class BaseControllerTest {
     @Test
     public void testUpdateEntityWhenEntityExists() throws RepositoryException {
         // setup
-        TestEntity existingEntity = new TestEntity();
-        TestEntity modifiedEntity = new TestEntity();
+        TestEntity existingEntity = new TestEntity(1);
+        TestEntity modifiedEntity = new TestEntity(2);
         when(repository.findById((Long) any())).thenReturn(existingEntity);
         // exercise
-        controller.updateEntity(existingEntity, modifiedEntity);
+        controller.updateEntity(modifiedEntity);
         // verify
         InOrder inOrder = inOrder(repository, view);
         inOrder.verify(repository).update(modifiedEntity);
-        inOrder.verify(view).entityUpdated(existingEntity, modifiedEntity);
+        inOrder.verify(view).entityUpdated(modifiedEntity);
     }
 
     @Test
     public void testUpdateEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
-        TestEntity existingEntity = new TestEntity();
-        TestEntity modifiedEntity = new TestEntity();
+        TestEntity modifiedEntity = new TestEntity(2);
         when(repository.findById((Long) any())).thenReturn(null);
         // exercise
-        controller.updateEntity(existingEntity, modifiedEntity);
+        controller.updateEntity(modifiedEntity);
         // verify
-        verify(view).showError("No existing entity: " + existingEntity,
-                existingEntity);
+        verify(view).showError("No existing entity: " + modifiedEntity,
+                modifiedEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
     }
 
@@ -186,15 +199,14 @@ public class BaseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        TestEntity existingEntity = new TestEntity();
         TestEntity modifiedEntity = new TestEntity();
         when(repository.findById((Long) any()))
                 .thenThrow(new RepositoryException(message));
         // exercise
-        controller.updateEntity(existingEntity, modifiedEntity);
+        controller.updateEntity(modifiedEntity);
         // verify
         verify(view).showError("Repository exception: " + message,
-                existingEntity);
+                modifiedEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
     }
 
@@ -203,13 +215,13 @@ public class BaseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        TestEntity existingEntity = new TestEntity();
-        TestEntity modifiedEntity = new TestEntity();
+        TestEntity existingEntity = new TestEntity(1);
+        TestEntity modifiedEntity = new TestEntity(2);
         when(repository.findById((Long) any())).thenReturn(existingEntity);
         doThrow(new RepositoryException(message)).when(repository)
                 .update(modifiedEntity);
         // exercise
-        controller.updateEntity(existingEntity, modifiedEntity);
+        controller.updateEntity(modifiedEntity);
         // verify
         verify(view).showError("Repository exception: " + message,
                 existingEntity);

@@ -32,7 +32,7 @@ public class StudentController extends BaseController<Student> {
     }
 
     @Override
-    public void updateEntity(Student existingStudent, Student modifiedStudent) {
+    public void updateEntity(Student modifiedStudent) {
 
         if (!duplicatedExam(modifiedStudent.getExams()).isEmpty()) {
             view.showError("Duplicate Exams in Student: " + modifiedStudent,
@@ -50,7 +50,7 @@ public class StudentController extends BaseController<Student> {
                     modifiedStudent);
             return;
         }
-        super.updateEntity(existingStudent, modifiedStudent);
+        super.updateEntity(modifiedStudent);
     }
 
     public List<Course> duplicatedExam(List<Exam> list) {

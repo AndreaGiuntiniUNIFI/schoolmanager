@@ -8,9 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 
 public class StudentPanel extends BasePanel<Student> {
+
+    private StudentController controller;
 
     private JButton btnOpen;
     private JPanel cardsPanel;
@@ -28,7 +31,7 @@ public class StudentPanel extends BasePanel<Student> {
         btnAdd.addActionListener(e -> {
             String name = dialogManager.manageDialog("Name");
             if (name != null) {
-                controller.newEntity(new Student(name));
+                getController().newEntity(new Student(name));
             }
         });
 
@@ -37,7 +40,8 @@ public class StudentPanel extends BasePanel<Student> {
             String name = dialogManager.manageDialog("Name",
                     selectedStudent.getName());
             if (name != null) {
-                controller.updateEntity(selectedStudent, new Student(name));
+                selectedStudent.merge(new Student(name));
+                controller.updateEntity(selectedStudent);
             }
         });
 
@@ -79,6 +83,14 @@ public class StudentPanel extends BasePanel<Student> {
 
     public JPanel getExamPanel() {
         return examPanel;
+    }
+
+    public StudentController getController() {
+        return controller;
+    }
+
+    public void setController(StudentController controller) {
+        this.controller = controller;
     }
 
 }
