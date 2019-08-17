@@ -17,10 +17,10 @@ public class StudentPanel extends BasePanel<Student> {
 
     private JButton btnOpen;
     private JPanel cardsPanel;
-    private JPanel examPanel;
+    private ExamPanel examPanel;
     private CardLayout cardLayout;
 
-    public StudentPanel(JPanel studentPanel, JPanel examPanel,
+    public StudentPanel(JPanel studentPanel, ExamPanel examPanel,
             MainFrame parentMainFrame, DialogManager dialogManager,
             String headerText) {
 
@@ -48,19 +48,15 @@ public class StudentPanel extends BasePanel<Student> {
         btnDelete.addActionListener(
                 e -> controller.deleteEntity(list.getSelectedValue()));
 
-        // These lines must be put where in the actual exam panel
-        examPanel.setName("examPanel");
-        JButton btnBack = new JButton("Back");
-        examPanel.add(btnBack);
         ActionListener switchPanel = e -> cardLayout.next(cardsPanel);
-        btnBack.addActionListener(switchPanel);
 
         cardsPanel = new JPanel();
         cardsPanel.setName("cardsPanel");
         cardsPanel.setLayout(new CardLayout());
         cardsPanel.add(studentPanel);
         cardLayout = (CardLayout) (cardsPanel.getLayout());
-        cardsPanel.add(examPanel);
+        cardsPanel.add(examPanel.getPanel());
+        examPanel.getBtnBack().addActionListener(switchPanel);
 
         btnOpen = new JButton("Open");
         btnOpen.setEnabled(false);
@@ -68,12 +64,14 @@ public class StudentPanel extends BasePanel<Student> {
         gbc_btnOpen.gridx = 3;
         gbc_btnOpen.gridy = 1;
         studentPanel.add(btnOpen, gbc_btnOpen);
-        btnOpen.addActionListener(switchPanel);
-
-        list.addListSelectionListener(e -> {
-            boolean enable = list.getSelectedIndex() != -1;
-            btnOpen.setEnabled(enable);
+        btnOpen.addActionListener(e -> {
+            examPanel.setStudent(list.getSelectedValue());
+            examPanel.showAll();
+            switchPanel.actionPerformed(e);
         });
+
+        list.addListSelectionListener(
+                e -> btnOpen.setEnabled(list.getSelectedIndex() != -1));
 
     }
 
@@ -82,7 +80,7 @@ public class StudentPanel extends BasePanel<Student> {
     }
 
     public JPanel getExamPanel() {
-        return examPanel;
+        return examPanel.getPanel();
     }
 
     public StudentController getController() {

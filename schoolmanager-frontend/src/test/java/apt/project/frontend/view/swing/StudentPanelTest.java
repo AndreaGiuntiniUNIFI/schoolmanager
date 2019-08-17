@@ -2,6 +2,7 @@ package apt.project.frontend.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,8 @@ import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
@@ -31,15 +34,17 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
     private StudentPanel studentPanel;
 
-    private JPanel internalPanel;
+    private JPanel internalStudentPanel;
     private JPanelFixture panelFixture;
     private JFrame frame;
     private DialogManager dialogManager;
     private StudentController studentController;
     private MainFrame mainFrame;
-    private JPanel examPanel;
+    private JPanel internalExamPanel;
 
     private JPanel cardsPanel;
+
+    private ExamPanel examPanel;
 
     @Override
     protected void onSetUp() {
@@ -49,10 +54,13 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
         studentController = mock(StudentController.class);
 
         GuiActionRunner.execute(() -> {
-            internalPanel = new JPanel();
-            examPanel = new JPanel();
-            studentPanel = new StudentPanel(internalPanel, examPanel, mainFrame,
-                    dialogManager, HEADER_TEXT);
+            internalExamPanel = new JPanel();
+            examPanel = spy(new ExamPanel(internalExamPanel, mainFrame,
+                    dialogManager, "List of Exams"));
+
+            internalStudentPanel = new JPanel();
+            studentPanel = new StudentPanel(internalStudentPanel, examPanel,
+                    mainFrame, dialogManager, HEADER_TEXT);
             studentPanel.setController(studentController);
             frame = new JFrame();
             cardsPanel = studentPanel.getCardsPanel();
@@ -61,7 +69,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
             frame.setVisible(true);
         });
 
-        panelFixture = new JPanelFixture(robot(), internalPanel);
+        panelFixture = new JPanelFixture(robot(), internalStudentPanel);
     }
 
     @Test
@@ -192,17 +200,22 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testWhenOpenButtonIsClickedExamPanelIsShown() {
         // setup
-        String name = "name1";
+        Student student1 = new Student("name1");
+        Student student2 = new Student("name2");
         GuiActionRunner.execute(() -> {
-            studentPanel.getListModel().addElement(new Student(name));
+            studentPanel.getListModel().addElement(student1);
+            studentPanel.getListModel().addElement(student2);
         });
-        panelFixture.list("entityList").selectItem(0);
+        panelFixture.list("entityList").selectItem(1);
         JPanelFixture cardsFixture = new JPanelFixture(robot(), cardsPanel);
 
         // exercise
         panelFixture.button(JButtonMatcher.withText("Open")).click();
 
         // verify
+        InOrder inOrder = Mockito.inOrder(examPanel);
+        inOrder.verify(examPanel).setStudent(student2);
+        inOrder.verify(examPanel).showAll();
         cardsFixture.panel("examPanel").requireVisible();
         panelFixture.requireNotVisible();
     }

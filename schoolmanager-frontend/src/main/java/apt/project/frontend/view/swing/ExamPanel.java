@@ -1,5 +1,9 @@
 package apt.project.frontend.view.swing;
 
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import apt.project.backend.domain.Exam;
@@ -11,11 +15,15 @@ public class ExamPanel extends BasePanel<Exam> {
 
     private StudentController controller;
     private Student student;
+    private JButton btnBack;
 
-    public ExamPanel(JPanel internalPanel, MainFrame mainFrame,
+    public ExamPanel(JPanel examPanel, MainFrame mainFrame,
             DialogManager dialogManager, String headerText) {
-        super(internalPanel, mainFrame, dialogManager, headerText);
+        super(examPanel, mainFrame, dialogManager, headerText);
 
+        // TODO: se non ci sono corsi non si dovrebbero poter aggiungere esami
+        // TODO: il titolo dei dialog dovrebbe fare riferimento all'esame
+        // selezionato
         btnAdd.addActionListener(e -> {
             Exam exam = dialogManager.manageDialogExam(student.getExams());
             if (exam != null) {
@@ -41,6 +49,15 @@ public class ExamPanel extends BasePanel<Exam> {
             }
         });
 
+        examPanel.setName("examPanel");
+        btnBack = new JButton("Back");
+        examPanel.add(btnBack);
+        GridBagConstraints gbc_btnBack = new GridBagConstraints();
+        gbc_btnBack.insets = new Insets(0, 5, 0, 0);
+        gbc_btnBack.gridx = 3;
+        gbc_btnBack.gridy = 1;
+        examPanel.add(btnBack, gbc_btnBack);
+
     }
 
     public void showAll() {
@@ -53,5 +70,9 @@ public class ExamPanel extends BasePanel<Exam> {
 
     public void setController(StudentController controller) {
         this.controller = controller;
+    }
+
+    public JButton getBtnBack() {
+        return btnBack;
     }
 }

@@ -87,6 +87,12 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
+    public void testControlsInitialStates() {
+        panelFixture.button(JButtonMatcher.withText("Back")).requireEnabled();
+    }
+
+    @Test
+    @GUITest
     public void testWhenAddButtonIsClickedDialogManagerIsCalled() {
         // setup
         Course course1 = new Course("course1");
