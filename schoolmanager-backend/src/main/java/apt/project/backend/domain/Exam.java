@@ -1,15 +1,15 @@
 package apt.project.backend.domain;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-@Embeddable
-public class Exam {
+@Entity
+public class Exam extends BaseEntity {
 
     @ManyToOne
     private Course course;
 
-    private int rate;
+    private Integer rate;
 
     public Exam() {
 
@@ -17,6 +17,17 @@ public class Exam {
 
     public Exam(Course course) {
         this.course = course;
+    }
+
+    public Exam(Course course, Integer rate) {
+        this.course = course;
+        this.rate = rate;
+    }
+
+    public void merge(Exam entity) {
+        if (entity.getRate() != null) {
+            this.rate = entity.getRate();
+        }
     }
 
     @Override
@@ -52,11 +63,11 @@ public class Exam {
         this.course = course;
     }
 
-    public int getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 

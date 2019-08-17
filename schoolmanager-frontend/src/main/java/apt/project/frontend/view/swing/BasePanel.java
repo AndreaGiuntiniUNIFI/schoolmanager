@@ -14,13 +14,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import apt.project.backend.domain.BaseEntity;
-import apt.project.frontend.controller.Controller;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.View;
 
 public class BasePanel<T extends BaseEntity> implements View<T> {
-
-    protected Controller<T> controller;
 
     private JPanel panel;
     private MainFrame parentMainFrame;
@@ -114,22 +111,14 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
     }
 
     @Override
-    public void entityUpdated(T existingEntity, T modifiedEntity) {
-        listModel.set(listModel.indexOf(existingEntity), modifiedEntity);
+    public void entityUpdated(T modifiedEntity) {
+        listModel.set(listModel.indexOf(modifiedEntity), modifiedEntity);
         parentMainFrame.resetErrorLabel();
     }
 
     @Override
     public void showError(String label, T entity) {
         parentMainFrame.displayErrorLabel(label + ": " + entity);
-    }
-
-    public Controller<T> getController() {
-        return controller;
-    }
-
-    public void setController(Controller<T> controller) {
-        this.controller = controller;
     }
 
     public JPanel getPanel() {

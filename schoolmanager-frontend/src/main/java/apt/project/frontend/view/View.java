@@ -12,8 +12,8 @@ public interface View<T extends BaseEntity> {
 
     void entityDeleted(T entity);
 
-    void entityUpdated(T existingEntity, T modifiedEntity);
-
     void showError(String string, T entity);
+
+    void entityUpdated(T modifiedEntity);
 
 }

@@ -16,34 +16,28 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
 
     @Override
     public void allEntities() {
-        ExceptionManager.catcher(() -> {
-            view.showAll(repository.findAll());
-            return null;
-        }, view);
+        ExceptionManager.voidCatcher(() -> view.showAll(repository.findAll()),
+                view);
     }
 
     @Override
-    public void updateEntity(T existingEntity, T modifiedEntity) {
+    public void updateEntity(T modifiedEntity) {
         if (ExceptionManager.catcher(
-                () -> repository.findById(existingEntity.getId()), view,
-                existingEntity) == null) {
-            view.showError("No existing entity: " + existingEntity,
-                    existingEntity);
+                () -> repository.findById(modifiedEntity.getId()), view,
+                modifiedEntity) == null) {
+            view.showError("No existing entity: " + modifiedEntity,
+                    modifiedEntity);
             return;
         }
-        ExceptionManager.catcher(() -> {
-            repository.update(modifiedEntity);
-            return null;
-        }, view, existingEntity);
-        view.entityUpdated(existingEntity, modifiedEntity);
+        ExceptionManager.voidCatcher(() -> repository.update(modifiedEntity),
+                view, modifiedEntity);
+        view.entityUpdated(modifiedEntity);
     }
 
     @Override
     public void newEntity(T entity) {
-        ExceptionManager.catcher(() -> {
-            repository.save(entity);
-            return null;
-        }, view, entity);
+        ExceptionManager.voidCatcher(() -> repository.save(entity), view,
+                entity);
         view.entityAdded(entity);
     }
 
@@ -56,10 +50,8 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
                     entityToDelete);
             return;
         }
-        ExceptionManager.catcher(() -> {
-            repository.delete(entityToDelete);
-            return null;
-        }, view, entityToDelete);
+        ExceptionManager.voidCatcher(() -> repository.delete(entityToDelete),
+                view, entityToDelete);
         view.entityDeleted(entityToDelete);
     }
 

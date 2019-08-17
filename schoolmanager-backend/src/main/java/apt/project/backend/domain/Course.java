@@ -22,6 +22,12 @@ public class Course extends BaseEntity {
         this.title = title;
     }
 
+    public void merge(Course entity) {
+        if (entity.getTitle() != null) {
+            this.title = entity.getTitle();
+        }
+    }
+
     @Override
     public String toString() {
         return "Course [title=" + title + "]";

@@ -3,9 +3,12 @@ package apt.project.frontend.view.swing;
 import javax.swing.JPanel;
 
 import apt.project.backend.domain.Course;
+import apt.project.frontend.controller.CourseController;
 import apt.project.frontend.view.MainFrame;
 
 public class CoursePanel extends BasePanel<Course> {
+
+    private CourseController controller;
 
     public CoursePanel(JPanel panel, MainFrame parentMainFrame,
             DialogManager dialogManager, String headerText) {
@@ -15,7 +18,7 @@ public class CoursePanel extends BasePanel<Course> {
         btnAdd.addActionListener(e -> {
             String title = dialogManager.manageDialog("Title");
             if (title != null) {
-                controller.newEntity(new Course(title));
+                getController().newEntity(new Course(title));
             }
         });
 
@@ -24,12 +27,21 @@ public class CoursePanel extends BasePanel<Course> {
             String title = dialogManager.manageDialog("Title",
                     selectedCourse.getTitle());
             if (title != null) {
-                controller.updateEntity(selectedCourse, new Course(title));
+                selectedCourse.merge(new Course(title));
+                getController().updateEntity(selectedCourse);
             }
         });
 
         btnDelete.addActionListener(
-                e -> controller.deleteEntity(list.getSelectedValue()));
+                e -> getController().deleteEntity(list.getSelectedValue()));
+    }
+
+    public CourseController getController() {
+        return controller;
+    }
+
+    public void setController(CourseController controller) {
+        this.controller = controller;
     }
 
 }

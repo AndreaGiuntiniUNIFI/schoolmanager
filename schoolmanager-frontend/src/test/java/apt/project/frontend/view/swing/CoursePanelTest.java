@@ -1,5 +1,6 @@
 package apt.project.frontend.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -16,6 +17,7 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
@@ -115,9 +117,10 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
     public void testWhenModifyButtonIsClickedAndDialogManagerReturnsOutcomeThenControllerIsCalled() {
         String title = "title1";
         String modifiedTitle = "modifiedTitle";
+        Course course = new Course(title);
 
         GuiActionRunner.execute(() -> {
-            coursePanel.getListModel().addElement(new Course(title));
+            coursePanel.getListModel().addElement(course);
         });
 
         panelFixture.list("entityList").selectItem(0);
@@ -126,8 +129,14 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
                 .thenReturn(modifiedTitle);
 
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
-        verify(courseController).updateEntity(new Course(title),
-                new Course(modifiedTitle));
+
+        ArgumentCaptor<Course> courseCaptor = ArgumentCaptor
+                .forClass(Course.class);
+
+        verify(courseController).updateEntity(courseCaptor.capture());
+        assertThat(courseCaptor.getValue().getTitle()).isEqualTo(modifiedTitle);
+        assertThat(courseCaptor.getValue()).isEqualTo(course);
+
     }
 
     @Test

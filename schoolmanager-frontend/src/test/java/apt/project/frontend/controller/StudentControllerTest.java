@@ -192,12 +192,11 @@ public class StudentControllerTest {
         when(studentRepository.findById((Long) any()))
                 .thenReturn(existingStudent);
         // exercise
-        studentController.updateEntity(existingStudent, modifiedStudent);
+        studentController.updateEntity(modifiedStudent);
         // verify
         InOrder inOrder = inOrder(studentRepository, studentView);
         inOrder.verify(studentRepository).update(modifiedStudent);
-        inOrder.verify(studentView).entityUpdated(existingStudent,
-                modifiedStudent);
+        inOrder.verify(studentView).entityUpdated(modifiedStudent);
     }
 
     @Test
@@ -205,15 +204,14 @@ public class StudentControllerTest {
             throws RepositoryException {
         // setup
         String modifiedName = "Jane";
-        Student existingStudent = new Student("John");
         Student modifiedStudent = new Student(modifiedName);
         when(studentRepository.findByName(modifiedName)).thenReturn(null);
         when(studentRepository.findById((Long) any())).thenReturn(null);
         // exercise
-        studentController.updateEntity(existingStudent, modifiedStudent);
+        studentController.updateEntity(modifiedStudent);
         // verify
-        verify(studentView).showError("No existing entity: " + existingStudent,
-                existingStudent);
+        verify(studentView).showError("No existing entity: " + modifiedStudent,
+                modifiedStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
@@ -223,16 +221,15 @@ public class StudentControllerTest {
         // setup
         String message = "message";
         String modifiedName = "Jane";
-        Student existingStudent = new Student("John");
         Student modifiedStudent = new Student(modifiedName);
         when(studentRepository.findByName(modifiedName)).thenReturn(null);
         when(studentRepository.findById((Long) any()))
                 .thenThrow(new RepositoryException(message));
         // exercise
-        studentController.updateEntity(existingStudent, modifiedStudent);
+        studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError("Repository exception: " + message,
-                existingStudent);
+                modifiedStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
@@ -250,10 +247,10 @@ public class StudentControllerTest {
         doThrow(new RepositoryException(message)).when(studentRepository)
                 .update(modifiedStudent);
         // exercise
-        studentController.updateEntity(existingStudent, modifiedStudent);
+        studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError("Repository exception: " + message,
-                existingStudent);
+                modifiedStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
@@ -263,13 +260,12 @@ public class StudentControllerTest {
         // setup
 
         String modifiedName = "Jane";
-        Student existingStudent = new Student("John");
         Student modifiedStudent = new Student(modifiedName);
         when(studentRepository.findByName(modifiedName))
                 .thenReturn(new Student(modifiedName));
 
         // exercise
-        studentController.updateEntity(existingStudent, modifiedStudent);
+        studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError(
                 "Already existing entity: " + modifiedStudent, modifiedStudent);
@@ -282,13 +278,12 @@ public class StudentControllerTest {
         // setup
         String message = "message";
         String modifiedTitle = "Jane";
-        Student existingCourse = new Student("John");
         Student modifiedCourse = new Student(modifiedTitle);
 
         when(studentRepository.findByName(modifiedTitle))
                 .thenThrow(new RepositoryException(message));
         // exercise
-        studentController.updateEntity(existingCourse, modifiedCourse);
+        studentController.updateEntity(modifiedCourse);
         // verify
         verify(studentView).showError("Repository exception: " + message,
                 modifiedCourse);
@@ -314,7 +309,7 @@ public class StudentControllerTest {
                 .thenReturn(existingStudent);
 
         // exercise
-        studentController.updateEntity(existingStudent, modifiedStudent);
+        studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError(
                 "Duplicate Exams in Student: " + modifiedStudent,

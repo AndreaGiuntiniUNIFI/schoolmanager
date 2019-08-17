@@ -25,20 +25,20 @@ public class CourseController extends BaseController<Course> {
     }
 
     @Override
-    public void updateEntity(Course existingCourse, Course modifiedCourse) {
-        Course CourseWithNewTitle;
+    public void updateEntity(Course modifiedCourse) {
+        Course courseWithNewTitle;
 
-        CourseWithNewTitle = ExceptionManager.catcher(
+        courseWithNewTitle = ExceptionManager.catcher(
                 () -> ((CourseRepository) repository)
                         .findByTitle(modifiedCourse.getTitle()),
                 view, modifiedCourse);
-        if (CourseWithNewTitle != null) {
+        if (courseWithNewTitle != null) {
             view.showError("Already existing entity: " + modifiedCourse,
                     modifiedCourse);
             return;
         }
 
-        super.updateEntity(existingCourse, modifiedCourse);
+        super.updateEntity(modifiedCourse);
     }
 
 }
