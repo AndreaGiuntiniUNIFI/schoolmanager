@@ -24,6 +24,23 @@ public class ExamPanel extends BasePanel<Exam> {
             }
         });
 
+        btnDelete.addActionListener(e -> {
+            student.getExams().remove(list.getSelectedIndex());
+            controller.updateEntity(student);
+        });
+
+        btnModify.addActionListener(e -> {
+            Exam selectedExam = list.getSelectedValue();
+            String rate = dialogManager.manageDialog("Rate",
+                    selectedExam.getRate().toString());
+            if (rate != null) {
+                Exam exameToMerge = new Exam();
+                exameToMerge.setRate(Integer.parseInt(rate));
+                selectedExam.merge(exameToMerge);
+                controller.updateEntity(student);
+            }
+        });
+
     }
 
     public void showAll() {

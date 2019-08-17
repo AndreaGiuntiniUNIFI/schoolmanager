@@ -159,4 +159,130 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         verifyZeroInteractions(studentController);
     }
 
+    @Test
+    @GUITest
+    public void testWhenDeleteButtonIsClickedThenControllerIsCalled() {
+        // setUp
+        Course course1 = new Course("course1");
+        Exam exam1 = new Exam(course1, 28);
+        Course course2 = new Course("course2");
+        Exam exam2 = new Exam(course2, 24);
+        List<Exam> examList = new ArrayList<>(asList(exam1, exam2));
+
+        student.setExams(examList);
+        examPanel.setStudent(student);
+
+        GuiActionRunner.execute(() -> {
+            examPanel.getListModel().addElement(exam1);
+            examPanel.getListModel().addElement(exam2);
+        });
+
+        panelFixture.list("entityList").selectItem(1);
+
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Delete")).click();
+
+        // verify
+        List<Exam> modifiedList = new ArrayList<Exam>(asList(exam1));
+
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor
+                .forClass(Student.class);
+
+        verify(studentController).updateEntity(studentCaptor.capture());
+        assertThat(studentCaptor.getValue().getExams())
+                .containsAll(modifiedList);
+        assertThat(studentCaptor.getValue()).isEqualTo(student);
+
+    }
+
+    @Test
+    @GUITest
+    public void testWhenModifyButtonIsClickedDialogManagerIsCalled() {
+        // setUp
+        Course course1 = new Course("course1");
+        Integer rate = 28;
+        Exam exam1 = new Exam(course1, rate);
+        List<Exam> examList = new ArrayList<>(asList(exam1));
+
+        student.setExams(examList);
+        examPanel.setStudent(student);
+
+        GuiActionRunner.execute(() -> {
+            examPanel.getListModel().addElement(exam1);
+        });
+
+        panelFixture.list("entityList").selectItem(0);
+
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+
+        // verify
+        verify(dialogManager).manageDialog("Rate", rate.toString());
+    }
+
+    @Test
+    @GUITest
+    public void testWhenModifyButtonIsClickedAndDialogManagerReturnsOutcomeThenControllerIsCalled() {
+        // setUp
+        Course course1 = new Course("course1");
+        Integer rate = 28;
+        Integer modifiedRate = 30;
+        Exam exam1 = new Exam(course1, rate);
+        List<Exam> examList = new ArrayList<>(asList(exam1));
+
+        student.setExams(examList);
+        examPanel.setStudent(student);
+
+        GuiActionRunner.execute(() -> {
+            examPanel.getListModel().addElement(exam1);
+        });
+
+        panelFixture.list("entityList").selectItem(0);
+
+        when(dialogManager.manageDialog("Rate", rate.toString()))
+                .thenReturn(modifiedRate.toString());
+
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+
+        // verify
+        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor
+                .forClass(Student.class);
+
+        verify(studentController).updateEntity(studentCaptor.capture());
+
+        assertThat(studentCaptor.getValue().getExams().get(0).getRate())
+                .isEqualTo(modifiedRate);
+        assertThat(studentCaptor.getValue().getExams().get(0).getCourse())
+                .isEqualTo(course1);
+    }
+
+    @Test
+    @GUITest
+    public void testWhenModifyButtonIsClickedAndDialogManagerReturnsNullThenControllerIsNotCalled() {
+        // setUp
+        Course course1 = new Course("course1");
+        Integer rate = 28;
+        Exam exam1 = new Exam(course1, rate);
+        List<Exam> examList = new ArrayList<>(asList(exam1));
+
+        student.setExams(examList);
+        examPanel.setStudent(student);
+
+        GuiActionRunner.execute(() -> {
+            examPanel.getListModel().addElement(exam1);
+        });
+
+        panelFixture.list("entityList").selectItem(0);
+
+        when(dialogManager.manageDialog("Rate", rate.toString()))
+                .thenReturn(null);
+
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+
+        // verify
+        verifyZeroInteractions(studentController);
+    }
+
 }
