@@ -24,13 +24,9 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
         GuiActionRunner.execute(() -> {
             customDialog = new CustomDialog();
         });
-
         dialogFixture = new DialogFixture(robot(), customDialog);
-
         customDialog.setModalityType(Dialog.ModalityType.MODELESS);
-
         customDialog.showDialog();
-
     }
 
     @Override
