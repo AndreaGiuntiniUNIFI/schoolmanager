@@ -2,6 +2,7 @@ package apt.project.frontend.view.swing;
 
 import java.util.List;
 
+import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
 
 public class DialogManager {
@@ -24,7 +25,7 @@ public class DialogManager {
 
     // per questo metodo serve il repository di course e fare la diff con la
     // lista che viene passata (in realta è dialog che deve farlo)
-    public Exam manageDialogExam(List<Exam> asList) {
+    public Exam manageDialogExam(List<Course> exams) {
         // TODO Auto-generated method stub
         return null;
     }

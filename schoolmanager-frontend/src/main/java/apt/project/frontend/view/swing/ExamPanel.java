@@ -2,6 +2,7 @@ package apt.project.frontend.view.swing;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -25,7 +26,9 @@ public class ExamPanel extends BasePanel<Exam> {
         // TODO: il titolo dei dialog dovrebbe fare riferimento all'esame
         // selezionato
         btnAdd.addActionListener(e -> {
-            Exam exam = dialogManager.manageDialogExam(student.getExams());
+            Exam exam = dialogManager
+                    .manageDialogExam(student.getExams().stream()
+                            .map(Exam::getCourse).collect(Collectors.toList()));
             if (exam != null) {
                 student.addExam(exam);
                 controller.updateEntity(student);
