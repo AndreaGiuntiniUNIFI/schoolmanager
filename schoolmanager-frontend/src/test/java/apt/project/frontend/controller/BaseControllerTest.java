@@ -59,7 +59,7 @@ public class BaseControllerTest {
     }
 
     @Test
-    public void testAllEntitiesShouldCallView() throws RepositoryException {
+    public void testAllEntities() throws RepositoryException {
         // setup
         List<BaseEntity> entities = asList(new TestEntity());
         when(repository.findAll()).thenReturn(entities);
@@ -79,6 +79,7 @@ public class BaseControllerTest {
         controller.allEntities();
         // verify
         verify(view).showError("Repository exception: " + message, null);
+        verifyNoMoreInteractions(view);
     }
 
     @Test
@@ -104,6 +105,7 @@ public class BaseControllerTest {
         controller.newEntity(entity);
         // verify
         verify(view).showError("Repository exception: " + message, entity);
+        verifyNoMoreInteractions(view);
     }
 
     @Test
@@ -147,6 +149,7 @@ public class BaseControllerTest {
         verify(view).showError("Repository exception: " + message,
                 entityToDelete);
         verifyNoMoreInteractions(ignoreStubs(repository));
+        verifyNoMoreInteractions(view);
     }
 
     @Test
@@ -164,6 +167,7 @@ public class BaseControllerTest {
         verify(view).showError("Repository exception: " + message,
                 entityToDelete);
         verifyNoMoreInteractions(ignoreStubs(repository));
+        verifyNoMoreInteractions(view);
     }
 
     @Test
@@ -208,6 +212,7 @@ public class BaseControllerTest {
         verify(view).showError("Repository exception: " + message,
                 modifiedEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
+        verifyNoMoreInteractions(view);
     }
 
     @Test
@@ -226,6 +231,7 @@ public class BaseControllerTest {
         verify(view).showError("Repository exception: " + message,
                 existingEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
+        verifyNoMoreInteractions(view);
     }
 
 }

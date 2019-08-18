@@ -1,42 +1,66 @@
 package apt.project.frontend.controller;
 
+import static java.util.Arrays.asList;
+
+import java.util.List;
+
 import apt.project.backend.domain.BaseEntity;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.frontend.view.View;
 
-public final class ExceptionManager {
+public class ExceptionManager<T extends BaseEntity> {
 
-    private ExceptionManager() {
+    private List<T> resultList;
+    private View<T> view;
+
+    ExceptionManager(View<T> view) {
+        this.view = view;
     }
 
-    static <T extends BaseEntity> T catcher(ThrowingSupplier<T> supplier,
-            View<T> view, T entity) {
+    public boolean listCatcher(ThrowingListSupplier<T> supplier, T entity) {
         try {
-            return supplier.get();
+            clearResultList();
+            resultList = supplier.get();
+            return true;
         } catch (RepositoryException e) {
             view.showError(e.getMessage(), entity);
         }
-        return null;
+        return false;
     }
 
-    static <T extends BaseEntity> T catcher(ThrowingSupplier<T> supplier,
-            View<T> view) {
-        return catcher(supplier, view, null);
+    public boolean listCatcher(ThrowingListSupplier<T> supplier) {
+        return listCatcher(supplier, null);
     }
 
-    static <T extends BaseEntity> void voidCatcher(ThrowingRunnable runnable,
-            View<T> view, T entity) {
-        catcher(() -> {
+    public boolean catcher(ThrowingSupplier<T> supplier, T entity) {
+        return listCatcher(() -> asList(supplier.get()), entity);
+    }
+
+    public boolean catcher(ThrowingSupplier<T> supplier) {
+        return catcher(supplier, null);
+    }
+
+    public boolean voidCatcher(ThrowingRunnable runnable, T entity) {
+        return catcher(() -> {
             runnable.run();
             return null;
-        }, view, entity);
+        }, entity);
     }
 
-    static <T extends BaseEntity> void voidCatcher(ThrowingRunnable runnable,
-            View<T> view) {
-        catcher(() -> {
-            runnable.run();
-            return null;
-        }, view);
+    public boolean voidCatcher(ThrowingRunnable runnable) {
+        return voidCatcher(runnable::run, null);
     }
+
+    public T getResult() {
+        return resultList.get(0);
+    }
+
+    public List<T> getResultList() {
+        return resultList;
+    }
+
+    public void clearResultList() {
+        resultList = null;
+    }
+
 }

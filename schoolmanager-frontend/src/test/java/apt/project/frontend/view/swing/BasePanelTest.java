@@ -250,10 +250,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
         });
         entity2.setaField(2);
 
-        System.out.println(basePanel.getListModel().indexOf(entity2));
-
         // exercise
-
         GuiActionRunner.execute(() -> basePanel.entityUpdated(entity2));
 
         // verify

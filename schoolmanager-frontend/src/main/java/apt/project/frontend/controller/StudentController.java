@@ -21,9 +21,11 @@ public class StudentController extends BaseController<Student> {
     @Override
     public void newEntity(Student entity) {
         Student existingStudent;
-        existingStudent = ExceptionManager
-                .catcher(() -> ((StudentRepository) repository)
-                        .findByName(entity.getName()), view, entity);
+        if (!em.catcher(() -> ((StudentRepository) repository)
+                .findByName(entity.getName()), entity)) {
+            return;
+        }
+        existingStudent = em.getResult();
         if (existingStudent != null) {
             view.showError("Already existing entity: " + entity, entity);
             return;
@@ -39,12 +41,15 @@ public class StudentController extends BaseController<Student> {
                     modifiedStudent);
             return;
         }
-        Student studentWithNewName;
 
-        studentWithNewName = ExceptionManager.catcher(
+        Student studentWithNewName;
+        if (!em.catcher(
                 () -> ((StudentRepository) repository)
                         .findByName(modifiedStudent.getName()),
-                view, modifiedStudent);
+                modifiedStudent)) {
+            return;
+        }
+        studentWithNewName = em.getResult();
         if (studentWithNewName != null) {
             view.showError("Already existing entity: " + modifiedStudent,
                     modifiedStudent);
