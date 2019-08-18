@@ -14,9 +14,12 @@ public class CourseController extends BaseController<Course> {
     public void newEntity(Course course) {
         Course existingCourse;
 
-        existingCourse = ExceptionManager
-                .catcher(() -> ((CourseRepository) repository)
-                        .findByTitle(course.getTitle()), view, course);
+        if (!em.catcher(() -> ((CourseRepository) repository)
+                .findByTitle(course.getTitle()), course)) {
+            return;
+        }
+        existingCourse = em.getResult();
+
         if (existingCourse != null) {
             view.showError("Already existing entity: " + course, course);
             return;
@@ -28,10 +31,13 @@ public class CourseController extends BaseController<Course> {
     public void updateEntity(Course modifiedCourse) {
         Course courseWithNewTitle;
 
-        courseWithNewTitle = ExceptionManager.catcher(
+        if (!em.catcher(
                 () -> ((CourseRepository) repository)
                         .findByTitle(modifiedCourse.getTitle()),
-                view, modifiedCourse);
+                modifiedCourse)) {
+            return;
+        }
+        courseWithNewTitle = em.getResult();
         if (courseWithNewTitle != null) {
             view.showError("Already existing entity: " + modifiedCourse,
                     modifiedCourse);
@@ -39,6 +45,7 @@ public class CourseController extends BaseController<Course> {
         }
 
         super.updateEntity(modifiedCourse);
+
     }
 
 }
