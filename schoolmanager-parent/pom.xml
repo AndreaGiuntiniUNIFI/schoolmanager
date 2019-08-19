@@ -20,6 +20,7 @@
     <assertj-swing.version>3.9.2</assertj-swing.version>
     <mockito.version>2.28.2</mockito.version>
     <h2-driver.version>1.4.199</h2-driver.version>
+    <postgresql-driver.version>42.2.6</postgresql-driver.version>
 
     <sonar.coverage.exclusions>
       **/backend/domain/*.*,
@@ -56,6 +57,20 @@
         <version>${hibernate.version}</version>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2-driver.version}</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgresql-driver.version}</version>
+      </dependency>
+
       <!-- Test scope dependencies -->
 
       <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -88,13 +103,6 @@
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
         <scope>test</scope>
-      </dependency>
-
-      <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>${h2-driver.version}</version>
       </dependency>
 
     </dependencies>
@@ -191,6 +199,7 @@
             </excludedClasses>
             <excludedTestClasses>
               <param>apt.project.frontend.view.swing.*</param>
+              <param>**.*IT</param>
             </excludedTestClasses>
             <mutators>
               <mutator>ALL</mutator>
@@ -207,6 +216,87 @@
                 <goal>mutationCoverage</goal>
               </goals>
               <phase>verify</phase>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Maven failsafe plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.1</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Build helper maven plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+              <id>add-test-source</id>
+              <phase>generate-test-sources</phase>
+              <goals>
+                <goal>add-test-source</goal>
+              </goals>
+              <configuration>
+                <sources>
+                  <source>src/it/java</source>
+                </sources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Docker maven plugin -->
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.27.2</version>
+          <configuration>
+            <images>
+              <image>
+                <name>postgres:11.4-alpine</name>
+                <alias>it-database</alias>
+                <run>
+                  <ports>
+                    <port>5436:5432</port>
+                  </ports>
+                  <env>
+                    <POSTGRES_DB>it_db</POSTGRES_DB>
+                    <POSTGRES_USER>it_user</POSTGRES_USER>
+                    <POSTGRES_PASSWORD>it_pwd</POSTGRES_PASSWORD>
+                  </env>
+                  <wait>
+                    <log>database system is ready to accept connections</log>
+                    <time>10000</time>
+                  </wait>
+                </run>
+              </image>
+            </images>
+          </configuration>
+          <executions>
+            <execution>
+              <id>docker-start-it-db</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>start</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>docker-stop-it-db</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>stop</goal>
+              </goals>
             </execution>
           </executions>
         </plugin>
