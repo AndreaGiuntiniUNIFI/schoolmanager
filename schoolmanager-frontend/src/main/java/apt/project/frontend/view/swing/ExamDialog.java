@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
-import apt.project.frontend.controller.CustomDialogController;
 
 public class ExamDialog extends CustomDialog {
 
@@ -20,8 +19,6 @@ public class ExamDialog extends CustomDialog {
      * 
      */
     private static final long serialVersionUID = 1L;
-
-    private CustomDialogController controller;
 
     private JComboBox<String> examComboBox;
 
@@ -76,14 +73,6 @@ public class ExamDialog extends CustomDialog {
                 setOutcome(null);
             }
         });
-    }
-
-    public void setController(CustomDialogController controller) {
-        this.controller = controller;
-    }
-
-    public void initializeComboBox(List<Course> courses) {
-        controller.populateComboBox(courses);
     }
 
     JComboBox<String> getExamComboBox() {

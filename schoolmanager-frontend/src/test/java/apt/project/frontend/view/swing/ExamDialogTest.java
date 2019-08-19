@@ -2,7 +2,6 @@ package apt.project.frontend.view.swing;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import java.awt.Dialog;
 import java.util.ArrayList;
@@ -24,14 +23,12 @@ import org.junit.runner.RunWith;
 
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
-import apt.project.frontend.controller.CustomDialogController;
 
 @RunWith(GUITestRunner.class)
 public class ExamDialogTest extends AssertJSwingJUnitTestCase {
 
     private ExamDialog dialog;
     private DialogFixture dialogFixture;
-    private CustomDialogController customDialogController;
     private Course course;
 
     @Override
@@ -41,10 +38,8 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
             dialog = new ExamDialog();
         });
 
-        customDialogController = mock(CustomDialogController.class);
         dialogFixture = new DialogFixture(robot(), dialog);
         dialog.setModalityType(Dialog.ModalityType.MODELESS);
-        dialog.setController(customDialogController);
 
         course = new Course("course2");
         GuiActionRunner.execute(() -> {

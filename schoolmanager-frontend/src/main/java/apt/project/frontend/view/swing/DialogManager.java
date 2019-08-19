@@ -12,15 +12,17 @@ public class DialogManager {
     }
 
     public String manageDialog(String label) {
-        CustomDialog dialog = new CustomDialog(label);
-        dialog.showDialog();
-        return dialog.getOutcome();
+        // CustomDialog dialog = new CustomDialog(label);
+        // dialog.showDialog();
+        // return dialog.getOutcome();
+        return null;
     }
 
     public String manageDialog(String label, String value) {
-        CustomDialog dialog = new CustomDialog(label, value);
-        dialog.showDialog();
-        return dialog.getOutcome();
+        // CustomDialog dialog = new CustomDialog(label, value);
+        // dialog.showDialog();
+        // return dialog.getOutcome();
+        return null;
     }
 
     // per questo metodo serve il repository di course e fare la diff con la
