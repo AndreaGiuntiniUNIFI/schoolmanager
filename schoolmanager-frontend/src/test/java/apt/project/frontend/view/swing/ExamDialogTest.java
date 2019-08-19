@@ -1,5 +1,6 @@
 package apt.project.frontend.view.swing;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
 import apt.project.frontend.controller.CustomDialogController;
 
 @RunWith(GUITestRunner.class)
@@ -30,6 +32,7 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
     private ExamDialog dialog;
     private DialogFixture dialogFixture;
     private CustomDialogController customDialogController;
+    private Course course;
 
     @Override
     protected void onSetUp() {
@@ -43,6 +46,7 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
         dialog.setModalityType(Dialog.ModalityType.MODELESS);
         dialog.setController(customDialogController);
 
+        course = new Course("course2");
         GuiActionRunner.execute(() -> {
             dialog.showDialog();
         });
@@ -96,8 +100,7 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
             dialog.getExamComboBox()
                     .addItem((new Course("course1")).toString());
 
-            dialog.getExamComboBox()
-                    .addItem((new Course("course2")).toString());
+            dialog.getExamComboBox().addItem((course).toString());
         });
 
         dialogFixture.comboBox("examComboBox").selectItem(1);
@@ -113,8 +116,7 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
             dialog.getExamComboBox()
                     .addItem((new Course("course1")).toString());
 
-            dialog.getExamComboBox()
-                    .addItem((new Course("course2")).toString());
+            dialog.getExamComboBox().addItem((course).toString());
         });
 
         JComboBoxFixture examComboBox = dialogFixture.comboBox("examComboBox");
@@ -133,6 +135,69 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
         rateComboBox.selectItem(1);
         dialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
 
+    }
+
+    @Test
+    @GUITest
+    public void testsShowAllStudentsShouldAddStudentDescriptionsToTheList() {
+
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+        GuiActionRunner.execute(
+                () -> dialog.setCoursesComboBox(asList(course1, course2)));
+        String[] listContents = dialogFixture.comboBox("examComboBox")
+                .contents();
+        assertThat(listContents).containsExactly(course1.toString(),
+                course2.toString());
+        assertThat(dialog.getCourses()).containsExactly(course1, course2);
+
+    }
+
+    @Test
+    @GUITest
+    public void testWhenOkButtonIsClickedThenInputIsSavedBeforeClosing() {
+        // setup
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+
+        GuiActionRunner.execute(() -> {
+            dialog.getExamComboBox().addItem(course1.toString());
+            dialog.getExamComboBox().addItem(course2.toString());
+            dialog.setCourses(asList(course1, course2));
+        });
+        // exercise
+        dialogFixture.comboBox("examComboBox").selectItem(1);
+        dialogFixture.comboBox("rateComboBox").selectItem(1);
+
+        dialogFixture.button(JButtonMatcher.withText("OK")).click();
+
+        // verify
+        assertThat(dialog.getOutcome().getCourse()).isEqualTo(course2);
+        assertThat(dialog.getOutcome().getRate()).isEqualTo(19);
+        assertThat(dialog.isVisible()).isFalse();
+    }
+
+    @Test
+    @GUITest
+    public void testWhenCancelButtonIsClickedThenOutcomeIsNull() {
+        // setup
+        Exam outcome = new Exam(course, 20);
+        dialog.setOutcome(outcome);
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+
+        GuiActionRunner.execute(() -> {
+            dialog.getExamComboBox().addItem(course1.toString());
+            dialog.getExamComboBox().addItem(course2.toString());
+            dialog.setCourses(asList(course1, course2));
+        });
+        // exercise
+        dialogFixture.comboBox("examComboBox").selectItem(1);
+        dialogFixture.comboBox("rateComboBox").selectItem(1);
+        dialogFixture.button(JButtonMatcher.withText("Cancel")).click();
+
+        // verify
+        assertThat(dialog.getOutcome()).isNull();
     }
 
 }

@@ -2,6 +2,8 @@ package apt.project.frontend.view.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -9,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
 import apt.project.frontend.controller.CustomDialogController;
 
 public class ExamDialog extends CustomDialog {
@@ -23,6 +26,10 @@ public class ExamDialog extends CustomDialog {
     private JComboBox<String> examComboBox;
 
     private JComboBox<String> rateComboBox;
+
+    private List<Course> courses;
+
+    private Exam outcome;
 
     public ExamDialog() {
         super();
@@ -52,9 +59,23 @@ public class ExamDialog extends CustomDialog {
         IntStream.range(18, 31).boxed()
                 .forEach(i -> rateComboBox.addItem(i.toString()));
 
-        // courses.stream().map(Course::getTitle).forEach(comboBox::addItem);
-        // comboBox.setSelectedIndex(-1);
-        // contentPanel.add(comboBox);
+        okButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                String rate = (String) rateComboBox.getSelectedItem();
+                outcome = new Exam(courses.get(examComboBox.getSelectedIndex()),
+                        Integer.parseInt(rate));
+
+                setVisible(false);
+            }
+        });
+
+        cancelButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                setOutcome(null);
+            }
+        });
     }
 
     public void setController(CustomDialogController controller) {
@@ -71,6 +92,28 @@ public class ExamDialog extends CustomDialog {
 
     JComboBox<String> getRateComboBox() {
         return rateComboBox;
+    }
+
+    public Exam getOutcome() {
+        return outcome;
+    }
+
+    public void setOutcome(Exam outcome) {
+        this.outcome = outcome;
+    }
+
+    public void setCoursesComboBox(List<Course> courses) {
+        this.courses = courses;
+        this.courses.stream()
+                .forEach(course -> examComboBox.addItem(course.toString()));
+    }
+
+    List<Course> getCourses() {
+        return courses;
+    }
+
+    void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 
 }
