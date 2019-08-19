@@ -28,6 +28,7 @@ import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 @RunWith(GUITestRunner.class)
 public class ExamPanelTest extends AssertJSwingJUnitTestCase {
@@ -106,7 +107,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
 
         // verify
-        verify(dialogManager).manageDialogExam(asList(exam1, exam2));
+        verify(dialogManager).manageExamDialog(asList(course1, course2));
     }
 
     @Test
@@ -115,16 +116,19 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         // setup
         Course course1 = new Course("course1");
         Exam exam1 = new Exam(course1, 28);
+
         Course course2 = new Course("course2");
         Exam exam2 = new Exam(course2, 24);
+
         List<Exam> examList = new ArrayList<>(asList(exam1, exam2));
+
         student.setExams(examList);
         examPanel.setStudent(student);
 
         Course course3 = new Course("course3");
         Exam submittedExam = new Exam(course3, 30);
 
-        when(dialogManager.manageDialogExam(examList))
+        when(dialogManager.manageExamDialog(asList(course1, course2)))
                 .thenReturn(submittedExam);
 
         // exercise
@@ -156,7 +160,8 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         student.setExams(examList);
         examPanel.setStudent(student);
 
-        when(dialogManager.manageDialogExam(examList)).thenReturn(null);
+        when(dialogManager.manageExamDialog(asList(course1, course2)))
+                .thenReturn(null);
 
         // exercise
         panelFixture.button(JButtonMatcher.withText("Add")).click();

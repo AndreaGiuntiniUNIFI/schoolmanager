@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import apt.project.backend.domain.BaseEntity;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.View;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class BasePanel<T extends BaseEntity> implements View<T> {
 

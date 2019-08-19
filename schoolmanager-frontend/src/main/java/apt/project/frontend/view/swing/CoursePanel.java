@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class CoursePanel extends BasePanel<Course> {
 

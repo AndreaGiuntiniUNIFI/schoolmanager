@@ -1,4 +1,4 @@
-package apt.project.frontend.view.swing;
+package apt.project.frontend.view.swing.dialog;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,22 +15,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(GUITestRunner.class)
-public class CustomDialogTest extends AssertJSwingJUnitTestCase {
+public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
 
-    private CustomDialog customDialog;
+    private SimpleDialog dialog;
     private DialogFixture dialogFixture;
 
     @Override
     protected void onSetUp() {
-        GuiActionRunner.execute(() -> {
-            customDialog = new CustomDialog("label");
-        });
-
-        dialogFixture = new DialogFixture(robot(), customDialog);
-
-        customDialog.setModalityType(Dialog.ModalityType.MODELESS);
-
-        customDialog.showDialog();
+        GuiActionRunner.execute(() -> dialog = new SimpleDialog("label"));
+        dialogFixture = new DialogFixture(robot(), dialog);
+        dialog.setModalityType(Dialog.ModalityType.MODELESS);
+        dialog.showDialog();
     }
 
     @Override
@@ -43,21 +38,18 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
             dialogFixture.cleanUp();
         }
 
-        customDialog.setVisible(false);
-        customDialog.dispose();
+        dialog.setVisible(false);
+        dialog.dispose();
         super.onTearDown();
     }
 
     @Test
     @GUITest
     public void testControlsInitialStates() {
-
+        // verify
         dialogFixture.label(JLabelMatcher.withText("label"));
-
         dialogFixture.textBox("labelTextField").requireEnabled().requireEmpty();
-
         dialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
-
         dialogFixture.button(JButtonMatcher.withText("Cancel"))
                 .requireEnabled();
     }
@@ -65,9 +57,10 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testWhenTheFieldIsCompiledOkButtonIsEnabled() {
-
+        // setup
         dialogFixture.textBox("labelTextField").enterText("test");
 
+        // verify
         dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
 
     }
@@ -75,29 +68,58 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testWhenOkButtonIsClickedThenInputIsSavedBeforeClosing() {
-        // exercise
+        // setup
         String input = "test";
         dialogFixture.textBox("labelTextField").enterText(input);
+
+        // exercise
         dialogFixture.button(JButtonMatcher.withText("OK")).click();
 
         // verify
-        assertThat(customDialog.getOutcome()).isEqualTo(input);
-        assertThat(customDialog.isVisible()).isFalse();
+        assertThat(dialog.getOutcome()).isEqualTo(input);
+        assertThat(dialog.isVisible()).isFalse();
     }
 
     @Test
     @GUITest
-    public void testWhenCancelButtonIsClickedThenDialogIsCLosedWithoutSavingInput() {
-        // exercise
-        customDialog.setOutcome("outcome");
+    public void testWhenCancelButtonIsClickedThenOutcomeIsNull() {
+        // setup
+        dialog.setOutcome("outcome");
         String input = "test";
         dialogFixture.textBox("labelTextField").enterText(input);
+
+        // exercise
         dialogFixture.button(JButtonMatcher.withText("Cancel")).click();
 
         // verify
-        assertThat(customDialog.getOutcome()).isNull();
-        ;
-        assertThat(customDialog.isVisible()).isFalse();
+        assertThat(dialog.getOutcome()).isNull();
+        assertThat(dialog.isVisible()).isFalse();
+    }
+
+    @Test
+    @GUITest
+    public void testControlsInitialStatesWithDefaultValue() {
+        // clean up the fixture created on setup
+        dialogFixture.cleanUp();
+        dialog.setVisible(false);
+        dialog.dispose();
+        dialog.setVisible(false);
+
+        // create new fixture with dialog with default value
+        String defaultVal = "default";
+        GuiActionRunner
+                .execute(() -> dialog = new SimpleDialog("label", defaultVal));
+        dialogFixture = new DialogFixture(robot(), dialog);
+        dialog.setModalityType(Dialog.ModalityType.MODELESS);
+        dialog.showDialog();
+
+        // verify
+        dialogFixture.label(JLabelMatcher.withText("label"));
+        dialogFixture.textBox("labelTextField").requireEnabled()
+                .requireText(defaultVal);
+        dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
+        dialogFixture.button(JButtonMatcher.withText("Cancel"))
+                .requireEnabled();
     }
 
 }

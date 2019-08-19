@@ -26,7 +26,7 @@
       **/backend/repository/TransactionManager.java,
       **/backend/repository/RepositoryException.java,
       **/frontend/controller/ExceptionManager.java,
-      **/frontend/view/swing/*.*
+      **/frontend/view/swing/**/*.*
     </sonar.coverage.exclusions>
 
     <!-- Custom property to point sonar to the right report path in children (see 
@@ -156,7 +156,7 @@
               <exclude>**/repository/TransactionManager.*</exclude>
               <exclude>**/repository/RepositoryException.*</exclude>
               <exclude>**/controller/ExceptionManager.*</exclude>
-              <exclude>**/view/swing/*.*</exclude>
+              <exclude>**/view/swing/**/*.*</exclude>
             </excludes>
           </configuration>
           <executions>

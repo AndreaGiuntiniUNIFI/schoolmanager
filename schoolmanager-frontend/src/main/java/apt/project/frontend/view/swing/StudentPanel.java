@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class StudentPanel extends BasePanel<Student> {
 

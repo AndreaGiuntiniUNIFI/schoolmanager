@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 @RunWith(GUITestRunner.class)
 public class StudentPanelTest extends AssertJSwingJUnitTestCase {

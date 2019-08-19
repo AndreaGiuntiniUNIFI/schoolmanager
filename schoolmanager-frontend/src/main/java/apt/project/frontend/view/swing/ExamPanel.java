@@ -2,6 +2,7 @@ package apt.project.frontend.view.swing;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -10,6 +11,7 @@ import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class ExamPanel extends BasePanel<Exam> {
 
@@ -21,11 +23,12 @@ public class ExamPanel extends BasePanel<Exam> {
             DialogManager dialogManager, String headerText) {
         super(examPanel, mainFrame, dialogManager, headerText);
 
-        // TODO: se non ci sono corsi non si dovrebbero poter aggiungere esami
         // TODO: il titolo dei dialog dovrebbe fare riferimento all'esame
         // selezionato
         btnAdd.addActionListener(e -> {
-            Exam exam = dialogManager.manageDialogExam(student.getExams());
+            Exam exam = dialogManager
+                    .manageExamDialog(student.getExams().stream()
+                            .map(Exam::getCourse).collect(Collectors.toList()));
             if (exam != null) {
                 student.addExam(exam);
                 controller.updateEntity(student);
@@ -61,7 +64,7 @@ public class ExamPanel extends BasePanel<Exam> {
     }
 
     public void showAll() {
-        super.showAll(this.student.getExams());
+        super.showAll(student.getExams());
     }
 
     public void setStudent(Student student) {

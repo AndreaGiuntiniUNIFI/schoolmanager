@@ -22,6 +22,7 @@ import org.mockito.ArgumentCaptor;
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 @RunWith(GUITestRunner.class)
 public class CoursePanelTest extends AssertJSwingJUnitTestCase {
