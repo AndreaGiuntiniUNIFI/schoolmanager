@@ -49,11 +49,11 @@ public class CustomDialog extends JDialog {
         setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
         setBounds(100, 100, 450, 300);
-        getContentPane().setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        add(buttonPane, BorderLayout.SOUTH);
 
         okButton = new JButton("OK");
         okButton.setEnabled(false);
@@ -74,7 +74,7 @@ public class CustomDialog extends JDialog {
         contentPanel.setLayout(new FlowLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        add(contentPanel, BorderLayout.CENTER);
     }
 
     public void showDialog() {

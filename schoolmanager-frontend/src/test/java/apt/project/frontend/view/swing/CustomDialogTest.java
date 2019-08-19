@@ -21,9 +21,7 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
 
     @Override
     protected void onSetUp() {
-        GuiActionRunner.execute(() -> {
-            customDialog = new CustomDialog();
-        });
+        GuiActionRunner.execute(() -> customDialog = new CustomDialog());
         dialogFixture = new DialogFixture(robot(), customDialog);
         customDialog.setModalityType(Dialog.ModalityType.MODELESS);
         customDialog.showDialog();
@@ -47,9 +45,8 @@ public class CustomDialogTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testControlsInitialStates() {
-
+        // verify
         dialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
-
         dialogFixture.button(JButtonMatcher.withText("Cancel"))
                 .requireEnabled();
     }
