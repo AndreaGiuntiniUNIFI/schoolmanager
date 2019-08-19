@@ -25,9 +25,11 @@ public class DialogManager {
         return null;
     }
 
+    // TODO: passare al managedialog il parent cioè come view
+
     // per questo metodo serve il repository di course e fare la diff con la
     // lista che viene passata (in realta è dialog che deve farlo)
-    public Exam manageDialogExam(List<Course> exams) {
+    public Exam manageExamDialog(List<Course> exams) {
         // TODO Auto-generated method stub
         return null;
     }

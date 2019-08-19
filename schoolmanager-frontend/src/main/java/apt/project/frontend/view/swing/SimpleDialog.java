@@ -10,17 +10,17 @@ import javax.swing.event.DocumentListener;
 
 public class SimpleDialog extends CustomDialog {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+
     private JTextField textField;
 
     private String outcome;
 
     public SimpleDialog(String labelText) {
         super();
+
         textField = new JTextField(10);
+        JLabel label = new JLabel(labelText);
 
         okButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -36,7 +36,7 @@ public class SimpleDialog extends CustomDialog {
                 setOutcome(null);
             }
         });
-        JLabel label = new JLabel(labelText);
+
         textField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void update() {

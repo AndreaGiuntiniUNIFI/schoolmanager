@@ -3,29 +3,32 @@ package apt.project.frontend.view.swing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dialog;
+import java.util.stream.IntStream;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.DialogFixture;
+import org.assertj.swing.fixture.JComboBoxFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(GUITestRunner.class)
-public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
+public class SimpleExamDialogTest extends AssertJSwingJUnitTestCase {
 
-    private SimpleDialog dialog;
+    private SimpleExamDialog dialog;
     private DialogFixture dialogFixture;
 
     @Override
     protected void onSetUp() {
-        GuiActionRunner.execute(() -> dialog = new SimpleDialog("label"));
+        GuiActionRunner.execute(() -> dialog = new SimpleExamDialog());
+
         dialogFixture = new DialogFixture(robot(), dialog);
         dialog.setModalityType(Dialog.ModalityType.MODELESS);
-        dialog.showDialog();
+        GuiActionRunner.execute(() -> dialog.showDialog());
     }
 
     @Override
@@ -46,9 +49,18 @@ public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testControlsInitialStates() {
+        // setup
+        String[] availableRates = IntStream.range(18, 31).boxed()
+                .map(String::valueOf).toArray(String[]::new);
+
         // verify
-        dialogFixture.label(JLabelMatcher.withText("label"));
-        dialogFixture.textBox("labelTextField").requireEnabled().requireEmpty();
+        dialogFixture.label(JLabelMatcher.withText("Rate"));
+
+        JComboBoxFixture comboBoxFixture = dialogFixture
+                .comboBox("rateComboBox");
+        comboBoxFixture.requireNoSelection();
+        assertThat(comboBoxFixture.contents()).isEqualTo(availableRates);
+
         dialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
         dialogFixture.button(JButtonMatcher.withText("Cancel"))
                 .requireEnabled();
@@ -56,27 +68,28 @@ public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void testWhenTheFieldIsCompiledOkButtonIsEnabled() {
+    public void testWhenComboBoxHasSelectionOkButtonIsEnabled() {
         // setup
-        dialogFixture.textBox("labelTextField").enterText("test");
+        dialogFixture.comboBox("rateComboBox").selectItem(1);
 
         // verify
         dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
-
     }
 
     @Test
     @GUITest
     public void testWhenOkButtonIsClickedThenInputIsSavedBeforeClosing() {
         // setup
-        String input = "test";
-        dialogFixture.textBox("labelTextField").enterText(input);
+        JComboBoxFixture comboBoxFixture = dialogFixture
+                .comboBox("rateComboBox");
+        comboBoxFixture.selectItem(3);
+        String selectedValue = comboBoxFixture.selectedItem();
 
         // exercise
         dialogFixture.button(JButtonMatcher.withText("OK")).click();
 
         // verify
-        assertThat(dialog.getOutcome()).isEqualTo(input);
+        assertThat(dialog.getOutcome()).isEqualTo(selectedValue);
         assertThat(dialog.isVisible()).isFalse();
     }
 
@@ -84,9 +97,9 @@ public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testWhenCancelButtonIsClickedThenOutcomeIsNull() {
         // setup
-        dialog.setOutcome("outcome");
-        String input = "test";
-        dialogFixture.textBox("labelTextField").enterText(input);
+        JComboBoxFixture comboBoxFixture = dialogFixture
+                .comboBox("rateComboBox");
+        comboBoxFixture.selectItem(3);
 
         // exercise
         dialogFixture.button(JButtonMatcher.withText("Cancel")).click();
@@ -94,32 +107,6 @@ public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
         // verify
         assertThat(dialog.getOutcome()).isNull();
         assertThat(dialog.isVisible()).isFalse();
-    }
-
-    @Test
-    @GUITest
-    public void testControlsInitialStatesWithDefaultValue() {
-        // clean up the fixture created on setup
-        dialogFixture.cleanUp();
-        dialog.setVisible(false);
-        dialog.dispose();
-        dialog.setVisible(false);
-
-        // create new fixture with dialog with default value
-        String defaultVal = "default";
-        GuiActionRunner
-                .execute(() -> dialog = new SimpleDialog("label", defaultVal));
-        dialogFixture = new DialogFixture(robot(), dialog);
-        dialog.setModalityType(Dialog.ModalityType.MODELESS);
-        dialog.showDialog();
-
-        // verify
-        dialogFixture.label(JLabelMatcher.withText("label"));
-        dialogFixture.textBox("labelTextField").requireEnabled()
-                .requireText(defaultVal);
-        dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
-        dialogFixture.button(JButtonMatcher.withText("Cancel"))
-                .requireEnabled();
     }
 
 }

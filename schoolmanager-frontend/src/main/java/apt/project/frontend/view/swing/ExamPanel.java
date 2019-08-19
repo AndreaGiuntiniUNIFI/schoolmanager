@@ -22,12 +22,11 @@ public class ExamPanel extends BasePanel<Exam> {
             DialogManager dialogManager, String headerText) {
         super(examPanel, mainFrame, dialogManager, headerText);
 
-        // TODO: se non ci sono corsi non si dovrebbero poter aggiungere esami
         // TODO: il titolo dei dialog dovrebbe fare riferimento all'esame
         // selezionato
         btnAdd.addActionListener(e -> {
             Exam exam = dialogManager
-                    .manageDialogExam(student.getExams().stream()
+                    .manageExamDialog(student.getExams().stream()
                             .map(Exam::getCourse).collect(Collectors.toList()));
             if (exam != null) {
                 student.addExam(exam);
@@ -64,7 +63,7 @@ public class ExamPanel extends BasePanel<Exam> {
     }
 
     public void showAll() {
-        super.showAll(this.student.getExams());
+        super.showAll(student.getExams());
     }
 
     public void setStudent(Student student) {

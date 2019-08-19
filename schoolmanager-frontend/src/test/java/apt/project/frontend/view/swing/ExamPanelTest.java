@@ -106,7 +106,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
 
         // verify
-        verify(dialogManager).manageDialogExam(asList(course1, course2));
+        verify(dialogManager).manageExamDialog(asList(course1, course2));
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         Course course3 = new Course("course3");
         Exam submittedExam = new Exam(course3, 30);
 
-        when(dialogManager.manageDialogExam(asList(course1, course2)))
+        when(dialogManager.manageExamDialog(asList(course1, course2)))
                 .thenReturn(submittedExam);
 
         // exercise
@@ -159,7 +159,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         student.setExams(examList);
         examPanel.setStudent(student);
 
-        when(dialogManager.manageDialogExam(asList(course1, course2)))
+        when(dialogManager.manageExamDialog(asList(course1, course2)))
                 .thenReturn(null);
 
         // exercise

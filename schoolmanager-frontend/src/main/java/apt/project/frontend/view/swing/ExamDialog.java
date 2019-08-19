@@ -1,6 +1,5 @@
 package apt.project.frontend.view.swing;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,37 +23,32 @@ public class ExamDialog extends CustomDialog {
 
     private JComboBox<String> rateComboBox;
 
-    private List<Course> courses;
+    private transient List<Course> courses;
 
-    private Exam outcome;
+    private transient Exam outcome;
 
     public ExamDialog() {
         super();
         JLabel examLabel = new JLabel("Exam");
         JLabel rateLabel = new JLabel("Rate");
-        contentPanel.add(examLabel);
-        contentPanel.add(rateLabel);
 
-        ActionListener btnOkEnabler = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                okButton.setEnabled(rateComboBox.getSelectedIndex() >= 0
+        ActionListener btnOkEnabler = e -> okButton
+                .setEnabled(rateComboBox.getSelectedIndex() >= 0
                         && examComboBox.getSelectedIndex() >= 0);
-            }
-        };
 
         examComboBox = new JComboBox<>();
-        getExamComboBox().setName("examComboBox");
+        examComboBox.setName("examComboBox");
         examComboBox.addActionListener(btnOkEnabler);
-        contentPanel.add(getExamComboBox());
 
         rateComboBox = new JComboBox<>();
-        getRateComboBox().setName("rateComboBox");
+        rateComboBox.setName("rateComboBox");
         rateComboBox.addActionListener(btnOkEnabler);
-        contentPanel.add(getRateComboBox());
 
-        IntStream.range(18, 31).boxed()
-                .forEach(i -> rateComboBox.addItem(i.toString()));
+        IntStream.range(18, 31).boxed().map(String::valueOf)
+                .forEach(rateComboBox::addItem);
+
+        rateComboBox.setSelectedIndex(-1);
+        examComboBox.setSelectedIndex(-1);
 
         okButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -62,7 +56,6 @@ public class ExamDialog extends CustomDialog {
                 String rate = (String) rateComboBox.getSelectedItem();
                 outcome = new Exam(courses.get(examComboBox.getSelectedIndex()),
                         Integer.parseInt(rate));
-
                 setVisible(false);
             }
         });
@@ -70,9 +63,14 @@ public class ExamDialog extends CustomDialog {
         cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                setOutcome(null);
+                outcome = null;
             }
         });
+
+        contentPanel.add(examLabel);
+        contentPanel.add(examComboBox);
+        contentPanel.add(rateLabel);
+        contentPanel.add(rateComboBox);
     }
 
     JComboBox<String> getExamComboBox() {
@@ -93,8 +91,8 @@ public class ExamDialog extends CustomDialog {
 
     public void setCoursesComboBox(List<Course> courses) {
         this.courses = courses;
-        this.courses.stream()
-                .forEach(course -> examComboBox.addItem(course.toString()));
+        this.courses.stream().map(Course::toString)
+                .forEach(examComboBox::addItem);
     }
 
     List<Course> getCourses() {
