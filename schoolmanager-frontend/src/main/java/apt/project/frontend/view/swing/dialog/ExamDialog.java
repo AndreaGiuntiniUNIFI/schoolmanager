@@ -1,4 +1,4 @@
-package apt.project.frontend.view.swing;
+package apt.project.frontend.view.swing.dialog;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;

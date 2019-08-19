@@ -1,4 +1,4 @@
-package apt.project.frontend.view.swing;
+package apt.project.frontend.view.swing.dialog;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

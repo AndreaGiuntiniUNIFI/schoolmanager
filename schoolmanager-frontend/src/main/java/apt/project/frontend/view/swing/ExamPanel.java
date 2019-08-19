@@ -11,6 +11,7 @@ import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class ExamPanel extends BasePanel<Exam> {
 

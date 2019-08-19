@@ -22,7 +22,7 @@ import apt.project.backend.domain.Exam;
 import apt.project.backend.repository.CourseRepository;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.frontend.view.View;
-import apt.project.frontend.view.swing.ExamDialog;
+import apt.project.frontend.view.swing.dialog.ExamDialog;
 
 public class ExamDialogControllerTest {
 

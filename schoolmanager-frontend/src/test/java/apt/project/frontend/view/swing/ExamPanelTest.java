@@ -28,6 +28,7 @@ import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 @RunWith(GUITestRunner.class)
 public class ExamPanelTest extends AssertJSwingJUnitTestCase {
