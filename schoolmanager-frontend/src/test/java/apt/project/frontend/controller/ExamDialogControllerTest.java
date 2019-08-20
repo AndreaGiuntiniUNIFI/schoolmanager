@@ -33,7 +33,7 @@ public class ExamDialogControllerTest {
     private CourseRepository courseRepository;
 
     @Mock
-    private ExamDialog dialog;
+    private ExamDialog examDialog;
 
     @InjectMocks
     private ExamDialogController controller;
@@ -44,6 +44,10 @@ public class ExamDialogControllerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        // Manual setter injection. Mockito does not work with mixed
+        // setter/constructor injection
+        controller.setExamDialog(examDialog);
     }
 
     @Test
@@ -66,7 +70,7 @@ public class ExamDialogControllerTest {
         boolean result = controller.populateComboBox(courses);
 
         // verify
-        verify(dialog).setCoursesComboBox(listCaptor.capture());
+        verify(examDialog).setCoursesComboBox(listCaptor.capture());
         assertThat(listCaptor.getValue()).containsAll(difference);
         assertThat(result).isTrue();
     }
@@ -90,7 +94,7 @@ public class ExamDialogControllerTest {
         // verify
         verify(view).showError("Repository exception: " + message, null);
         assertThat(result).isFalse();
-        verifyNoMoreInteractions(dialog);
+        verifyNoMoreInteractions(examDialog);
         verifyNoMoreInteractions(view);
     }
 
@@ -111,7 +115,7 @@ public class ExamDialogControllerTest {
         // verify
         verify(view).showError("Cannot add an exam. No course existing.", null);
         assertThat(result).isFalse();
-        verifyNoMoreInteractions(dialog);
+        verifyNoMoreInteractions(examDialog);
         verifyNoMoreInteractions(view);
     }
 
@@ -134,7 +138,7 @@ public class ExamDialogControllerTest {
         verify(view).showError(
                 "Cannot add an exam. Alredy registered all exams.", null);
         assertThat(result).isFalse();
-        verifyNoMoreInteractions(dialog);
+        verifyNoMoreInteractions(examDialog);
         verifyNoMoreInteractions(view);
     }
 
