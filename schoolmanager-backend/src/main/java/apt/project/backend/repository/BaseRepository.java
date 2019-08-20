@@ -23,10 +23,11 @@ public class BaseRepository<T extends BaseEntity> implements Repository<T> {
 
     @Override
     public List<T> findAll() throws RepositoryException {
+        StringBuilder queryBuilder = new StringBuilder("from ")
+                .append(getNameTable());
         return transactionManager.doInTransactionAndReturn(em -> em
-                .createQuery("from " + getNameTable(), typeParameterClass)
+                .createQuery(queryBuilder.toString(), typeParameterClass)
                 .getResultList());
-
     }
 
     @Override

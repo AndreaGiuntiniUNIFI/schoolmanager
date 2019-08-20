@@ -1,10 +1,12 @@
 package apt.project.backend.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class Course extends BaseEntity {
 
+    @Column(unique = true)
     private String title;
 
     public Course() {
