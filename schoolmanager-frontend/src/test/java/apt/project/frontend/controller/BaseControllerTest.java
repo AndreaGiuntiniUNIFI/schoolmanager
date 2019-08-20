@@ -1,7 +1,6 @@
 package apt.project.frontend.controller;
 
 import static java.util.Arrays.asList;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
@@ -42,15 +41,15 @@ public class BaseControllerTest {
         public TestEntity() {
         }
 
-        public TestEntity(int field) {
+        public TestEntity(int field, Long id) {
             aField = field;
+            setId(id);
         }
 
         @Override
         public String toString() {
             return "TestEntity [aField=" + aField + "]";
         }
-
     };
 
     @Before
@@ -111,8 +110,8 @@ public class BaseControllerTest {
     @Test
     public void testDeleteEntityWhenEntityExists() throws RepositoryException {
         // setup
-        TestEntity entityToDelete = new TestEntity();
-        when(repository.findById((Long) any())).thenReturn(entityToDelete);
+        TestEntity entityToDelete = new TestEntity(1, 1L);
+        when(repository.findById(1L)).thenReturn(entityToDelete);
         // exercise
         controller.deleteEntity(entityToDelete);
         // verify
@@ -125,8 +124,8 @@ public class BaseControllerTest {
     public void testDeleteEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
-        TestEntity entityToDelete = new TestEntity();
-        when(repository.findById((Long) any())).thenReturn(null);
+        TestEntity entityToDelete = new TestEntity(1, 1L);
+        when(repository.findById(1L)).thenReturn(null);
         // exercise
         controller.deleteEntity(entityToDelete);
         // verify
@@ -140,8 +139,8 @@ public class BaseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        TestEntity entityToDelete = new TestEntity();
-        when(repository.findById((Long) any()))
+        TestEntity entityToDelete = new TestEntity(1, 1L);
+        when(repository.findById(1L))
                 .thenThrow(new RepositoryException(message));
         // exercise
         controller.deleteEntity(entityToDelete);
@@ -157,8 +156,8 @@ public class BaseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        TestEntity entityToDelete = new TestEntity();
-        when(repository.findById((Long) any())).thenReturn(entityToDelete);
+        TestEntity entityToDelete = new TestEntity(1, 1L);
+        when(repository.findById(1L)).thenReturn(entityToDelete);
         doThrow(new RepositoryException(message)).when(repository)
                 .delete(entityToDelete);
         // exercise
@@ -173,9 +172,9 @@ public class BaseControllerTest {
     @Test
     public void testUpdateEntityWhenEntityExists() throws RepositoryException {
         // setup
-        TestEntity existingEntity = new TestEntity(1);
-        TestEntity modifiedEntity = new TestEntity(2);
-        when(repository.findById((Long) any())).thenReturn(existingEntity);
+        TestEntity existingEntity = new TestEntity(1, 1L);
+        TestEntity modifiedEntity = new TestEntity(2, 1L);
+        when(repository.findById(1L)).thenReturn(existingEntity);
         // exercise
         controller.updateEntity(modifiedEntity);
         // verify
@@ -188,8 +187,8 @@ public class BaseControllerTest {
     public void testUpdateEntityWhenEntityDoesNotExist()
             throws RepositoryException {
         // setup
-        TestEntity modifiedEntity = new TestEntity(2);
-        when(repository.findById((Long) any())).thenReturn(null);
+        TestEntity modifiedEntity = new TestEntity(1, 1L);
+        when(repository.findById(1L)).thenReturn(null);
         // exercise
         controller.updateEntity(modifiedEntity);
         // verify
@@ -203,8 +202,8 @@ public class BaseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        TestEntity modifiedEntity = new TestEntity();
-        when(repository.findById((Long) any()))
+        TestEntity modifiedEntity = new TestEntity(1, 1L);
+        when(repository.findById(1L))
                 .thenThrow(new RepositoryException(message));
         // exercise
         controller.updateEntity(modifiedEntity);
@@ -220,9 +219,9 @@ public class BaseControllerTest {
             throws RepositoryException {
         // setup
         String message = "message";
-        TestEntity existingEntity = new TestEntity(1);
-        TestEntity modifiedEntity = new TestEntity(2);
-        when(repository.findById((Long) any())).thenReturn(existingEntity);
+        TestEntity existingEntity = new TestEntity(1, 1L);
+        TestEntity modifiedEntity = new TestEntity(2, 1L);
+        when(repository.findById(1L)).thenReturn(existingEntity);
         doThrow(new RepositoryException(message)).when(repository)
                 .update(modifiedEntity);
         // exercise

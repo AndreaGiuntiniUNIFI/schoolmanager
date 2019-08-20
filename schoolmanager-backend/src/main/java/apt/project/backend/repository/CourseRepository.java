@@ -15,8 +15,7 @@ public class CourseRepository extends BaseRepository<Course> {
                 .doInTransactionAndReturn(em -> em
                         .createQuery("from Course " + "where title = :title ",
                                 Course.class)
-                        .setParameter("title", titleToFind).setMaxResults(1)
-                        .getResultList());
+                        .setParameter("title", titleToFind).getResultList());
 
         if (result.isEmpty()) {
             return null;

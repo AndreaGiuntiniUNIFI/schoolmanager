@@ -3,12 +3,14 @@ package apt.project.backend.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Student extends BaseEntity {
 
+    @Column(unique = true)
     private String name;
 
     @OneToMany(orphanRemoval = true)

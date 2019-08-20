@@ -28,8 +28,6 @@ public class ExamPanel extends BasePanel<Exam> {
             DialogManager dialogManager, String headerText) {
         super(examPanel, mainFrame, dialogManager, headerText);
 
-        // TODO: il titolo dei dialog dovrebbe fare riferimento all'esame
-        // selezionato
         btnAdd.addActionListener(e -> {
             List<Course> courses = student.getExams().stream()
                     .map(Exam::getCourse).collect(toList());

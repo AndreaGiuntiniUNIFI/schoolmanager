@@ -15,8 +15,7 @@ public class StudentRepository extends BaseRepository<Student> {
                 .doInTransactionAndReturn(em -> em
                         .createQuery("from Student " + "where name = :name ",
                                 Student.class)
-                        .setParameter("name", name).setMaxResults(1)
-                        .getResultList());
+                        .setParameter("name", name).getResultList());
 
         if (result.isEmpty()) {
             return null;

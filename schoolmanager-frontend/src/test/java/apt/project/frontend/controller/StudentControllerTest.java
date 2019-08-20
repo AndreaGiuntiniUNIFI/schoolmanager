@@ -187,10 +187,13 @@ public class StudentControllerTest {
     @Test
     public void testUpdateEntityWhenEntityExists() throws RepositoryException {
         // setup
+        String studentName = "Jane";
         Student existingStudent = new Student("John");
-        Student modifiedStudent = new Student("Jane");
-        when(studentRepository.findById((Long) any()))
-                .thenReturn(existingStudent);
+        existingStudent.setId(1L);
+        Student modifiedStudent = new Student(studentName);
+        modifiedStudent.setId(2L);
+        when(studentRepository.findByName(studentName)).thenReturn(null);
+        when(studentRepository.findById(2L)).thenReturn(existingStudent);
         // exercise
         studentController.updateEntity(modifiedStudent);
         // verify
@@ -261,9 +264,12 @@ public class StudentControllerTest {
 
         String modifiedName = "Jane";
         Student modifiedStudent = new Student(modifiedName);
-        when(studentRepository.findByName(modifiedName))
-                .thenReturn(new Student(modifiedName));
+        modifiedStudent.setId(1L);
+        Student existingStudent = new Student(modifiedName);
+        existingStudent.setId(2L);
 
+        when(studentRepository.findByName(modifiedName))
+                .thenReturn(existingStudent);
         // exercise
         studentController.updateEntity(modifiedStudent);
         // verify
@@ -290,7 +296,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testExamCouldNotHasDuplicateCourseForEachStudent()
+    public void testUpdateEntityWithDuplicatedExam()
             throws RepositoryException {
         Course course1 = new Course("course1");
         Exam exam1 = new Exam(course1);
@@ -305,16 +311,45 @@ public class StudentControllerTest {
         modifiedStudent.getExams().add(exam1);
         modifiedStudent.getExams().add(exam2);
 
-        when(studentRepository.findById((Long) any()))
+        // exercise
+        studentController.updateEntity(modifiedStudent);
+        // verify
+        verify(studentView).showError(
+                "Duplicate Exams in Student: " + asList(course1),
+                modifiedStudent);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+    }
+
+    @Test
+    public void testUpdateEntityWithoutDuplicatedExamAndNotModifiedName()
+            throws RepositoryException {
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+        Exam exam1 = new Exam(course1);
+        exam1.setRate(18);
+        String studentName = "John";
+        Student existingStudent = new Student(studentName);
+        existingStudent.setId(1L);
+        existingStudent.getExams().add(exam1);
+
+        Student modifiedStudent = new Student(studentName);
+        modifiedStudent.setId(1L);
+        Exam exam2 = new Exam(course2);
+        exam1.setRate(28);
+        modifiedStudent.getExams().add(exam1);
+        modifiedStudent.getExams().add(exam2);
+
+        when(studentRepository.findById(1L)).thenReturn(existingStudent);
+
+        when(studentRepository.findByName(studentName))
                 .thenReturn(existingStudent);
 
         // exercise
         studentController.updateEntity(modifiedStudent);
         // verify
-        verify(studentView).showError(
-                "Duplicate Exams in Student: " + modifiedStudent,
-                modifiedStudent);
-        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+        InOrder inOrder = inOrder(studentRepository, studentView);
+        inOrder.verify(studentRepository).update(modifiedStudent);
+        inOrder.verify(studentView).entityUpdated(modifiedStudent);
     }
 
 }

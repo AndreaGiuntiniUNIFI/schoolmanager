@@ -1,8 +1,11 @@
 package apt.project.frontend.controller;
 
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
@@ -36,8 +39,11 @@ public class StudentController extends BaseController<Student> {
     @Override
     public void updateEntity(Student modifiedStudent) {
 
-        if (!duplicatedExam(modifiedStudent.getExams()).isEmpty()) {
-            view.showError("Duplicate Exams in Student: " + modifiedStudent,
+        List<Course> duplicatedExam = duplicatedExam(
+                modifiedStudent.getExams());
+
+        if (!duplicatedExam.isEmpty()) {
+            view.showError("Duplicate Exams in Student: " + duplicatedExam,
                     modifiedStudent);
             return;
         }
@@ -50,7 +56,8 @@ public class StudentController extends BaseController<Student> {
             return;
         }
         studentWithNewName = em.getResult();
-        if (studentWithNewName != null) {
+        if (studentWithNewName != null && !studentWithNewName.getId()
+                .equals(modifiedStudent.getId())) {
             view.showError("Already existing entity: " + modifiedStudent,
                     modifiedStudent);
             return;
@@ -59,11 +66,9 @@ public class StudentController extends BaseController<Student> {
     }
 
     public List<Course> duplicatedExam(List<Exam> list) {
-        return list.stream()
-                .collect(Collectors.groupingBy(Exam::getCourse,
-                        Collectors.counting()))
+        return list.stream().collect(groupingBy(Exam::getCourse, counting()))
                 .entrySet().stream().filter(e -> e.getValue() > 1L)
-                .map(Entry<Course, Long>::getKey).collect(Collectors.toList());
+                .map(Entry<Course, Long>::getKey).collect(toList());
     }
 
 }
