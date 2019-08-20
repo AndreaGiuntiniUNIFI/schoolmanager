@@ -315,7 +315,7 @@ public class StudentControllerTest {
         studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError(
-                "Duplicate Exams in Student: " + modifiedStudent,
+                "Duplicate Exams in Student: " + asList(course1),
                 modifiedStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
