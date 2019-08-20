@@ -276,8 +276,12 @@
                     <POSTGRES_PASSWORD>it_pwd</POSTGRES_PASSWORD>
                   </env>
                   <wait>
-                    <log>database system is ready to accept connections</log>
-                    <time>10000</time>
+                    <!-- Could not use standard <log> and <time> due to a bug in 
+                      docker-maven-plugin. See issue #552 on GitHub. -->
+                    <log>(?s)database system is ready to accept connections</log>
+                    <exec>
+                      <postStart>sleep 5</postStart>
+                    </exec>
                   </wait>
                 </run>
               </image>
