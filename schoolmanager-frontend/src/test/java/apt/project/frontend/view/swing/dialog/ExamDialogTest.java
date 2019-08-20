@@ -155,11 +155,8 @@ public class ExamDialogTest extends AssertJSwingJUnitTestCase {
 
         // verify
         assertThat(dialog.getOutcome().getCourse()).isEqualTo(course2);
-        assertThat(dialog.getOutcome().getRate()).isEqualTo(19); // TODO:
-                                                                 // prendere
-                                                                 // 19 da
-                                                                 // fixture?
-        assertThat(dialog.isVisible()).isFalse();
+        assertThat(dialog.getOutcome().getRate()).isEqualTo(19);
+        dialogFixture.requireNotVisible();
     }
 
     @Test

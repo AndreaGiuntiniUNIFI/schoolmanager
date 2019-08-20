@@ -26,6 +26,7 @@ import org.mockito.ArgumentCaptor;
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.ExamDialogController;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
@@ -42,6 +43,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
     private JFrame frame;
     private DialogManager dialogManager;
     private StudentController studentController;
+    private ExamDialogController examDialogController;
     private MainFrame mainFrame;
     private Student student;
 
@@ -57,6 +59,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
             examPanel = new ExamPanel(internalPanel, mainFrame, dialogManager,
                     HEADER_TEXT);
             examPanel.setController(studentController);
+            examPanel.setExamDialogController(examDialogController);
             frame = new JFrame();
             frame.add(internalPanel);
             frame.pack();
@@ -107,7 +110,8 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
 
         // verify
-        verify(dialogManager).manageExamDialog(asList(course1, course2));
+        verify(dialogManager).manageExamDialog(asList(course1, course2),
+                examDialogController);
     }
 
     @Test
@@ -128,8 +132,8 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         Course course3 = new Course("course3");
         Exam submittedExam = new Exam(course3, 30);
 
-        when(dialogManager.manageExamDialog(asList(course1, course2)))
-                .thenReturn(submittedExam);
+        when(dialogManager.manageExamDialog(asList(course1, course2),
+                examDialogController)).thenReturn(submittedExam);
 
         // exercise
         panelFixture.button(JButtonMatcher.withText("Add")).click();
@@ -160,8 +164,8 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         student.setExams(examList);
         examPanel.setStudent(student);
 
-        when(dialogManager.manageExamDialog(asList(course1, course2)))
-                .thenReturn(null);
+        when(dialogManager.manageExamDialog(asList(course1, course2),
+                examDialogController)).thenReturn(null);
 
         // exercise
         panelFixture.button(JButtonMatcher.withText("Add")).click();
@@ -228,7 +232,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
 
         // verify
-        verify(dialogManager).manageDialog("Rate", rate.toString());
+        verify(dialogManager).manageSimpleExamDialog();
     }
 
     @Test
@@ -250,7 +254,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
 
         panelFixture.list("entityList").selectItem(0);
 
-        when(dialogManager.manageDialog("Rate", rate.toString()))
+        when(dialogManager.manageSimpleExamDialog())
                 .thenReturn(modifiedRate.toString());
 
         // exercise
@@ -286,8 +290,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
 
         panelFixture.list("entityList").selectItem(0);
 
-        when(dialogManager.manageDialog("Rate", rate.toString()))
-                .thenReturn(null);
+        when(dialogManager.manageSimpleExamDialog()).thenReturn(null);
 
         // exercise
         panelFixture.button(JButtonMatcher.withText("Modify")).click();

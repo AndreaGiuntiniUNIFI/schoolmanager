@@ -20,10 +20,9 @@ public class ExamDialogController {
     private ExamDialog examDialog;
 
     public ExamDialogController(View<Exam> view,
-            CourseRepository courseRepository, ExamDialog examDialog) {
+            CourseRepository courseRepository) {
         this.view = view;
         this.courseRepository = courseRepository;
-        this.examDialog = examDialog;
     }
 
     public boolean populateComboBox(List<Course> studentCourses) {
@@ -52,6 +51,10 @@ public class ExamDialogController {
 
         examDialog.setCoursesComboBox(difference);
         return true;
+    }
+
+    public void setExamDialog(ExamDialog examDialog) {
+        this.examDialog = examDialog;
     }
 
 }

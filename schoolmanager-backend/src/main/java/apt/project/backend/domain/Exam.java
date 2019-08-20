@@ -33,8 +33,9 @@ public class Exam extends BaseEntity {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + ((course == null) ? 0 : course.hashCode());
+        result = prime * result + ((rate == null) ? 0 : rate.hashCode());
         return result;
     }
 
@@ -42,7 +43,7 @@ public class Exam extends BaseEntity {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
@@ -51,6 +52,11 @@ public class Exam extends BaseEntity {
             if (other.course != null)
                 return false;
         } else if (!course.equals(other.course))
+            return false;
+        if (rate == null) {
+            if (other.rate != null)
+                return false;
+        } else if (!rate.equals(other.rate))
             return false;
         return true;
     }

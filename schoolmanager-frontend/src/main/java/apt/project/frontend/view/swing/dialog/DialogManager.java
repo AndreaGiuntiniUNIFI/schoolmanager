@@ -4,34 +4,35 @@ import java.util.List;
 
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
+import apt.project.frontend.controller.ExamDialogController;
 
 public class DialogManager {
 
-    public DialogManager() {
-        //
-    }
-
     public String manageDialog(String label) {
-        // CustomDialog dialog = new CustomDialog(label);
-        // dialog.showDialog();
-        // return dialog.getOutcome();
-        return null;
+        SimpleDialog dialog = new SimpleDialog(label);
+        dialog.showDialog();
+        return dialog.getOutcome();
     }
 
     public String manageDialog(String label, String value) {
-        // CustomDialog dialog = new CustomDialog(label, value);
-        // dialog.showDialog();
-        // return dialog.getOutcome();
-        return null;
+        SimpleDialog dialog = new SimpleDialog(label, value);
+        dialog.showDialog();
+        return dialog.getOutcome();
     }
 
-    // TODO: passare al managedialog il parent cioè come view
+    public String manageSimpleExamDialog() {
+        SimpleExamDialog dialog = new SimpleExamDialog();
+        dialog.showDialog();
+        return dialog.getOutcome();
+    }
 
-    // per questo metodo serve il repository di course e fare la diff con la
-    // lista che viene passata (in realta è dialog che deve farlo)
-    public Exam manageExamDialog(List<Course> exams) {
-        // TODO Auto-generated method stub
-        return null;
+    public Exam manageExamDialog(List<Course> courses,
+            ExamDialogController controller) {
+        ExamDialog dialog = new ExamDialog();
+        controller.setExamDialog(dialog);
+        controller.populateComboBox(courses);
+        dialog.showDialog();
+        return dialog.getOutcome();
     }
 
 }
