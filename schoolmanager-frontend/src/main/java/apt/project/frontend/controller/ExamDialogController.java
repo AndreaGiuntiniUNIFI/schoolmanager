@@ -53,10 +53,6 @@ public class ExamDialogController {
         return true;
     }
 
-    public ExamDialog getExamDialog() {
-        return examDialog;
-    }
-
     public void setExamDialog(ExamDialog examDialog) {
         this.examDialog = examDialog;
     }
