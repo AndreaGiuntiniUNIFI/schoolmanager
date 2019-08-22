@@ -1,12 +1,17 @@
 package apt.project.backend.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Exam extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Course course;
 
     private Integer rate;
@@ -71,6 +76,11 @@ public class Exam extends BaseEntity {
 
     public Integer getRate() {
         return rate;
+    }
+
+    @Override
+    public String toString() {
+        return "Exam [course=" + course + ", rate=" + rate + "]";
     }
 
     public void setRate(Integer rate) {
