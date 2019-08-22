@@ -36,13 +36,36 @@
         value="jdbc:postgresql://localhost:5436/it_db" />
       <property name="javax.persistence.jdbc.user" value="it_user" />
       <property name="javax.persistence.jdbc.password" value="it_pwd" />
-      <property
-        name="javax.persistence.schema-generation.database.action"
-        value="create" />
+      <property name="hibernate.hbm2ddl.auto" value="create-drop" />
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.PostgreSQL95Dialect" />
       <property name="hibernate.format_sql" value="true" />
     </properties>
+  </persistence-unit>
+
+
+  <persistence-unit name="MYSQL"
+    transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+    <class>apt.project.backend.domain.Course</class>
+    <class>apt.project.backend.domain.Student</class>
+    <class>apt.project.backend.domain.Exam</class>
+
+    <properties>
+      <property name="javax.persistence.jdbc.driver"
+        value="com.mysql.cj.jdbc.Driver" />
+      <property name="javax.persistence.jdbc.url"
+        value="jdbc:mysql://localhost:3314/it_db" />
+      <property name="javax.persistence.jdbc.user" value="it_user" />
+      <property name="javax.persistence.jdbc.password" value="it_pwd" />
+
+      <property name="hibernate.dialect"
+        value="org.hibernate.dialect.MySQL8Dialect" />
+      <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+      <property name="hibernate.format_sql" value="true" />
+    </properties>
+
   </persistence-unit>
 
 </persistence>

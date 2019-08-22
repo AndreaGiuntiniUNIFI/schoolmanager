@@ -1,7 +1,10 @@
 package apt.project.backend.repository;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,30 +14,32 @@ import javax.persistence.Persistence;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
-import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 
-public class StudentRepositoryTest {
+@RunWith(Parameterized.class)
+public class StudentRepositoryIT {
 
-    private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
     private StudentRepository studentRepository;
     private static TransactionManager<Student> transactionManager;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("H2");
-        transactionManager = new TransactionManager<>(entityManagerFactory);
+    private static List<EntityManagerFactory> emfList = asList("MYSQL",
+            "POSTGRES").stream().map(Persistence::createEntityManagerFactory)
+                    .collect(toList());
+
+    @Parameters
+    public static Collection<EntityManagerFactory> data() {
+        return emfList;
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        entityManagerFactory.close();
-    }
+    @Parameter
+    public static EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setUp() {
@@ -44,20 +49,20 @@ public class StudentRepositoryTest {
         entityManager.createNativeQuery("DELETE FROM Course").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM Student").executeUpdate();
         entityManager.getTransaction().commit();
+        transactionManager = new TransactionManager<>(entityManagerFactory);
         studentRepository = new StudentRepository(transactionManager);
+    }
 
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+        emfList.stream().filter(emf -> emf != null)
+                .forEach(EntityManagerFactory::close);
     }
 
     @After
     public void tearDown() {
         entityManager.clear();
         entityManager.close();
-    }
-
-    @Test
-    public void testFindAllWhenDataBaseIsEmpty() throws RepositoryException {
-        // exercise and verify
-        assertThat(studentRepository.findAll()).isEmpty();
     }
 
     @Test
@@ -70,8 +75,8 @@ public class StudentRepositoryTest {
         entityManager.persist(student2);
         entityManager.getTransaction().commit();
         // exercise and verify
-        assertThat(studentRepository.findAll()).containsExactly(student1,
-                student2);
+        assertThat(studentRepository.findAll())
+                .containsExactlyInAnyOrder(student1, student2);
     }
 
     @Test
@@ -85,13 +90,6 @@ public class StudentRepositoryTest {
         entityManager.getTransaction().commit();
         // exercise and verify
         assertThat(studentRepository.findByName("John")).isEqualTo(student1);
-    }
-
-    @Test
-    public void testFindByNameWhenStudentDoesNotExist()
-            throws RepositoryException {
-        // exercise and verify
-        assertThat(studentRepository.findByName("John")).isNull();
     }
 
     @Test
@@ -133,7 +131,7 @@ public class StudentRepositoryTest {
         entityManager.persist(existingStudent);
         entityManager.getTransaction().commit();
         entityManager.clear(); // this is done because otherwise Hibernate would
-                               // update the entity automatically.
+        // update the entity automatically.
         existingStudent.setName("Jane");
         // exercise
         studentRepository.update(existingStudent);
@@ -145,49 +143,7 @@ public class StudentRepositoryTest {
 
         entityManager.getTransaction().begin();
         assertThat(retrievedStudent).isEqualTo(existingStudent);
-        // assertThat(retrievedStudent).isEqualTo(existingStudent);
         entityManager.getTransaction().commit();
-    }
-
-    @Test
-    public void testFindById() throws RepositoryException {
-        // setup
-        Student student = new Student("John");
-        entityManager.getTransaction().begin();
-        entityManager.persist(student);
-        entityManager.getTransaction().commit();
-        // exercise
-        Student retrievedStudent = studentRepository.findById(student.getId());
-        // verify
-        assertThat(student).isEqualTo(retrievedStudent);
-    }
-
-    @Test
-    public void testWhenStudentIsDeletedThenAllHisExamsAreDeleted()
-            throws RepositoryException {
-        // setup
-        Student student = new Student("John");
-        Student student2 = new Student("Jane");
-        Course course = new Course("course");
-        Exam exam = new Exam(course, 30);
-        Exam exam2 = new Exam(course, 23);
-        student.addExam(exam);
-        student2.addExam(exam2);
-        entityManager.getTransaction().begin();
-        entityManager.persist(course);
-        entityManager.persist(student2);
-        entityManager.persist(student);
-        entityManager.getTransaction().commit();
-
-        // exercise
-        studentRepository.delete(student);
-
-        // verify
-        entityManager.getTransaction().begin();
-        List<Exam> exams = entityManager.createQuery("from Exam", Exam.class)
-                .getResultList();
-        entityManager.getTransaction().commit();
-        assertThat(exams).containsExactly(exam2);
     }
 
 }

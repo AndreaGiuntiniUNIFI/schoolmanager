@@ -40,12 +40,9 @@ public class CourseRepositoryTest {
     public void setUp() {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("DELETE FROM public.Exam")
-                .executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM public.Course")
-                .executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM public.Student")
-                .executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM Exam").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM Course").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM Student").executeUpdate();
         entityManager.getTransaction().commit();
         courseRepository = new CourseRepository(transactionManager);
 
