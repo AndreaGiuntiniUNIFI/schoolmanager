@@ -31,7 +31,7 @@ public class TransactionManager<T extends BaseEntity> {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException(e);
         } finally {
             em.close();
         }

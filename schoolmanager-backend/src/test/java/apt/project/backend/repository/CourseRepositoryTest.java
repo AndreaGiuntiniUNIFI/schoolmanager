@@ -15,6 +15,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
+import apt.project.backend.domain.Student;
 
 public class CourseRepositoryTest {
 
@@ -38,7 +40,11 @@ public class CourseRepositoryTest {
     public void setUp() {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("DELETE FROM public.Exam")
+                .executeUpdate();
         entityManager.createNativeQuery("DELETE FROM public.Course")
+                .executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM public.Student")
                 .executeUpdate();
         entityManager.getTransaction().commit();
         courseRepository = new CourseRepository(transactionManager);
@@ -155,5 +161,45 @@ public class CourseRepositoryTest {
         Course retrievedCourse = courseRepository.findById(course.getId());
         // verify
         assertThat(course).isEqualTo(retrievedCourse);
+    }
+
+    @Test
+    public void testWhenCourseIsDeletedThenRelatedExamsAreAlsoDeleted()
+            throws RepositoryException {
+
+        // setup
+        Course course = new Course("Course");
+        Course course1 = new Course("Course1");
+
+        Student student = new Student("student");
+        Exam exam = new Exam(course, 23);
+        Exam exam1 = new Exam(course1, 29);
+        student.addExam(exam);
+        student.addExam(exam1);
+        entityManager.getTransaction().begin();
+        entityManager.persist(course);
+        entityManager.persist(course1);
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+
+        // exercise
+        courseRepository.delete(course);
+        entityManager.clear();
+
+        // verify
+        entityManager.getTransaction().begin();
+        Student retrievedStudent = entityManager
+                .createQuery("from Student", Student.class).getResultList()
+                .get(0);
+
+        List<Exam> retrievedExams = entityManager
+                .createQuery("from Exam", Exam.class).getResultList();
+        entityManager.getTransaction().commit();
+
+        assertThat(retrievedExams).hasSize(1);
+        assertThat(retrievedExams.get(0)).isEqualTo(exam1);
+
+        assertThat(retrievedStudent.getExams()).hasSize(1);
+        assertThat(retrievedStudent.getExams().get(0)).isEqualTo(exam1);
     }
 }

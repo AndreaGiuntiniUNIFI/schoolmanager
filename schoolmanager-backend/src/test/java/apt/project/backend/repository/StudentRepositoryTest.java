@@ -14,6 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 
 public class StudentRepositoryTest {
@@ -38,6 +40,10 @@ public class StudentRepositoryTest {
     public void setUp() {
         entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("DELETE FROM public.Exam")
+                .executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM public.Course")
+                .executeUpdate();
         entityManager.createNativeQuery("DELETE FROM public.Student")
                 .executeUpdate();
         entityManager.getTransaction().commit();
@@ -157,6 +163,33 @@ public class StudentRepositoryTest {
         Student retrievedStudent = studentRepository.findById(student.getId());
         // verify
         assertThat(student).isEqualTo(retrievedStudent);
+    }
+
+    @Test
+    public void testWhenStudentIsDeletedThenAllHisExamsAreDeleted()
+            throws RepositoryException {
+        Student student = new Student("John");
+        Student student2 = new Student("Jane");
+        Course course = new Course("course");
+        Exam exam = new Exam(course, 30);
+        Exam exam2 = new Exam(course, 23);
+        student.addExam(exam);
+        student2.addExam(exam2);
+        entityManager.getTransaction().begin();
+        entityManager.persist(course);
+        entityManager.persist(student2);
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+
+        // exercise
+        studentRepository.delete(student);
+
+        // verify
+        entityManager.getTransaction().begin();
+        List<Exam> exams = entityManager.createQuery("from Exam", Exam.class)
+                .getResultList();
+        entityManager.getTransaction().commit();
+        assertThat(exams).containsExactly(exam2);
     }
 
 }
