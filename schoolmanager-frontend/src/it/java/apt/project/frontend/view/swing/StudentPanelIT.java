@@ -3,6 +3,7 @@ package apt.project.frontend.view.swing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -10,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -91,8 +93,8 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
 
     @Test
     @GUITest
-    public void testAllCourses() throws RepositoryException {
-        // use the repository to add course to the database
+    public void testAllStudents() throws RepositoryException {
+        // use the repository to add student to the database
         Student student1 = new Student("student1");
         Student student2 = new Student("student2");
         studentRepository.save(student1);
@@ -102,6 +104,105 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
         // and verify that the view's list is populated
         assertThat(panelFixture.list().contents())
                 .containsExactly(student1.toString(), student2.toString());
+    }
+
+    @Test
+    @GUITest
+    public void testAddButtonSuccess() {
+        // setup
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        String name = "name1";
+        panelFixture.dialog().textBox("NameTextField").enterText(name);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+
+        // verify
+        assertThat(panelFixture.list().contents())
+                .containsExactly(new Student("name1").toString());
+    }
+
+    @Test
+    @GUITest
+    public void testAddButtonError() throws RepositoryException {
+        String existingName = "name";
+        Student student = new Student(existingName);
+        studentRepository.save(student);
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        panelFixture.dialog().textBox("NameTextField").enterText(existingName);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+        assertThat(panelFixture.list().contents()).isEmpty();
+
+        verify(mainFrame).displayErrorLabel(
+                "Already existing entity: " + student + ": " + student);
+    }
+
+    @Test
+    @GUITest
+    public void testDeleteButtonSuccess() {
+        // use the controller to populate the view's list...
+        GuiActionRunner.execute(() -> studentController
+                .newEntity(new Student("studentToRemove")));
+        // ...with a course to select
+        panelFixture.list().selectItem(0);
+        panelFixture.button(JButtonMatcher.withText("Delete")).click();
+        assertThat(panelFixture.list().contents()).isEmpty();
+    }
+
+    @Test
+    @GUITest
+    public void testDeleteButtonError() {
+        // manually add a course to the list, which will not be in the db
+        Student student = new Student("non existent");
+        GuiActionRunner
+                .execute(() -> studentPanel.getListModel().addElement(student));
+        panelFixture.list().selectItem(0);
+        panelFixture.button(JButtonMatcher.withText("Delete")).click();
+        assertThat(panelFixture.list().contents())
+                .containsExactly(student.toString());
+
+        verify(mainFrame).displayErrorLabel(
+                "No existing entity: " + student + ": " + student);
+    }
+
+    @Test
+    @GUITest
+    public void testUpdateButtonSuccess() {
+        // use the controller to populate the view's list...
+        GuiActionRunner.execute(() -> studentController
+                .newEntity(new Student("studentToModify")));
+        // ...with a student to select
+        panelFixture.list().selectItem(0);
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        String name = "modifiedName";
+        panelFixture.dialog().textBox("NameTextField").deleteText()
+                .enterText(name);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+        // verify
+        assertThat(panelFixture.list().contents())
+                .containsExactly(new Student(name).toString());
+    }
+
+    @Test
+    @GUITest
+    public void testUpdateButtonError() throws RepositoryException {
+        String existingName = "name";
+        Student student = new Student(existingName);
+        studentRepository.save(student);
+        // use the controller to populate the view's list...
+        GuiActionRunner.execute(
+                () -> studentController.newEntity(new Student("nameToModify")));
+        // ...with a student to select
+        panelFixture.list().selectItem(0);
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        panelFixture.dialog().textBox("NameTextField").deleteText()
+                .enterText(existingName);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+        // verify
+
+        verify(mainFrame).displayErrorLabel(
+                "Already existing entity: " + student + ": " + student);
     }
 
 }
