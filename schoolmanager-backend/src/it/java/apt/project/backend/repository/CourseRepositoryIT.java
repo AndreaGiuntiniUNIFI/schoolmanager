@@ -1,8 +1,12 @@
 package apt.project.backend.repository;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,30 +15,32 @@ import javax.persistence.Persistence;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
 import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Exam;
-import apt.project.backend.domain.Student;
 
-public class CourseRepositoryTest {
+@RunWith(Parameterized.class)
+public class CourseRepositoryIT {
 
-    private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
     private CourseRepository courseRepository;
     private static TransactionManager<Course> transactionManager;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("H2");
-        transactionManager = new TransactionManager<>(entityManagerFactory);
+    private static List<EntityManagerFactory> emfList;
+
+    @Parameters
+    public static Collection<EntityManagerFactory> data() {
+        emfList = asList("POSTGRES", "MYSQL").stream()
+                .map(Persistence::createEntityManagerFactory).collect(toList());
+        return emfList;
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        entityManagerFactory.close();
-    }
+    @Parameter
+    public static EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setUp() {
@@ -44,20 +50,20 @@ public class CourseRepositoryTest {
         entityManager.createNativeQuery("DELETE FROM Course").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM Student").executeUpdate();
         entityManager.getTransaction().commit();
+        transactionManager = new TransactionManager<>(entityManagerFactory);
         courseRepository = new CourseRepository(transactionManager);
+    }
 
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+        emfList.stream().filter(Objects::nonNull)
+                .forEach(EntityManagerFactory::close);
     }
 
     @After
     public void tearDown() {
         entityManager.clear();
         entityManager.close();
-    }
-
-    @Test
-    public void testFindAllWhenDataBaseIsEmpty() throws RepositoryException {
-        // exercise and verify
-        assertThat(courseRepository.findAll()).isEmpty();
     }
 
     @Test
@@ -85,13 +91,6 @@ public class CourseRepositoryTest {
         entityManager.getTransaction().commit();
         // exercise and verify
         assertThat(courseRepository.findByTitle("Course1")).isEqualTo(course1);
-    }
-
-    @Test
-    public void testFindByTitleWhenTheCourseDoesNotExist()
-            throws RepositoryException {
-        // exercise and verify
-        assertThat(courseRepository.findByTitle("Course1")).isNull();
     }
 
     @Test
@@ -147,56 +146,4 @@ public class CourseRepositoryTest {
                 .isEqualToComparingFieldByField(existingCourse);
     }
 
-    @Test
-    public void testFindById() throws RepositoryException {
-        // setup
-        Course course = new Course("Course1");
-        entityManager.getTransaction().begin();
-        entityManager.persist(course);
-        entityManager.getTransaction().commit();
-        // exercise
-        Course retrievedCourse = courseRepository.findById(course.getId());
-        // verify
-        assertThat(course).isEqualTo(retrievedCourse);
-    }
-
-    @Test
-    public void testWhenCourseIsDeletedThenRelatedExamsAreAlsoDeleted()
-            throws RepositoryException {
-
-        // setup
-        Course course = new Course("Course");
-        Course course1 = new Course("Course1");
-
-        Student student = new Student("student");
-        Exam exam = new Exam(course, 23);
-        Exam exam1 = new Exam(course1, 29);
-        student.addExam(exam);
-        student.addExam(exam1);
-        entityManager.getTransaction().begin();
-        entityManager.persist(course);
-        entityManager.persist(course1);
-        entityManager.persist(student);
-        entityManager.getTransaction().commit();
-
-        // exercise
-        courseRepository.delete(course);
-        entityManager.clear();
-
-        // verify
-        entityManager.getTransaction().begin();
-        Student retrievedStudent = entityManager
-                .createQuery("from Student", Student.class).getResultList()
-                .get(0);
-
-        List<Exam> retrievedExams = entityManager
-                .createQuery("from Exam", Exam.class).getResultList();
-        entityManager.getTransaction().commit();
-
-        assertThat(retrievedExams).hasSize(1);
-        assertThat(retrievedExams.get(0)).isEqualTo(exam1);
-
-        assertThat(retrievedStudent.getExams()).hasSize(1);
-        assertThat(retrievedStudent.getExams().get(0)).isEqualTo(exam1);
-    }
 }
