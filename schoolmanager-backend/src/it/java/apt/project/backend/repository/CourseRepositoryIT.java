@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,13 +30,13 @@ public class CourseRepositoryIT {
     private CourseRepository courseRepository;
     private static TransactionManager<Course> transactionManager;
 
-    private final static List<EntityManagerFactory> EMF_LIST = asList("MYSQL",
-            "POSTGRES").stream().map(Persistence::createEntityManagerFactory)
-                    .collect(toList());
+    private static List<EntityManagerFactory> emfList;
 
     @Parameters
     public static Collection<EntityManagerFactory> data() {
-        return EMF_LIST;
+        emfList = asList("POSTGRES", "MYSQL").stream()
+                .map(Persistence::createEntityManagerFactory).collect(toList());
+        return emfList;
     }
 
     @Parameter
@@ -55,7 +56,7 @@ public class CourseRepositoryIT {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        EMF_LIST.stream().filter(emf -> emf != null)
+        emfList.stream().filter(Objects::nonNull)
                 .forEach(EntityManagerFactory::close);
     }
 

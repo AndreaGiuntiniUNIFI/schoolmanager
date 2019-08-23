@@ -17,7 +17,7 @@
       <property name="javax.persistence.jdbc.user" value="user" />
       <property name="javax.persistence.jdbc.password" value="pwd" />
       <property name="hibernate.format_sql" value="true" />
-      <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+      <property name="hibernate.hbm2ddl.auto" value="create" />
     </properties>
   </persistence-unit>
 
@@ -33,10 +33,12 @@
       <property name="javax.persistence.jdbc.driver"
         value="org.postgresql.Driver" />
       <property name="javax.persistence.jdbc.url"
-        value="jdbc:postgresql://localhost:5436/it_db" />
-      <property name="javax.persistence.jdbc.user" value="it_user" />
-      <property name="javax.persistence.jdbc.password" value="it_pwd" />
-      <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+        value="jdbc:postgresql://localhost:5436/postgres_it_db" />
+      <property name="javax.persistence.jdbc.user"
+        value="postgres_it_user" />
+      <property name="javax.persistence.jdbc.password"
+        value="postgres_it_pwd" />
+      <property name="hibernate.hbm2ddl.auto" value="create" />
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.PostgreSQL95Dialect" />
       <property name="hibernate.format_sql" value="true" />
@@ -56,13 +58,15 @@
       <property name="javax.persistence.jdbc.driver"
         value="com.mysql.cj.jdbc.Driver" />
       <property name="javax.persistence.jdbc.url"
-        value="jdbc:mysql://localhost:3314/it_db" />
-      <property name="javax.persistence.jdbc.user" value="it_user" />
-      <property name="javax.persistence.jdbc.password" value="it_pwd" />
+        value="jdbc:mysql://localhost:3314/mysql_it_db" />
+      <property name="javax.persistence.jdbc.user"
+        value="mysql_it_user" />
+      <property name="javax.persistence.jdbc.password"
+        value="mysql_it_pwd" />
 
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.MySQL8Dialect" />
-      <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+      <property name="hibernate.hbm2ddl.auto" value="create" />
       <property name="hibernate.format_sql" value="true" />
     </properties>
 

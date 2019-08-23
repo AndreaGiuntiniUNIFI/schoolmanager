@@ -273,15 +273,15 @@
             <images>
               <image>
                 <name>postgres:11.4-alpine</name>
-                <alias>it-database</alias>
+                <alias>postgres-it-database</alias>
                 <run>
                   <ports>
                     <port>5436:5432</port>
                   </ports>
                   <env>
-                    <POSTGRES_DB>it_db</POSTGRES_DB>
-                    <POSTGRES_USER>it_user</POSTGRES_USER>
-                    <POSTGRES_PASSWORD>it_pwd</POSTGRES_PASSWORD>
+                    <POSTGRES_DB>postgres_it_db</POSTGRES_DB>
+                    <POSTGRES_USER>postgres_it_user</POSTGRES_USER>
+                    <POSTGRES_PASSWORD>postgres_it_pwd</POSTGRES_PASSWORD>
                   </env>
                   <wait>
                     <!-- Could not use standard <log> and <time> due to a bug in 
@@ -295,7 +295,7 @@
               </image>
 
               <image>
-                <alias>mysql-database</alias>
+                <alias>mysql-it-database</alias>
                 <name>mysql:8.0.17</name>
                 <run>
                   <wait>
@@ -303,10 +303,10 @@
                     <time>20000</time>
                   </wait>
                   <env>
-                    <MYSQL_DATABASE>it_db</MYSQL_DATABASE>
-                    <MYSQL_USER>it_user</MYSQL_USER>
-                    <MYSQL_PASSWORD>it_pwd</MYSQL_PASSWORD>
-                    <MYSQL_ROOT_PASSWORD>it_pwd</MYSQL_ROOT_PASSWORD>
+                    <MYSQL_DATABASE>mysql_it_db</MYSQL_DATABASE>
+                    <MYSQL_USER>mysql_it_user</MYSQL_USER>
+                    <MYSQL_PASSWORD>mysql_it_pwd</MYSQL_PASSWORD>
+                    <MYSQL_ROOT_PASSWORD>mysql_it_pwd</MYSQL_ROOT_PASSWORD>
                   </env>
                   <ports>
                     <port>3314:3306</port>
