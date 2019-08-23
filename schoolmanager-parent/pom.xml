@@ -288,12 +288,16 @@
                   </env>
                   <wait>
                     <!-- Could not use standard <log> and <time> due to a bug in 
-                      docker-maven-plugin. See issue #552 on GitHub. -->
+                      docker-maven-plugin. See issues #767 and #552 on GitHub. -->
                     <log>(?s)database system is ready to accept connections</log>
                     <exec>
                       <postStart>sleep 5</postStart>
                     </exec>
                   </wait>
+                  <log>
+                    <date>default</date>
+                    <color>magenta</color>
+                  </log>
                 </run>
               </image>
 
@@ -304,6 +308,9 @@
                   <wait>
                     <log>mysqld: ready for connections.*port: 3306</log>
                     <time>30000</time>
+                    <exec>
+                      <postStart>sleep 5</postStart>
+                    </exec>
                   </wait>
                   <env>
                     <MYSQL_DATABASE>mysql_it_db</MYSQL_DATABASE>
@@ -314,6 +321,10 @@
                   <ports>
                     <port>${mysql-port}:3306</port>
                   </ports>
+                  <log>
+                    <date>default</date>
+                    <color>magenta</color>
+                  </log>
                 </run>
               </image>
             </images>
