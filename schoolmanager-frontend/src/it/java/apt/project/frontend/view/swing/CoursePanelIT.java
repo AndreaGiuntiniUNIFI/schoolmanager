@@ -2,14 +2,15 @@ package apt.project.frontend.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -42,7 +43,6 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
     private MainFrame mainFrame;
 
     private static EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
     private CourseRepository courseRepository;
     private static TransactionManager<Course> transactionManager;
 
@@ -60,8 +60,8 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
             for (Course course : courseRepository.findAll()) {
                 courseRepository.delete(course);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
 
         dialogManager = new DialogManager();
@@ -88,13 +88,6 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
         entityManagerFactory.close();
     }
 
-    // @Override
-    // @After
-    // public void onTearDown() {
-    // entityManager.clear();
-    // entityManager.close();
-    // }
-
     @Test
     @GUITest
     public void testAllCourses() throws RepositoryException {
@@ -108,6 +101,36 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
         // and verify that the view's list is populated
         assertThat(panelFixture.list().contents())
                 .containsExactly(course1.toString(), course2.toString());
+    }
+
+    @Test
+    @GUITest
+    public void testAddButtonSuccess() {
+        // setup
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        String title = "title1";
+        panelFixture.dialog().textBox("TitleTextField").enterText(title);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+
+        // verify
+        assertThat(panelFixture.list().contents())
+                .containsExactly(new Course("title1").toString());
+    }
+
+    @Test
+    @GUITest
+    public void testAddButtonError() throws RepositoryException {
+        String existingTitle = "title";
+        Course course = new Course(existingTitle);
+        courseRepository.save(course);
+        panelFixture.button(JButtonMatcher.withText("Add")).click();
+        panelFixture.dialog().textBox().enterText(existingTitle);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+        assertThat(panelFixture.list().contents()).isEmpty();
+
+        verify(mainFrame).displayErrorLabel(
+                "Already existing entity: " + course + ": " + course);
     }
 
 }
