@@ -23,6 +23,9 @@
     <postgresql-driver.version>42.2.6</postgresql-driver.version>
     <mysql-driver.version>8.0.17</mysql-driver.version>
 
+    <mysql-port>3314</mysql-port>
+    <postgres-port>5436</postgres-port>
+
     <sonar.coverage.exclusions>
       **/backend/domain/*.*,
       **/backend/repository/TransactionManager.java,
@@ -276,7 +279,7 @@
                 <alias>postgres-it-database</alias>
                 <run>
                   <ports>
-                    <port>5436:5432</port>
+                    <port>${postgres-port}:5432</port>
                   </ports>
                   <env>
                     <POSTGRES_DB>postgres_it_db</POSTGRES_DB>
@@ -299,8 +302,8 @@
                 <name>mysql:8.0.17</name>
                 <run>
                   <wait>
-                    <log>mysqld: ready for connections</log>
-                    <time>20000</time>
+                    <log>mysqld: ready for connections.*port: 3306</log>
+                    <time>30000</time>
                   </wait>
                   <env>
                     <MYSQL_DATABASE>mysql_it_db</MYSQL_DATABASE>
@@ -309,7 +312,7 @@
                     <MYSQL_ROOT_PASSWORD>mysql_it_pwd</MYSQL_ROOT_PASSWORD>
                   </env>
                   <ports>
-                    <port>3314:3306</port>
+                    <port>${mysql-port}:3306</port>
                   </ports>
                 </run>
               </image>
