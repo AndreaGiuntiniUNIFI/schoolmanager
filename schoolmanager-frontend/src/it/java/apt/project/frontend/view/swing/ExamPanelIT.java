@@ -26,6 +26,7 @@ import apt.project.backend.repository.CourseRepository;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.backend.repository.StudentRepository;
 import apt.project.backend.repository.TransactionManager;
+import apt.project.frontend.controller.ExamDialogController;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
@@ -60,6 +61,12 @@ public class ExamPanelIT extends AssertJSwingJUnitTestCase {
 
     private Student student;
 
+    private Course course1;
+
+    private Exam exam1;
+
+    private ExamDialogController examDialogController;
+
     @BeforeClass
     public static void setUpClass() throws Exception {
         entityManagerFactory = Persistence.createEntityManagerFactory("H2");
@@ -93,6 +100,11 @@ public class ExamPanelIT extends AssertJSwingJUnitTestCase {
                     mainFrame, dialogManager, HEADER_STUDENT);
             studentController = new StudentController(studentPanel,
                     studentRepository);
+            examPanel.setController(studentController);
+            examDialogController = new ExamDialogController(examPanel,
+                    courseRepository);
+            examPanel.setExamDialogController(examDialogController);
+
             studentPanel.setController(studentController);
 
             frame = new JFrame();
@@ -103,28 +115,16 @@ public class ExamPanelIT extends AssertJSwingJUnitTestCase {
 
         });
         panelFixture = new JPanelFixture(robot(), cardsPanel);
-    }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        entityManagerFactory.close();
-    }
-
-    @Test
-    @GUITest
-    public void testAllExams() throws RepositoryException {
+        // Initialization for Exam panel related to "student" entity
         student = new Student("student");
 
-        Course course1 = new Course("course1");
-        Exam exam1 = new Exam(course1, 30);
-        Course course2 = new Course("course2");
-        Exam exam2 = new Exam(course2, 28);
+        course1 = new Course("course1");
+        exam1 = new Exam(course1, 30);
 
         student.addExam(exam1);
-        student.addExam(exam2);
         try {
             courseRepository.save(course1);
-            courseRepository.save(course2);
             studentRepository.save(student);
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
@@ -136,8 +136,40 @@ public class ExamPanelIT extends AssertJSwingJUnitTestCase {
         panelFixture.list().selectItem(0);
         panelFixture.button(JButtonMatcher.withText("Open")).click();
 
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+        entityManagerFactory.close();
+    }
+
+    @Test
+    @GUITest
+    public void testAllExams() throws RepositoryException {
+
         assertThat(panelFixture.list().contents())
-                .containsExactly(exam1.toString(), exam2.toString());
+                .containsExactly(exam1.toString());
+    }
+
+    @Test
+    @GUITest
+    public void testAddButtonSuccess() throws RepositoryException {
+        // setup
+        Course course2 = new Course("course3");
+        courseRepository.save(course2);
+
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Add").andShowing())
+                .click();
+
+        panelFixture.dialog().comboBox("examComboBox").selectItem(0);
+        panelFixture.dialog().comboBox("rateComboBox").selectItem(1);
+
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+
+        // verify
+        assertThat(panelFixture.list().contents()).containsExactlyInAnyOrder(
+                exam1.toString(), new Exam(course2, 19).toString());
     }
 
 }
