@@ -91,12 +91,12 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testAllCourses() throws RepositoryException {
-        // use the repository to add students to the database
+        // use the repository to add course to the database
         Course course1 = new Course("course1");
         Course course2 = new Course("course2");
         courseRepository.save(course1);
         courseRepository.save(course2);
-        // use the controller's allStudents
+        // use the controller's allEntities
         GuiActionRunner.execute(() -> courseController.allEntities());
         // and verify that the view's list is populated
         assertThat(panelFixture.list().contents())
@@ -125,9 +125,80 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
         Course course = new Course(existingTitle);
         courseRepository.save(course);
         panelFixture.button(JButtonMatcher.withText("Add")).click();
-        panelFixture.dialog().textBox().enterText(existingTitle);
+        panelFixture.dialog().textBox("TitleTextField")
+                .enterText(existingTitle);
         panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
         assertThat(panelFixture.list().contents()).isEmpty();
+
+        verify(mainFrame).displayErrorLabel(
+                "Already existing entity: " + course + ": " + course);
+    }
+
+    @Test
+    @GUITest
+    public void testDeleteButtonSuccess() {
+        // use the controller to populate the view's list...
+        GuiActionRunner.execute(
+                () -> courseController.newEntity(new Course("coursetoRemove")));
+        // ...with a course to select
+        panelFixture.list().selectItem(0);
+        panelFixture.button(JButtonMatcher.withText("Delete")).click();
+        assertThat(panelFixture.list().contents()).isEmpty();
+    }
+
+    @Test
+    @GUITest
+    public void testDeleteButtonError() {
+        // manually add a course to the list, which will not be in the db
+        Course course = new Course("non existent");
+        GuiActionRunner
+                .execute(() -> coursePanel.getListModel().addElement(course));
+        panelFixture.list().selectItem(0);
+        panelFixture.button(JButtonMatcher.withText("Delete")).click();
+        assertThat(panelFixture.list().contents())
+                .containsExactly(course.toString());
+
+        verify(mainFrame).displayErrorLabel(
+                "No existing entity: " + course + ": " + course);
+    }
+
+    @Test
+    @GUITest
+    public void testUpdateButtonSuccess() {
+        // use the controller to populate the view's list...
+        GuiActionRunner.execute(
+                () -> courseController.newEntity(new Course("coursetoModify")));
+        // ...with a course to select
+        panelFixture.list().selectItem(0);
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        String title = "modifiedCourse";
+        panelFixture.dialog().textBox("TitleTextField").deleteText()
+                .enterText(title);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+        // verify
+        assertThat(panelFixture.list().contents())
+                .containsExactly(new Course(title).toString());
+    }
+
+    @Test
+    @GUITest
+    public void testUpdateButtonError() throws RepositoryException {
+        String existingTitle = "title";
+        Course course = new Course(existingTitle);
+        courseRepository.save(course);
+
+        // use the controller to populate the view's list...
+        GuiActionRunner.execute(
+                () -> courseController.newEntity(new Course("coursetoModify")));
+        // ...with a course to select
+        panelFixture.list().selectItem(0);
+        // exercise
+        panelFixture.button(JButtonMatcher.withText("Modify")).click();
+        panelFixture.dialog().textBox("TitleTextField").deleteText()
+                .enterText(existingTitle);
+        panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
+        // verify
 
         verify(mainFrame).displayErrorLabel(
                 "Already existing entity: " + course + ": " + course);

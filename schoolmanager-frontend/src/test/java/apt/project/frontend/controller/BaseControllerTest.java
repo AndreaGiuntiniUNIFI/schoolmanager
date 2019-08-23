@@ -46,6 +46,10 @@ public class BaseControllerTest {
             setId(id);
         }
 
+        public TestEntity(int field) {
+            aField = field;
+        }
+
         @Override
         public String toString() {
             return "TestEntity [aField=" + aField + "]";
@@ -126,6 +130,19 @@ public class BaseControllerTest {
         // setup
         TestEntity entityToDelete = new TestEntity(1, 1L);
         when(repository.findById(1L)).thenReturn(null);
+        // exercise
+        controller.deleteEntity(entityToDelete);
+        // verify
+        verify(view).showError("No existing entity: " + entityToDelete,
+                entityToDelete);
+        verifyNoMoreInteractions(ignoreStubs(repository));
+    }
+
+    @Test
+    public void testDeleteEntityWhenEntityDoesNotHaveId()
+            throws RepositoryException {
+        // setup
+        TestEntity entityToDelete = new TestEntity(1);
         // exercise
         controller.deleteEntity(entityToDelete);
         // verify
