@@ -32,6 +32,7 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
     @Override
     public void updateEntity(T modifiedEntity) {
         T persistedEntity;
+
         if (!em.catcher(() -> repository.findById(modifiedEntity.getId()),
                 modifiedEntity)) {
             return;

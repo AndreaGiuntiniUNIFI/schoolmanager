@@ -3,7 +3,6 @@ package apt.project.frontend.controller;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -27,7 +26,6 @@ public class StudentControllerIT {
 
     private StudentController studentController;
     private StudentRepository studentRepository;
-    private EntityManager entityManager;
     private static EntityManagerFactory entityManagerFactory;
     private static TransactionManager<Student> transactionManager;
 
@@ -45,7 +43,6 @@ public class StudentControllerIT {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        entityManager = entityManagerFactory.createEntityManager();
         studentRepository = new StudentRepository(transactionManager);
         transactionManager = new TransactionManager<>(entityManagerFactory);
         studentRepository = new StudentRepository(transactionManager);
@@ -91,13 +88,13 @@ public class StudentControllerIT {
     @Test
     public void testUpdateEntityWhenEntityExists() throws RepositoryException {
         // setup
-        Student existingStudent = new Student("John");
-        Student modifiedStudent = new Student("Jane");
-        studentRepository.save(existingStudent);
+        Student student = new Student("John");
+        studentRepository.save(student);
         // exercise
-        studentController.updateEntity(modifiedStudent);
+        student.setName("Jane");
+        studentController.updateEntity(student);
         // verify
-        verify(studentView).entityUpdated(modifiedStudent);
+        verify(studentView).entityUpdated(student);
     }
 
 }
