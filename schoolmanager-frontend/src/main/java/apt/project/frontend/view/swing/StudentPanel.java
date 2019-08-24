@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
@@ -15,6 +16,7 @@ import apt.project.frontend.view.swing.dialog.DialogManager;
 public class StudentPanel extends BasePanel<Student> {
 
     private StudentController controller;
+    private ExamController examController;
 
     private JButton btnOpen;
     private JPanel cardsPanel;
@@ -23,16 +25,17 @@ public class StudentPanel extends BasePanel<Student> {
 
     public StudentPanel(JPanel studentPanel, ExamPanel examPanel,
             MainFrame parentMainFrame, DialogManager dialogManager,
-            String headerText) {
+            ExamController examController, String headerText) {
 
         super(studentPanel, parentMainFrame, dialogManager, headerText);
 
         this.examPanel = examPanel;
+        this.examController = examController;
 
         btnAdd.addActionListener(e -> {
             String name = dialogManager.manageDialog("Name");
             if (name != null) {
-                getController().newEntity(new Student(name));
+                controller.newEntity(new Student(name));
             }
         });
 
@@ -66,8 +69,9 @@ public class StudentPanel extends BasePanel<Student> {
         gbc_btnOpen.gridy = 1;
         studentPanel.add(btnOpen, gbc_btnOpen);
         btnOpen.addActionListener(e -> {
-            examPanel.setStudent(list.getSelectedValue());
-            examPanel.showAll();
+            Student selectedStudent = list.getSelectedValue();
+            examPanel.setStudent(selectedStudent);
+            examController.allEntities(selectedStudent);
             switchPanel.actionPerformed(e);
         });
 
@@ -90,6 +94,10 @@ public class StudentPanel extends BasePanel<Student> {
 
     public void setController(StudentController controller) {
         this.controller = controller;
+    }
+
+    public ExamController getExamController() {
+        return examController;
     }
 
 }

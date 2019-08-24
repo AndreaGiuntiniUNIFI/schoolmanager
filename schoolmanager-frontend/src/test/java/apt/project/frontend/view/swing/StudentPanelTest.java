@@ -24,6 +24,7 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
@@ -40,6 +41,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
     private JFrame frame;
     private DialogManager dialogManager;
     private StudentController studentController;
+    private ExamController examController;
     private MainFrame mainFrame;
     private JPanel internalExamPanel;
 
@@ -53,6 +55,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
         dialogManager = mock(DialogManager.class);
         mainFrame = mock(MainFrame.class);
         studentController = mock(StudentController.class);
+        examController = mock(ExamController.class);
 
         GuiActionRunner.execute(() -> {
             internalExamPanel = new JPanel();
@@ -61,7 +64,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
 
             internalStudentPanel = new JPanel();
             studentPanel = new StudentPanel(internalStudentPanel, examPanel,
-                    mainFrame, dialogManager, HEADER_TEXT);
+                    mainFrame, dialogManager, examController, HEADER_TEXT);
             studentPanel.setController(studentController);
             frame = new JFrame();
             cardsPanel = studentPanel.getCardsPanel();
@@ -214,9 +217,9 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Open")).click();
 
         // verify
-        InOrder inOrder = Mockito.inOrder(examPanel);
+        InOrder inOrder = Mockito.inOrder(examPanel, examController);
         inOrder.verify(examPanel).setStudent(student2);
-        inOrder.verify(examPanel).showAll();
+        inOrder.verify(examController).allEntities(student2);
         cardsFixture.panel("examPanel").requireVisible();
         panelFixture.requireNotVisible();
     }

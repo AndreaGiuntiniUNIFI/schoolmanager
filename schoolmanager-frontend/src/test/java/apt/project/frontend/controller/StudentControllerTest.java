@@ -275,7 +275,8 @@ public class StudentControllerTest {
         studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError(
-                "Already existing entity: " + modifiedStudent, modifiedStudent);
+                "Already existing student with this name: " + modifiedStudent,
+                modifiedStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
@@ -316,7 +317,7 @@ public class StudentControllerTest {
         studentController.updateEntity(modifiedStudent);
         // verify
         verify(studentView).showError(
-                "Duplicate Exams in Student: " + asList(course1),
+                "Duplicate courses in student: " + asList(course1),
                 modifiedStudent);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
