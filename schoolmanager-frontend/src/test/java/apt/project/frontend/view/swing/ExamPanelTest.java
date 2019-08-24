@@ -33,7 +33,7 @@ import apt.project.frontend.view.swing.dialog.DialogManager;
 @RunWith(GUITestRunner.class)
 public class ExamPanelTest extends AssertJSwingJUnitTestCase {
 
-    private static final String HEADER_TEXT = "List of Courses";
+    private static final String HEADER_TEXT = "List of Exams";
 
     private ExamPanel examPanel;
 
