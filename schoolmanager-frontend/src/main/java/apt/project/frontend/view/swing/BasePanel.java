@@ -21,7 +21,7 @@ import apt.project.frontend.view.swing.dialog.DialogManager;
 public class BasePanel<T extends BaseEntity> implements View<T> {
 
     private JPanel panel;
-    private MainFrame parentMainFrame;
+    private MainFrame mainFrame;
     private DialogManager dialogManager;
     private String headerText;
 
@@ -31,11 +31,10 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
     protected DefaultListModel<T> listModel;
     protected JList<T> list;
 
-    public BasePanel(JPanel panel, MainFrame parentMainFrame,
-            DialogManager dialogManager, String headerText) {
+    public BasePanel(JPanel panel, DialogManager dialogManager,
+            String headerText) {
 
         this.panel = panel;
-        this.parentMainFrame = parentMainFrame;
         this.dialogManager = dialogManager;
         this.headerText = headerText;
 
@@ -102,36 +101,36 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
     @Override
     public void entityAdded(T entity) {
         listModel.addElement(entity);
-        parentMainFrame.resetErrorLabel();
+        mainFrame.resetErrorLabel();
     }
 
     @Override
     public void entityDeleted(T entity) {
         listModel.removeElement(entity);
-        parentMainFrame.resetErrorLabel();
+        mainFrame.resetErrorLabel();
     }
 
     @Override
     public void entityUpdated(T modifiedEntity) {
         listModel.set(listModel.indexOf(modifiedEntity), modifiedEntity);
-        parentMainFrame.resetErrorLabel();
+        mainFrame.resetErrorLabel();
     }
 
     @Override
     public void showError(String label, T entity) {
-        parentMainFrame.displayErrorLabel(label + ": " + entity);
+        mainFrame.displayErrorLabel(label + ": " + entity);
     }
 
     public JPanel getPanel() {
         return panel;
     }
 
-    public MainFrame getParentMainFrame() {
-        return parentMainFrame;
+    public MainFrame getMainFrame() {
+        return mainFrame;
     }
 
-    public void setParentMainFrame(MainFrame parentMainFrame) {
-        this.parentMainFrame = parentMainFrame;
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
     }
 
     public DialogManager getDialogManager() {

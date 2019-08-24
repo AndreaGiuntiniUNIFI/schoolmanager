@@ -1,7 +1,6 @@
 package apt.project.frontend.view.swing;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -9,17 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.view.MainFrame;
-import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class SwingMainFrame extends JFrame implements MainFrame {
-
-    private static final Logger LOGGER = LogManager
-            .getLogger(SwingMainFrame.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -27,26 +18,11 @@ public class SwingMainFrame extends JFrame implements MainFrame {
 
     private JLabel errorLabel;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                SwingMainFrame frame = new SwingMainFrame();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                LOGGER.error(e);
-            }
-        });
-    }
+    public SwingMainFrame(CoursePanel coursePanel, StudentPanel studentPanel) {
 
-    /**
-     * Create the frame.
-     */
-    public SwingMainFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
+
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
@@ -56,23 +32,8 @@ public class SwingMainFrame extends JFrame implements MainFrame {
         tabbedPane.setName("mainTabbedPane");
         contentPane.add(tabbedPane, BorderLayout.NORTH);
 
-        DialogManager dialogManager = new DialogManager();
-
-        JPanel internalExamPanel = new JPanel();
-        ExamPanel examPanel = new ExamPanel(internalExamPanel, this,
-                dialogManager, "List of Exams");
-
-        ExamController examController = new ExamController(examPanel, null);
-        JPanel internalStudentPanel = new JPanel();
-        StudentPanel studentPanel = new StudentPanel(internalStudentPanel,
-                examPanel, this, dialogManager, examController,
-                "List of Students");
-
         studentPanel.getPanel().setName("studentPanel");
         tabbedPane.addTab("Students", null, studentPanel.getCardsPanel(), null);
-
-        CoursePanel coursePanel = new CoursePanel(new JPanel(), this,
-                dialogManager, "List of Courses");
 
         coursePanel.getPanel().setName("coursePanel");
         tabbedPane.addTab("Courses", null, coursePanel.getPanel(), null);

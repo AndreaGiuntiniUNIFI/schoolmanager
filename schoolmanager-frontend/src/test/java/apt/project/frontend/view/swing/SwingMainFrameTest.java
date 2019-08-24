@@ -1,5 +1,7 @@
 package apt.project.frontend.view.swing;
 
+import javax.swing.JPanel;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
@@ -7,6 +9,9 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import apt.project.frontend.controller.ExamController;
+import apt.project.frontend.view.swing.dialog.DialogManager;
 
 @RunWith(GUITestRunner.class)
 public class SwingMainFrameTest extends AssertJSwingJUnitTestCase {
@@ -17,7 +22,26 @@ public class SwingMainFrameTest extends AssertJSwingJUnitTestCase {
     @Override
     protected void onSetUp() {
         GuiActionRunner.execute(() -> {
-            mainFrame = new SwingMainFrame();
+            DialogManager dialogManager = new DialogManager();
+
+            ExamPanel examPanel = new ExamPanel(new JPanel(), dialogManager,
+                    "List of Exams");
+
+            ExamController examController = new ExamController(examPanel, null);
+
+            StudentPanel studentPanel = new StudentPanel(new JPanel(),
+                    examPanel, dialogManager, examController,
+                    "List of Students");
+
+            CoursePanel coursePanel = new CoursePanel(new JPanel(),
+                    dialogManager, "List of Courses");
+
+            mainFrame = new SwingMainFrame(coursePanel, studentPanel);
+
+            examPanel.setMainFrame(mainFrame);
+            coursePanel.setMainFrame(mainFrame);
+            studentPanel.setMainFrame(mainFrame);
+
             frameFixture = new FrameFixture(robot(), mainFrame);
         });
         frameFixture.show();

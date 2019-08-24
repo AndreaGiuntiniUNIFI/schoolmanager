@@ -33,6 +33,11 @@
       <artifactId>log4j-core</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+    </dependency>
+
     <!-- Test scope dependencies -->
 
     <dependency>

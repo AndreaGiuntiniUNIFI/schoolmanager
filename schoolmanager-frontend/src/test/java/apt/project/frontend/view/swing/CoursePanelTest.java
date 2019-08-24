@@ -47,9 +47,10 @@ public class CoursePanelTest extends AssertJSwingJUnitTestCase {
 
         GuiActionRunner.execute(() -> {
             internalPanel = new JPanel();
-            coursePanel = new CoursePanel(internalPanel, mainFrame,
-                    dialogManager, HEADER_TEXT);
+            coursePanel = new CoursePanel(internalPanel, dialogManager,
+                    HEADER_TEXT);
             coursePanel.setController(courseController);
+            coursePanel.setMainFrame(mainFrame);
             frame = new JFrame();
             frame.add(internalPanel);
             frame.pack();
