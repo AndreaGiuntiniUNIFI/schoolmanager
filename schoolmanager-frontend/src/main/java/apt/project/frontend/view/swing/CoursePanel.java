@@ -19,7 +19,7 @@ public class CoursePanel extends BasePanel<Course> {
         btnAdd.addActionListener(e -> {
             String title = dialogManager.manageDialog("Title");
             if (title != null) {
-                getController().newEntity(new Course(title));
+                controller.newEntity(new Course(title));
             }
         });
 
@@ -29,12 +29,12 @@ public class CoursePanel extends BasePanel<Course> {
                     selectedCourse.getTitle());
             if (title != null) {
                 selectedCourse.merge(new Course(title));
-                getController().updateEntity(selectedCourse);
+                controller.updateEntity(selectedCourse);
             }
         });
 
         btnDelete.addActionListener(
-                e -> getController().deleteEntity(list.getSelectedValue()));
+                e -> controller.deleteEntity(list.getSelectedValue()));
     }
 
     public CourseController getController() {

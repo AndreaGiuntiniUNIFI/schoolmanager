@@ -21,13 +21,12 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.ExamDialogController;
-import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
@@ -42,7 +41,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
     private JPanelFixture panelFixture;
     private JFrame frame;
     private DialogManager dialogManager;
-    private StudentController studentController;
+    private ExamController examController;
     private ExamDialogController examDialogController;
     private MainFrame mainFrame;
     private Student student;
@@ -52,13 +51,13 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
 
         dialogManager = mock(DialogManager.class);
         mainFrame = mock(MainFrame.class);
-        studentController = mock(StudentController.class);
+        examController = mock(ExamController.class);
         student = new Student("student");
         GuiActionRunner.execute(() -> {
             internalPanel = new JPanel();
             examPanel = new ExamPanel(internalPanel, mainFrame, dialogManager,
                     HEADER_TEXT);
-            examPanel.setController(studentController);
+            examPanel.setController(examController);
             examPanel.setExamDialogController(examDialogController);
             frame = new JFrame();
             frame.add(internalPanel);
@@ -142,14 +141,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         List<Exam> modifiedList = new ArrayList<Exam>(student.getExams());
         modifiedList.add(submittedExam);
 
-        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor
-                .forClass(Student.class);
-
-        verify(studentController).updateEntity(studentCaptor.capture());
-        assertThat(studentCaptor.getValue().getExams())
-                .containsAll(modifiedList);
-        assertThat(studentCaptor.getValue()).isEqualTo(student);
-
+        verify(examController).newEntity(student, submittedExam);
     }
 
     @Test
@@ -171,7 +163,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Add")).click();
 
         // verify
-        verifyZeroInteractions(studentController);
+        verifyZeroInteractions(examController);
     }
 
     @Test
@@ -198,15 +190,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Delete")).click();
 
         // verify
-        List<Exam> modifiedList = new ArrayList<Exam>(asList(exam1));
-
-        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor
-                .forClass(Student.class);
-
-        verify(studentController).updateEntity(studentCaptor.capture());
-        assertThat(studentCaptor.getValue().getExams())
-                .containsAll(modifiedList);
-        assertThat(studentCaptor.getValue()).isEqualTo(student);
+        verify(examController).deleteEntity(student, exam2);
 
     }
 
@@ -261,15 +245,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
 
         // verify
-        ArgumentCaptor<Student> studentCaptor = ArgumentCaptor
-                .forClass(Student.class);
-
-        verify(studentController).updateEntity(studentCaptor.capture());
-
-        assertThat(studentCaptor.getValue().getExams().get(0).getRate())
-                .isEqualTo(modifiedRate);
-        assertThat(studentCaptor.getValue().getExams().get(0).getCourse())
-                .isEqualTo(course1);
+        verify(examController).updateEntity(student, exam1);
     }
 
     @Test
@@ -296,7 +272,7 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         panelFixture.button(JButtonMatcher.withText("Modify")).click();
 
         // verify
-        verifyZeroInteractions(studentController);
+        verifyZeroInteractions(examController);
     }
 
 }
