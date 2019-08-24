@@ -86,7 +86,7 @@ public class StudentControllerIT {
     }
 
     @Test
-    public void testUpdateEntityWhenEntityExists() throws RepositoryException {
+    public void testUpdateEntity() throws RepositoryException {
         // setup
         Student student = new Student("John");
         studentRepository.save(student);

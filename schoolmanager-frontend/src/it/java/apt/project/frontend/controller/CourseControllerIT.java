@@ -85,7 +85,7 @@ public class CourseControllerIT {
     }
 
     @Test
-    public void testUpdateEntityWhenEntityExists() throws RepositoryException {
+    public void testUpdateEntity() throws RepositoryException {
         // setup
         Course course = new Course("existingTitle");
         courseRepository.save(course);
