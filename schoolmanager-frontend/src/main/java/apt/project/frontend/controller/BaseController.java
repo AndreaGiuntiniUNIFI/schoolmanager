@@ -61,11 +61,6 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
     @Override
     public void deleteEntity(T entityToDelete) {
         T persistedEntity;
-        if (entityToDelete.getId() == null) {
-            view.showError("No existing entity: " + entityToDelete,
-                    entityToDelete);
-            return;
-        }
         if (!em.catcher(() -> repository.findById(entityToDelete.getId()),
                 entityToDelete)) {
             return;

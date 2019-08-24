@@ -151,6 +151,7 @@ public class CoursePanelIT extends AssertJSwingJUnitTestCase {
     public void testDeleteButtonError() {
         // manually add a course to the list, which will not be in the db
         Course course = new Course("non existent");
+        course.setId(1L);
         GuiActionRunner
                 .execute(() -> coursePanel.getListModel().addElement(course));
         panelFixture.list().selectItem(0);
