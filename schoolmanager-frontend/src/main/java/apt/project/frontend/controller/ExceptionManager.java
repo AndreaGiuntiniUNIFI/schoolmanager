@@ -4,11 +4,17 @@ import static java.util.Arrays.asList;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import apt.project.backend.domain.BaseEntity;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.frontend.view.View;
 
 public class ExceptionManager<T extends BaseEntity> {
+
+    private static final Logger LOGGER = LogManager
+            .getLogger(ExceptionManager.class);
 
     private List<T> resultList;
     private View<T> view;
@@ -24,6 +30,7 @@ public class ExceptionManager<T extends BaseEntity> {
             return true;
         } catch (RepositoryException e) {
             view.showError(e.getMessage(), entity);
+            LOGGER.error("", e);
         }
         return false;
     }

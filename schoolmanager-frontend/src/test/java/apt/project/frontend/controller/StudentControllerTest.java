@@ -187,12 +187,13 @@ public class StudentControllerTest {
     @Test
     public void testUpdateEntityWhenEntityExists() throws RepositoryException {
         // setup
-        String studentName = "Jane";
-        Student existingStudent = new Student("John");
+        String existingName = "John";
+        String modifiedName = "Jane";
+        Student existingStudent = new Student(existingName);
         existingStudent.setId(1L);
-        Student modifiedStudent = new Student(studentName);
+        Student modifiedStudent = new Student(modifiedName);
         modifiedStudent.setId(2L);
-        when(studentRepository.findByName(studentName)).thenReturn(null);
+        when(studentRepository.findByName(modifiedName)).thenReturn(null);
         when(studentRepository.findById(2L)).thenReturn(existingStudent);
         // exercise
         studentController.updateEntity(modifiedStudent);
