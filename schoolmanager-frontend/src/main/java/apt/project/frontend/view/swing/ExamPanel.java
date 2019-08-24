@@ -12,14 +12,14 @@ import javax.swing.JPanel;
 import apt.project.backend.domain.Course;
 import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
+import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.ExamDialogController;
-import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class ExamPanel extends BasePanel<Exam> {
 
-    private StudentController controller;
+    private ExamController controller;
     private ExamDialogController examDialogController;
     private Student student;
     private JButton btnBack;
@@ -34,24 +34,21 @@ public class ExamPanel extends BasePanel<Exam> {
             Exam exam = dialogManager.manageExamDialog(courses,
                     examDialogController);
             if (exam != null) {
-                student.addExam(exam);
-                controller.updateEntity(student);
+                controller.newEntity(student, exam);
             }
         });
 
         btnDelete.addActionListener(e -> {
-            student.getExams().remove(list.getSelectedIndex());
-            controller.updateEntity(student);
+            Exam exam = list.getSelectedValue();
+            controller.deleteEntity(student, exam);
         });
 
         btnModify.addActionListener(e -> {
             Exam selectedExam = list.getSelectedValue();
             String rate = dialogManager.manageSimpleExamDialog();
             if (rate != null) {
-                Exam exameToMerge = new Exam();
-                exameToMerge.setRate(Integer.parseInt(rate));
-                selectedExam.merge(exameToMerge);
-                controller.updateEntity(student);
+                selectedExam.setRate(Integer.parseInt(rate));
+                controller.updateEntity(student, selectedExam);
             }
         });
 
@@ -74,10 +71,6 @@ public class ExamPanel extends BasePanel<Exam> {
         this.student = student;
     }
 
-    public void setController(StudentController controller) {
-        this.controller = controller;
-    }
-
     public JButton getBtnBack() {
         return btnBack;
     }
@@ -85,5 +78,9 @@ public class ExamPanel extends BasePanel<Exam> {
     public void setExamDialogController(
             ExamDialogController examDialogController) {
         this.examDialogController = examDialogController;
+    }
+
+    public void setController(ExamController controller) {
+        this.controller = controller;
     }
 }

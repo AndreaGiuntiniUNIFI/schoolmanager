@@ -38,12 +38,11 @@ public class StudentController extends BaseController<Student> {
 
     @Override
     public void updateEntity(Student modifiedStudent) {
-
-        List<Course> duplicatedExam = duplicatedExam(
+        List<Course> duplicateCourses = checkDuplicateCourses(
                 modifiedStudent.getExams());
 
-        if (!duplicatedExam.isEmpty()) {
-            view.showError("Duplicate Exams in Student: " + duplicatedExam,
+        if (!duplicateCourses.isEmpty()) {
+            view.showError("Duplicate courses in student: " + duplicateCourses,
                     modifiedStudent);
             return;
         }
@@ -58,14 +57,14 @@ public class StudentController extends BaseController<Student> {
         studentWithNewName = em.getResult();
         if (studentWithNewName != null && !studentWithNewName.getId()
                 .equals(modifiedStudent.getId())) {
-            view.showError("Already existing entity: " + modifiedStudent,
-                    modifiedStudent);
+            view.showError("Already existing student with this name: "
+                    + modifiedStudent, modifiedStudent);
             return;
         }
         super.updateEntity(modifiedStudent);
     }
 
-    public List<Course> duplicatedExam(List<Exam> list) {
+    public List<Course> checkDuplicateCourses(List<Exam> list) {
         return list.stream().collect(groupingBy(Exam::getCourse, counting()))
                 .entrySet().stream().filter(e -> e.getValue() > 1L)
                 .map(Entry<Course, Long>::getKey).collect(toList());

@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
@@ -61,9 +62,11 @@ public class SwingMainFrame extends JFrame implements MainFrame {
         ExamPanel examPanel = new ExamPanel(internalExamPanel, this,
                 dialogManager, "List of Exams");
 
+        ExamController examController = new ExamController(examPanel, null);
         JPanel internalStudentPanel = new JPanel();
         StudentPanel studentPanel = new StudentPanel(internalStudentPanel,
-                examPanel, this, dialogManager, "List of Students");
+                examPanel, this, dialogManager, examController,
+                "List of Students");
 
         studentPanel.getPanel().setName("studentPanel");
         tabbedPane.addTab("Students", null, studentPanel.getCardsPanel(), null);

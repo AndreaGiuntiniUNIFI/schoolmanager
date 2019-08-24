@@ -87,4 +87,15 @@ public class Student extends BaseEntity {
         this.exams = exams;
     }
 
+    public boolean removeExam(Exam exam) {
+        return exams.remove(exam);
+    }
+
+    public int findExam(Exam exam) {
+        return exams.stream()
+                .filter(e -> e.getCourse().getTitle()
+                        .equals(exam.getCourse().getTitle()))
+                .map(exams::indexOf).findFirst().orElse(-1);
+    }
+
 }
