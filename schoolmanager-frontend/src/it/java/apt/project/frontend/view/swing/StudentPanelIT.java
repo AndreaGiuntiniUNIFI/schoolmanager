@@ -25,6 +25,7 @@ import apt.project.backend.domain.Student;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.backend.repository.StudentRepository;
 import apt.project.backend.repository.TransactionManager;
+import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
@@ -47,6 +48,8 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
     private StudentRepository studentRepository;
     private static TransactionManager<Student> transactionManager;
 
+    private ExamController examController;
+
     @BeforeClass
     public static void setUpClass() throws Exception {
         entityManagerFactory = Persistence.createEntityManagerFactory("H2");
@@ -67,13 +70,14 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
 
         dialogManager = new DialogManager();
         mainFrame = mock(MainFrame.class);
+        examController = mock(ExamController.class);
 
         GuiActionRunner.execute(() -> {
             ExamPanel examPanel = spy(new ExamPanel(new JPanel(), mainFrame,
                     dialogManager, "List of Exams"));
             internalPanel = new JPanel();
             studentPanel = new StudentPanel(internalPanel, examPanel, mainFrame,
-                    dialogManager, HEADER_TEXT);
+                    dialogManager, examController, HEADER_TEXT);
             studentController = new StudentController(studentPanel,
                     studentRepository);
             studentPanel.setController(studentController);
@@ -201,8 +205,9 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
         panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
         // verify
 
-        verify(mainFrame).displayErrorLabel(
-                "Already existing entity: " + student + ": " + student);
+        verify(mainFrame)
+                .displayErrorLabel("Already existing student with this name: "
+                        + student + ": " + student);
     }
 
 }
