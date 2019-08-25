@@ -59,7 +59,7 @@ public class StudentPanel extends BasePanel<Student> {
         cardsPanel.add(studentPanel);
         cardLayout = (CardLayout) (cardsPanel.getLayout());
         cardsPanel.add(examPanel.getPanel());
-        examPanel.getBtnBack().addActionListener((e) -> {
+        examPanel.getBtnBack().addActionListener(e -> {
             examPanel.clearListModel();
             switchPanel.actionPerformed(e);
         });
