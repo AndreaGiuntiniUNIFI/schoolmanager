@@ -94,8 +94,8 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
     }
 
     @Override
-    public void showAll(List<T> students) {
-        students.stream().forEach(listModel::addElement);
+    public void showAll(List<T> entities) {
+        entities.stream().forEach(listModel::addElement);
     }
 
     @Override
@@ -143,6 +143,10 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
 
     DefaultListModel<T> getListModel() {
         return listModel;
+    }
+
+    void clearListModel() {
+        listModel.clear();
     }
 
 }

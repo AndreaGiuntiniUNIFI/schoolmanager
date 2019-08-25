@@ -62,10 +62,6 @@ public class ExamPanel extends BasePanel<Exam> {
 
     }
 
-    public void showAll() {
-        super.showAll(student.getExams());
-    }
-
     public void setStudent(Student student) {
         this.student = student;
     }

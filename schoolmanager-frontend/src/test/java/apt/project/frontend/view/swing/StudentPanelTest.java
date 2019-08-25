@@ -243,6 +243,7 @@ public class StudentPanelTest extends AssertJSwingJUnitTestCase {
         examPanelFixture.button(JButtonMatcher.withText("Back")).click();
 
         // verify
+        verify(examPanel).clearListModel();
         panelFixture.requireVisible();
         examPanelFixture.requireNotVisible();
     }
