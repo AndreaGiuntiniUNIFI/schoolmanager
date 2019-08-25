@@ -22,6 +22,7 @@
     <h2-driver.version>1.4.199</h2-driver.version>
     <postgresql-driver.version>42.2.6</postgresql-driver.version>
     <mysql-driver.version>8.0.17</mysql-driver.version>
+    <picocli.version>4.0.2</picocli.version>
 
     <mysql-port>3314</mysql-port>
     <postgres-port>5436</postgres-port>
@@ -80,6 +81,13 @@
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>${mysql-driver.version}</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${picocli.version}</version>
       </dependency>
 
       <!-- Test scope dependencies -->
@@ -211,6 +219,7 @@
             <excludedTestClasses>
               <param>apt.project.frontend.view.swing.*</param>
               <param>**.*IT</param>
+              <param>**.*E2E</param>
             </excludedTestClasses>
             <mutators>
               <mutator>ALL</mutator>
@@ -238,10 +247,26 @@
           <version>2.22.1</version>
           <executions>
             <execution>
+              <id>default-it</id>
               <goals>
                 <goal>integration-test</goal>
                 <goal>verify</goal>
               </goals>
+            </execution>
+            <execution>
+              <id>e2e-tests</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+              <configuration>
+                <excludes>
+                  <exclude>**/*IT.java</exclude>
+                </excludes>
+                <includes>
+                  <include>**/*E2E.java</include>
+                </includes>
+              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -261,6 +286,7 @@
               <configuration>
                 <sources>
                   <source>src/it/java</source>
+                  <source>src/e2e/java</source>
                 </sources>
               </configuration>
             </execution>

@@ -10,7 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 public class Exam extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Course course;
 

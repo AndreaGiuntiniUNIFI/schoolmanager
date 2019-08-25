@@ -103,12 +103,14 @@ public class ExamPanelIT extends AssertJSwingJUnitTestCase {
 
         GuiActionRunner.execute(() -> {
             internalExamPanel = new JPanel();
-            examPanel = new ExamPanel(internalExamPanel, mainFrame,
-                    dialogManager, HEADER_EXAM);
+            examPanel = new ExamPanel(internalExamPanel, dialogManager,
+                    HEADER_EXAM);
+            examPanel.setMainFrame(mainFrame);
             examController = new ExamController(examPanel, studentRepository);
             internalStudentPanel = new JPanel();
             studentPanel = new StudentPanel(internalStudentPanel, examPanel,
-                    mainFrame, dialogManager, examController, HEADER_STUDENT);
+                    dialogManager, examController, HEADER_STUDENT);
+            studentPanel.setMainFrame(mainFrame);
             studentController = new StudentController(studentPanel,
                     studentRepository);
             examPanel.setController(examController);

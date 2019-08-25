@@ -97,8 +97,9 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
 
         GuiActionRunner.execute(() -> {
             internalPanel = new JPanel();
-            basePanel = new BasePanel<>(internalPanel, mainFrame, dialogManager,
+            basePanel = new BasePanel<>(internalPanel, dialogManager,
                     HEADER_TEXT);
+            basePanel.setMainFrame(mainFrame);
             frame = new JFrame();
             frame.add(internalPanel);
             frame.pack();
@@ -193,7 +194,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
                 .execute(() -> basePanel.showError("error message", entity));
 
         // verify
-        verify(basePanel.getParentMainFrame())
+        verify(basePanel.getMainFrame())
                 .displayErrorLabel("error message: " + entity);
     }
 
@@ -211,7 +212,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
         // verify
         String[] listContents = panelFixture.list("entityList").contents();
         assertThat(listContents).containsExactly(entity.toString());
-        verify(basePanel.getParentMainFrame()).resetErrorLabel();
+        verify(basePanel.getMainFrame()).resetErrorLabel();
     }
 
     @Test
@@ -233,7 +234,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
         // verify
         String[] listContents = panelFixture.list("entityList").contents();
         assertThat(listContents).containsExactly(entity1.toString());
-        verify(basePanel.getParentMainFrame()).resetErrorLabel();
+        verify(basePanel.getMainFrame()).resetErrorLabel();
     }
 
     @Test
@@ -258,7 +259,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
         String[] listContents = panelFixture.list("entityList").contents();
         assertThat(listContents).containsExactly(entity.toString(),
                 entity2.toString());
-        verify(basePanel.getParentMainFrame()).resetErrorLabel();
+        verify(basePanel.getMainFrame()).resetErrorLabel();
     }
 
 }

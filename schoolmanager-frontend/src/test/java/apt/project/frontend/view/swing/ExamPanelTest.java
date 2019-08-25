@@ -55,8 +55,9 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         student = new Student("student");
         GuiActionRunner.execute(() -> {
             internalPanel = new JPanel();
-            examPanel = new ExamPanel(internalPanel, mainFrame, dialogManager,
+            examPanel = new ExamPanel(internalPanel, dialogManager,
                     HEADER_TEXT);
+            examPanel.setMainFrame(mainFrame);
             examPanel.setController(examController);
             examPanel.setExamDialogController(examDialogController);
             frame = new JFrame();
@@ -76,11 +77,9 @@ public class ExamPanelTest extends AssertJSwingJUnitTestCase {
         Exam exam1 = new Exam(course1, 28);
         Course course2 = new Course("course2");
         Exam exam2 = new Exam(course2, 24);
-        student.setExams(asList(exam1, exam2));
-        examPanel.setStudent(student);
 
         // exercise
-        GuiActionRunner.execute(() -> examPanel.showAll());
+        GuiActionRunner.execute(() -> examPanel.showAll(asList(exam1, exam2)));
 
         // verify
         String[] listContents = panelFixture.list("entityList").contents();

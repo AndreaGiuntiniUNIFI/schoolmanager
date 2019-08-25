@@ -14,7 +14,6 @@ import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.ExamDialogController;
-import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class ExamPanel extends BasePanel<Exam> {
@@ -24,9 +23,9 @@ public class ExamPanel extends BasePanel<Exam> {
     private Student student;
     private JButton btnBack;
 
-    public ExamPanel(JPanel examPanel, MainFrame mainFrame,
-            DialogManager dialogManager, String headerText) {
-        super(examPanel, mainFrame, dialogManager, headerText);
+    public ExamPanel(JPanel examPanel, DialogManager dialogManager,
+            String headerText) {
+        super(examPanel, dialogManager, headerText);
 
         btnAdd.addActionListener(e -> {
             List<Course> courses = student.getExams().stream()
@@ -61,10 +60,6 @@ public class ExamPanel extends BasePanel<Exam> {
         gbc_btnBack.gridy = 1;
         examPanel.add(btnBack, gbc_btnBack);
 
-    }
-
-    public void showAll() {
-        super.showAll(student.getExams());
     }
 
     public void setStudent(Student student) {

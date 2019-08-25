@@ -33,6 +33,11 @@
       <artifactId>log4j-core</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+    </dependency>
+
     <!-- Test scope dependencies -->
 
     <dependency>
@@ -67,6 +72,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

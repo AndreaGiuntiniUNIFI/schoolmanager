@@ -4,17 +4,16 @@ import javax.swing.JPanel;
 
 import apt.project.backend.domain.Course;
 import apt.project.frontend.controller.CourseController;
-import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class CoursePanel extends BasePanel<Course> {
 
     private CourseController controller;
 
-    public CoursePanel(JPanel panel, MainFrame parentMainFrame,
-            DialogManager dialogManager, String headerText) {
+    public CoursePanel(JPanel panel, DialogManager dialogManager,
+            String headerText) {
 
-        super(panel, parentMainFrame, dialogManager, headerText);
+        super(panel, dialogManager, headerText);
 
         btnAdd.addActionListener(e -> {
             String title = dialogManager.manageDialog("Title");

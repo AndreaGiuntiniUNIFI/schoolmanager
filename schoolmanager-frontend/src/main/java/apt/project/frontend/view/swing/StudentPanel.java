@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import apt.project.backend.domain.Student;
 import apt.project.frontend.controller.ExamController;
 import apt.project.frontend.controller.StudentController;
-import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class StudentPanel extends BasePanel<Student> {
@@ -24,10 +23,10 @@ public class StudentPanel extends BasePanel<Student> {
     private CardLayout cardLayout;
 
     public StudentPanel(JPanel studentPanel, ExamPanel examPanel,
-            MainFrame parentMainFrame, DialogManager dialogManager,
-            ExamController examController, String headerText) {
+            DialogManager dialogManager, ExamController examController,
+            String headerText) {
 
-        super(studentPanel, parentMainFrame, dialogManager, headerText);
+        super(studentPanel, dialogManager, headerText);
 
         this.examPanel = examPanel;
         this.examController = examController;
@@ -60,7 +59,10 @@ public class StudentPanel extends BasePanel<Student> {
         cardsPanel.add(studentPanel);
         cardLayout = (CardLayout) (cardsPanel.getLayout());
         cardsPanel.add(examPanel.getPanel());
-        examPanel.getBtnBack().addActionListener(switchPanel);
+        examPanel.getBtnBack().addActionListener(e -> {
+            examPanel.clearListModel();
+            switchPanel.actionPerformed(e);
+        });
 
         btnOpen = new JButton("Open");
         btnOpen.setEnabled(false);
