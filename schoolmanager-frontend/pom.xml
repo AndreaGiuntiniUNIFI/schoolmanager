@@ -77,6 +77,36 @@
       <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>docker-start-it-db</id>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <images>
+                <image>
+                  <alias>postgres-it-database</alias>
+                </image>
+              </images>
+            </configuration>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>docker-stop-it-db</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <configuration>
+              <images>
+                <image>
+                  <alias>postgres-it-database</alias>
+                </image>
+              </images>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
