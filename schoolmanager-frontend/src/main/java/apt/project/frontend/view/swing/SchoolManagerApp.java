@@ -1,6 +1,10 @@
 package apt.project.frontend.view.swing;
 
+import static java.util.Arrays.asList;
+
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.persistence.EntityManagerFactory;
@@ -22,21 +26,41 @@ import apt.project.frontend.controller.StudentController;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 @Command(mixinStandardHelpOptions = true)
 public class SchoolManagerApp implements Callable<Void> {
 
+    static class PersistenceUnitNames extends ArrayList<String> {
+        private static final long serialVersionUID = 1L;
+
+        private static final List<String> values = asList("POSTGRES", "MYSQL");
+
+        static String getDefault() {
+            return values.get(0);
+        }
+
+        public PersistenceUnitNames() {
+            super(values);
+        }
+    }
+
     private static final Logger LOGGER = LogManager
             .getLogger(SchoolManagerApp.class);
+
+    @Option(
+            names = { "-p", "--persistence-unit-name" },
+            completionCandidates = PersistenceUnitNames.class,
+            description = "Available persistence unit names: ${COMPLETION-CANDIDATES}")
+    private String persistenceUnitName = PersistenceUnitNames.getDefault();
 
     @Override
     public Void call() throws Exception {
 
         EventQueue.invokeLater(() -> {
             try {
-
                 EntityManagerFactory entityManagerFactory = Persistence
-                        .createEntityManagerFactory("H2");
+                        .createEntityManagerFactory(persistenceUnitName);
                 TransactionManager<Student> studentTransactionManager = new TransactionManager<>(
                         entityManagerFactory);
 
