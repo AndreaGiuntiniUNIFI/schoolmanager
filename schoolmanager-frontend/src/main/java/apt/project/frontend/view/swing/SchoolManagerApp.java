@@ -31,6 +31,8 @@ import picocli.CommandLine.Option;
 @Command(mixinStandardHelpOptions = true)
 public class SchoolManagerApp implements Callable<Void> {
 
+    private static final String SCHOOL_MANAGER_APP_TITLE = "SchoolManagerApp";
+
     static class PersistenceUnitNames extends ArrayList<String> {
         private static final long serialVersionUID = 1L;
 
@@ -104,9 +106,14 @@ public class SchoolManagerApp implements Callable<Void> {
                 SwingMainFrame frame = new SwingMainFrame(coursePanel,
                         studentPanel);
 
+                frame.setTitle(SCHOOL_MANAGER_APP_TITLE);
+
                 examPanel.setMainFrame(frame);
                 coursePanel.setMainFrame(frame);
                 studentPanel.setMainFrame(frame);
+
+                courseController.allEntities();
+                studentController.allEntities();
 
                 frame.setVisible(true);
 

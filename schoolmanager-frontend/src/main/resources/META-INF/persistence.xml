@@ -19,7 +19,7 @@
         value="postgres_it_user" />
       <property name="javax.persistence.jdbc.password"
         value="postgres_it_pwd" />
-      <property name="hibernate.hbm2ddl.auto" value="create" />
+      <property name="hibernate.hbm2ddl.auto" value="update" />
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.PostgreSQL95Dialect" />
     </properties>
@@ -46,7 +46,7 @@
 
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.MySQL8Dialect" />
-      <property name="hibernate.hbm2ddl.auto" value="create" />
+      <property name="hibernate.hbm2ddl.auto" value="update" />
     </properties>
 
   </persistence-unit>
