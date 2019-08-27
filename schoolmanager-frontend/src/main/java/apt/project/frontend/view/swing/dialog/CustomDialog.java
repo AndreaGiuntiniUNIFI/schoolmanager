@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +34,7 @@ public class CustomDialog extends JDialog {
     public static void main(String[] args) {
         try {
             CustomDialog dialog = new CustomDialog();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
             LOGGER.error(e);

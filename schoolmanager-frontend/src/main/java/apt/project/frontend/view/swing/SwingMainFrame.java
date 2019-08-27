@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import apt.project.frontend.view.MainFrame;
@@ -28,7 +29,7 @@ public class SwingMainFrame extends JFrame implements MainFrame {
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
         tabbedPane.setName("mainTabbedPane");
         contentPane.add(tabbedPane, BorderLayout.NORTH);
 
