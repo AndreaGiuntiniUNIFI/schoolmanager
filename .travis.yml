@@ -25,4 +25,5 @@ cache:
   - $HOME/.sonar/cache
 
 script:
+  - git fetch --unshallow
   - ./execute-on-vnc.sh mvn -f schoolmanager-aggregator/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS sonar:sonar -Dsonar.projectKey=LeonardoScommegna_schoolmanager

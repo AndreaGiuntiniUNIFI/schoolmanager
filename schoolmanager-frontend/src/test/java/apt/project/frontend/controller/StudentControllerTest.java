@@ -188,11 +188,10 @@ public class StudentControllerTest {
         String existingName = "John";
         String modifiedName = "Jane";
         Student existingStudent = new Student(existingName);
-        existingStudent.setId(1L);
         Student modifiedStudent = new Student(modifiedName);
-        modifiedStudent.setId(2L);
         when(studentRepository.findByName(modifiedName)).thenReturn(null);
-        when(studentRepository.findById(2L)).thenReturn(existingStudent);
+        when(studentRepository.findById((Long) any()))
+                .thenReturn(existingStudent);
         // exercise
         studentController.updateEntity(modifiedStudent);
         // verify
@@ -257,7 +256,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testUpdateEntityWhenModifiedTitleAlreadyExist()
+    public void testUpdateEntityWhenEntityWithModifiedNameAlreadyExists()
             throws RepositoryException {
         // setup
 
@@ -279,14 +278,35 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByTitleShouldCallShowError()
+    public void testUpdateEntityWhenModifyingSameEntity()
+            throws RepositoryException {
+        // setup
+
+        String modifiedName = "Jane";
+        Student modifiedStudent = new Student(modifiedName);
+        modifiedStudent.setId(1L);
+        Student existingStudent = new Student(modifiedName);
+        existingStudent.setId(1L);
+
+        when(studentRepository.findByName(modifiedName))
+                .thenReturn(existingStudent);
+
+        // exercise
+        studentController.updateEntity(modifiedStudent);
+        // verify
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
+        verifyNoMoreInteractions(studentView);
+    }
+
+    @Test
+    public void testUpdateEntityWhenRepositoryExceptionIsThrownInFindByNameShouldCallShowError()
             throws RepositoryException {
         // setup
         String message = "message";
-        String modifiedTitle = "Jane";
-        Student modifiedCourse = new Student(modifiedTitle);
+        String modifiedName = "Jane";
+        Student modifiedCourse = new Student(modifiedName);
 
-        when(studentRepository.findByName(modifiedTitle))
+        when(studentRepository.findByName(modifiedName))
                 .thenThrow(new RepositoryException(message));
         // exercise
         studentController.updateEntity(modifiedCourse);

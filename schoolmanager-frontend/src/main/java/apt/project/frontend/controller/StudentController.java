@@ -38,10 +38,12 @@ public class StudentController extends BaseController<Student> {
             return;
         }
         studentWithNewName = em.getResult();
-        if (studentWithNewName != null && !studentWithNewName.getId()
-                .equals(modifiedStudent.getId())) {
-            view.showError("Already existing student with this name: "
-                    + modifiedStudent, modifiedStudent);
+
+        if (studentWithNewName != null) {
+            if (!studentWithNewName.getId().equals(modifiedStudent.getId())) {
+                view.showError("Already existing student with this name: "
+                        + modifiedStudent, modifiedStudent);
+            }
             return;
         }
         super.updateEntity(modifiedStudent);

@@ -50,16 +50,18 @@ public class ExamControllerTest {
         Exam exam2 = new Exam(course2, 21);
         Student student = new Student("student");
         student.setId(1L);
-        student.addExam(exam1);
-        student.addExam(exam2);
+
         when(studentRepository.getAllExams(1L))
                 .thenReturn(asList(exam1, exam2));
+
         // exercise
         examController.allEntities(student);
+
         // verify
         InOrder inOrder = inOrder(examView, studentRepository);
         inOrder.verify(studentRepository).getAllExams(1L);
         inOrder.verify(examView).showAll(asList(exam1, exam2));
+        assertThat(student.getExams()).containsExactly(exam1, exam2);
     }
 
     @Test
@@ -77,8 +79,10 @@ public class ExamControllerTest {
         String message = "message";
         when(studentRepository.getAllExams(1L))
                 .thenThrow(new RepositoryException(message));
+
         // exercise
         examController.allEntities(student);
+
         // verify
         verify(examView).showError("Repository exception: " + message, null);
         verifyNoMoreInteractions(examView);
@@ -90,6 +94,7 @@ public class ExamControllerTest {
             throws RepositoryException {
         // exercise
         examController.allEntities(null);
+
         // verify
         verify(examView).showError("Student is null", null);
         verifyNoMoreInteractions(studentRepository, examView);
