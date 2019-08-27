@@ -13,16 +13,20 @@
       the whole maven project has a flat structure and the maven build is started from 
       here). -->
 
-    <sonar.issue.ignore.multicriteria>e1,e2,e3</sonar.issue.ignore.multicriteria>
+    <sonar.issue.ignore.multicriteria>e1,e2,e3,e4</sonar.issue.ignore.multicriteria>
     <!-- Ignore rule for max inheritance depth for classes in swing package -->
     <sonar.issue.ignore.multicriteria.e1.ruleKey>squid:MaximumInheritanceDepth</sonar.issue.ignore.multicriteria.e1.ruleKey>
     <sonar.issue.ignore.multicriteria.e1.resourceKey>**/main/**/swing/**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
     <!-- Ignore rule for wrong variable naming convention for classes in swing package -->
     <sonar.issue.ignore.multicriteria.e2.ruleKey>squid:S00117</sonar.issue.ignore.multicriteria.e2.ruleKey>
     <sonar.issue.ignore.multicriteria.e2.resourceKey>**/main/**/swing/**/*.java</sonar.issue.ignore.multicriteria.e2.resourceKey>
-    <!-- Ignore rule 'Tests should include assertions' for test classes in swing package -->
+    <!-- Ignore rule 'Tests should include assertions' for test classes in swing 
+      package -->
     <sonar.issue.ignore.multicriteria.e3.ruleKey>squid:S2699</sonar.issue.ignore.multicriteria.e3.ruleKey>
     <sonar.issue.ignore.multicriteria.e3.resourceKey>**/test/**/swing/**/*Test.java</sonar.issue.ignore.multicriteria.e3.resourceKey>
+    <!-- Ignore rule 'Using command line arguments is security-sensitive' for ShoolManagerApp -->
+    <sonar.issue.ignore.multicriteria.e4.ruleKey>squid:S4823</sonar.issue.ignore.multicriteria.e4.ruleKey>
+    <sonar.issue.ignore.multicriteria.e4.resourceKey>**/SchoolManagerApp.java</sonar.issue.ignore.multicriteria.e4.resourceKey>
   </properties>
 
   <modules>

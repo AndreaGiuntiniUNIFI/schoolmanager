@@ -1,10 +1,6 @@
 package apt.project.frontend.view.swing;
 
-import static java.util.Arrays.asList;
-
 import java.awt.EventQueue;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.persistence.EntityManagerFactory;
@@ -33,18 +29,8 @@ public class SchoolManagerApp implements Callable<Void> {
 
     private static final String SCHOOL_MANAGER_APP_TITLE = "SchoolManagerApp";
 
-    static class PersistenceUnitNames extends ArrayList<String> {
-        private static final long serialVersionUID = 1L;
-
-        private static final List<String> values = asList("POSTGRES", "MYSQL");
-
-        static String getDefault() {
-            return values.get(0);
-        }
-
-        public PersistenceUnitNames() {
-            super(values);
-        }
+    enum PersistenceUnitName {
+        POSTGRES, MYSQL
     }
 
     private static final Logger LOGGER = LogManager
@@ -52,9 +38,8 @@ public class SchoolManagerApp implements Callable<Void> {
 
     @Option(
             names = { "-p", "--persistence-unit-name" },
-            completionCandidates = PersistenceUnitNames.class,
             description = "Available persistence unit names: ${COMPLETION-CANDIDATES}")
-    private String persistenceUnitName = PersistenceUnitNames.getDefault();
+    private PersistenceUnitName persistenceUnitName = PersistenceUnitName.POSTGRES;
 
     @Override
     public Void call() throws Exception {
@@ -62,7 +47,7 @@ public class SchoolManagerApp implements Callable<Void> {
         EventQueue.invokeLater(() -> {
             try {
                 EntityManagerFactory entityManagerFactory = Persistence
-                        .createEntityManagerFactory(persistenceUnitName);
+                        .createEntityManagerFactory(persistenceUnitName.name());
                 TransactionManager<Student> studentTransactionManager = new TransactionManager<>(
                         entityManagerFactory);
 
