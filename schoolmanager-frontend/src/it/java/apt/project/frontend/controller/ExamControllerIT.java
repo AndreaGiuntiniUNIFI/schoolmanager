@@ -74,6 +74,11 @@ public class ExamControllerIT {
         Student student = new Student("John");
         student.addExam(exam1);
         student.addExam(exam2);
+
+        courseRepository.save(course1);
+        courseRepository.save(course2);
+        studentRepository.save(student);
+
         // exercise
         examController.allEntities(student);
         // verify

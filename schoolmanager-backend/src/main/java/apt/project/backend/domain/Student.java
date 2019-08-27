@@ -33,9 +33,6 @@ public class Student extends BaseEntity {
         if (entity.getName() != null) {
             this.name = entity.getName();
         }
-        if (!entity.getExams().isEmpty()) {
-            this.exams = entity.getExams();
-        }
     }
 
     public void addExam(Exam exam) {

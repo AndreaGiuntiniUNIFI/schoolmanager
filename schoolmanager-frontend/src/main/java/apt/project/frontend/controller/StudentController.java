@@ -1,14 +1,5 @@
 package apt.project.frontend.controller;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Map.Entry;
-
-import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.backend.repository.Repository;
 import apt.project.backend.repository.StudentRepository;
@@ -38,14 +29,6 @@ public class StudentController extends BaseController<Student> {
 
     @Override
     public void updateEntity(Student modifiedStudent) {
-        List<Course> duplicateCourses = checkDuplicateCourses(
-                modifiedStudent.getExams());
-
-        if (!duplicateCourses.isEmpty()) {
-            view.showError("Duplicate courses in student: " + duplicateCourses,
-                    modifiedStudent);
-            return;
-        }
 
         Student studentWithNewName;
         if (!em.catcher(
@@ -62,12 +45,6 @@ public class StudentController extends BaseController<Student> {
             return;
         }
         super.updateEntity(modifiedStudent);
-    }
-
-    public List<Course> checkDuplicateCourses(List<Exam> list) {
-        return list.stream().collect(groupingBy(Exam::getCourse, counting()))
-                .entrySet().stream().filter(e -> e.getValue() > 1L)
-                .map(Entry<Course, Long>::getKey).collect(toList());
     }
 
 }

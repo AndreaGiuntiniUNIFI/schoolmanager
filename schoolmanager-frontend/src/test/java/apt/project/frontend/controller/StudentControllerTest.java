@@ -18,8 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import apt.project.backend.domain.Course;
-import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.backend.repository.RepositoryException;
 import apt.project.backend.repository.StudentRepository;
@@ -295,63 +293,6 @@ public class StudentControllerTest {
         // verify
         verify(studentView).showError("Repository exception: " + message,
                 modifiedCourse);
-    }
-
-    @Test
-    public void testUpdateEntityWithDuplicatedExam()
-            throws RepositoryException {
-        Course course1 = new Course("course1");
-        Exam exam1 = new Exam(course1);
-        exam1.setRate(18);
-        String studentName = "John";
-        Student existingStudent = new Student(studentName);
-        existingStudent.getExams().add(exam1);
-
-        Student modifiedStudent = new Student(studentName);
-        Exam exam2 = new Exam(course1);
-        exam1.setRate(28);
-        modifiedStudent.getExams().add(exam1);
-        modifiedStudent.getExams().add(exam2);
-
-        // exercise
-        studentController.updateEntity(modifiedStudent);
-        // verify
-        verify(studentView).showError(
-                "Duplicate courses in student: " + asList(course1),
-                modifiedStudent);
-        verifyNoMoreInteractions(ignoreStubs(studentRepository));
-    }
-
-    @Test
-    public void testUpdateEntityWithoutDuplicatedExamAndNotModifiedName()
-            throws RepositoryException {
-        Course course1 = new Course("course1");
-        Course course2 = new Course("course2");
-        Exam exam1 = new Exam(course1);
-        exam1.setRate(18);
-        String studentName = "John";
-        Student existingStudent = new Student(studentName);
-        existingStudent.setId(1L);
-        existingStudent.getExams().add(exam1);
-
-        Student modifiedStudent = new Student(studentName);
-        modifiedStudent.setId(1L);
-        Exam exam2 = new Exam(course2);
-        exam1.setRate(28);
-        modifiedStudent.getExams().add(exam1);
-        modifiedStudent.getExams().add(exam2);
-
-        when(studentRepository.findById(1L)).thenReturn(existingStudent);
-
-        when(studentRepository.findByName(studentName))
-                .thenReturn(existingStudent);
-
-        // exercise
-        studentController.updateEntity(modifiedStudent);
-        // verify
-        InOrder inOrder = inOrder(studentRepository, studentView);
-        inOrder.verify(studentRepository).update(modifiedStudent);
-        inOrder.verify(studentView).entityUpdated(modifiedStudent);
     }
 
 }
