@@ -8,6 +8,7 @@
     <class>apt.project.backend.domain.Course</class>
     <class>apt.project.backend.domain.Student</class>
     <class>apt.project.backend.domain.Exam</class>
+    <class>apt.project.backend.domain.TestEntity</class>
 
     <properties>
       <property name="javax.persistence.jdbc.driver"
