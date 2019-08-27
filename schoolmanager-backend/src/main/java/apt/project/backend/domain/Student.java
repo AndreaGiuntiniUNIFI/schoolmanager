@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -17,10 +15,9 @@ public class Student extends BaseEntity {
     private String name;
 
     @OneToMany(
-            orphanRemoval = true,
+            mappedBy = "student",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
-    @JoinColumn(name = "student_id")
+            orphanRemoval = true)
     private List<Exam> exams;
 
     public Student() {
@@ -36,13 +33,11 @@ public class Student extends BaseEntity {
         if (entity.getName() != null) {
             this.name = entity.getName();
         }
-        if (!entity.getExams().isEmpty()) {
-            this.exams = entity.getExams();
-        }
     }
 
     public void addExam(Exam exam) {
         this.exams.add(exam);
+        exam.setStudent(this);
     }
 
     public String getName() {
@@ -92,7 +87,11 @@ public class Student extends BaseEntity {
     }
 
     public boolean removeExam(Exam exam) {
-        return exams.remove(exam);
+        boolean res = exams.remove(exam);
+        if (res) {
+            exam.setStudent(null);
+        }
+        return res;
     }
 
     public int findExam(Exam exam) {

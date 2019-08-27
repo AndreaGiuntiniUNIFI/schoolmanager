@@ -1,6 +1,7 @@
 package apt.project.backend.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -188,6 +189,67 @@ public class StudentRepositoryTest {
                 .getResultList();
         entityManager.getTransaction().commit();
         assertThat(exams).containsExactly(exam2);
+    }
+
+    @Test
+    public void testGetAllExamsWhenThereAreNoExams()
+            throws RepositoryException {
+        // setup
+        Student student = new Student("John");
+        entityManager.getTransaction().begin();
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+
+        // exercise
+        List<Exam> exams = studentRepository.getAllExams(student.getId());
+
+        // verify
+        assertThat(exams).isEmpty();
+    }
+
+    @Test
+    public void testGetAllExamsWhenExamsArePresent()
+            throws RepositoryException {
+        // setup
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+        Student student = new Student("John");
+        Exam exam1 = new Exam(course1, 23);
+        Exam exam2 = new Exam(course2, 25);
+        student.addExam(exam1);
+        student.addExam(exam2);
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(course1);
+        entityManager.persist(course2);
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+
+        // exercise
+        List<Exam> exams = studentRepository.getAllExams(student.getId());
+
+        // verify
+        assertThat(exams).containsExactly(exam1, exam2);
+    }
+
+    @Test
+    public void testGetAllExamsWhenStudentIdDoesNotExist()
+            throws RepositoryException {
+        // setup
+        Course course1 = new Course("course1");
+        Student student = new Student("John");
+        Exam exam1 = new Exam(course1, 23);
+        student.addExam(exam1);
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(course1);
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+
+        // exercise and verify
+        assertThatThrownBy(() -> studentRepository.getAllExams(-1L))
+                .isInstanceOf(RepositoryException.class)
+                .hasMessage("Repository exception: The id is not valid: -1");
     }
 
 }

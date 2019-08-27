@@ -2,6 +2,7 @@ package apt.project.backend.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.OnDelete;
@@ -13,6 +14,10 @@ public class Exam extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Course course;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     private Integer rate;
 
@@ -85,6 +90,14 @@ public class Exam extends BaseEntity {
 
     public void setRate(Integer rate) {
         this.rate = rate;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
 }

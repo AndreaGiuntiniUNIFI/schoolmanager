@@ -21,6 +21,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import apt.project.backend.domain.Course;
+import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 
 @RunWith(Parameterized.class)
@@ -145,6 +147,31 @@ public class StudentRepositoryIT {
         entityManager.getTransaction().begin();
         assertThat(retrievedStudent).isEqualTo(existingStudent);
         entityManager.getTransaction().commit();
+    }
+
+    @Test
+    public void testGetAllExamsWhenExamsArePresent()
+            throws RepositoryException {
+        // setup
+        Course course1 = new Course("course1");
+        Course course2 = new Course("course2");
+        Student student = new Student("John");
+        Exam exam1 = new Exam(course1, 23);
+        Exam exam2 = new Exam(course2, 25);
+        student.addExam(exam1);
+        student.addExam(exam2);
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(course1);
+        entityManager.persist(course2);
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+
+        // exercise
+        List<Exam> exams = studentRepository.getAllExams(student.getId());
+
+        // verify
+        assertThat(exams).containsExactly(exam1, exam2);
     }
 
 }
