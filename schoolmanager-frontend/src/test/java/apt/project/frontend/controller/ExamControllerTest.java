@@ -3,9 +3,11 @@ package apt.project.frontend.controller;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,19 +41,48 @@ public class ExamControllerTest {
     }
 
     @Test
-    public void testAllEntitiesShouldCallView() throws RepositoryException {
+    public void testAllEntitiesShouldCallRepositoryAndView()
+            throws RepositoryException {
         // setup
         Course course1 = new Course("course1");
         Exam exam1 = new Exam(course1, 22);
         Course course2 = new Course("course2");
         Exam exam2 = new Exam(course2, 21);
         Student student = new Student("student");
+        student.setId(1L);
         student.addExam(exam1);
         student.addExam(exam2);
+        when(studentRepository.getAllExams(1L))
+                .thenReturn(asList(exam1, exam2));
         // exercise
         examController.allEntities(student);
         // verify
-        verify(examView).showAll(asList(exam1, exam2));
+        InOrder inOrder = inOrder(examView, studentRepository);
+        inOrder.verify(studentRepository).getAllExams(1L);
+        inOrder.verify(examView).showAll(asList(exam1, exam2));
+    }
+
+    @Test
+    public void testAllEntitiesWhenRepositoryExceptionIsThrownShouldCallShowError()
+            throws RepositoryException {
+        // setup
+        Course course1 = new Course("course1");
+        Exam exam1 = new Exam(course1, 22);
+        Course course2 = new Course("course2");
+        Exam exam2 = new Exam(course2, 21);
+        Student student = new Student("student");
+        student.setId(1L);
+        student.addExam(exam1);
+        student.addExam(exam2);
+        String message = "message";
+        when(studentRepository.getAllExams(1L))
+                .thenThrow(new RepositoryException(message));
+        // exercise
+        examController.allEntities(student);
+        // verify
+        verify(examView).showError("Repository exception: " + message, null);
+        verifyNoMoreInteractions(examView);
+        verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
 
     @Test

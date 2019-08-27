@@ -1,8 +1,12 @@
 package apt.project.frontend.controller;
 
+import java.util.List;
+
 import apt.project.backend.domain.Exam;
 import apt.project.backend.domain.Student;
 import apt.project.backend.repository.Repository;
+import apt.project.backend.repository.RepositoryException;
+import apt.project.backend.repository.StudentRepository;
 import apt.project.frontend.view.View;
 
 public class ExamController {
@@ -18,11 +22,20 @@ public class ExamController {
     }
 
     public void allEntities(Student student) {
+        List<Exam> exams = null;
         if (student == null) {
             view.showError("Student is null", null);
             return;
         }
-        view.showAll(student.getExams());
+        try {
+            exams = ((StudentRepository) repository)
+                    .getAllExams(student.getId());
+        } catch (RepositoryException e) {
+            view.showError(e.getMessage(), null);
+            return;
+        }
+        student.setExams(exams);
+        view.showAll(exams);
     }
 
     public void newEntity(Student student, Exam exam) {
