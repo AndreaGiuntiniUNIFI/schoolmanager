@@ -14,6 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import apt.project.backend.domain.TestEntity;
+
 public class BaseRepositoryTest {
 
     private static EntityManagerFactory entityManagerFactory;

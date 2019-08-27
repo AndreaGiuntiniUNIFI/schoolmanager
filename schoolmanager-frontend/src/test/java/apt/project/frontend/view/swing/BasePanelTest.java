@@ -19,6 +19,7 @@ import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 
 import apt.project.backend.domain.BaseEntity;
+import apt.project.frontend.testdomain.TestEntity;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.swing.dialog.DialogManager;
 
@@ -32,62 +33,6 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     private JPanelFixture panelFixture;
     private JFrame frame;
     private MainFrame mainFrame;
-
-    private class TestEntity extends BaseEntity {
-        // This entity has the only purpose to represent a concrete class
-        // extending BaseEntity.
-        private int aField;
-
-        public TestEntity() {
-        }
-
-        public TestEntity(int field) {
-            setaField(field);
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = super.hashCode();
-            result = prime * result + getEnclosingInstance().hashCode();
-            result = prime * result + aField;
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (!super.equals(obj))
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            TestEntity other = (TestEntity) obj;
-            if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
-                return false;
-            if (aField != other.aField)
-                return false;
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return "TestEntity [aField=" + getaField() + "]";
-        }
-
-        public int getaField() {
-            return aField;
-        }
-
-        public void setaField(int aField) {
-            this.aField = aField;
-        }
-
-        private BasePanelTest getEnclosingInstance() {
-            return BasePanelTest.this;
-        }
-
-    }
 
     @Override
     protected void onSetUp() {
@@ -241,8 +186,8 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     @GUITest
     public void testEntityUpdatedShouldUpdateEntityInListAndCallResetErrorLabelInParent() {
         // setup
-        TestEntity entity = new TestEntity(1);
-        TestEntity entity2 = new TestEntity(4);
+        TestEntity entity = new TestEntity("field1");
+        TestEntity entity2 = new TestEntity("field2");
 
         GuiActionRunner.execute(() -> {
             DefaultListModel<BaseEntity> listModel = basePanel.getListModel();
@@ -250,7 +195,7 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
             listModel.addElement(entity2);
 
         });
-        entity2.setaField(2);
+        entity2.setaField("field3");
 
         // exercise
         GuiActionRunner.execute(() -> basePanel.entityUpdated(entity2));
