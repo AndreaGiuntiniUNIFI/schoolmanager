@@ -21,7 +21,7 @@ public class StudentController extends BaseController<Student> {
         }
         existingStudent = em.getResult();
         if (existingStudent != null) {
-            view.showError("Already existing entity: " + entity, entity);
+            view.showError("Already existing entity: " + entity);
             return;
         }
         super.newEntity(entity);
@@ -42,7 +42,7 @@ public class StudentController extends BaseController<Student> {
         if (studentWithNewName != null) {
             if (!studentWithNewName.getId().equals(modifiedStudent.getId())) {
                 view.showError("Already existing student with this name: "
-                        + modifiedStudent, modifiedStudent);
+                        + modifiedStudent);
             }
             return;
         }

@@ -29,7 +29,7 @@ public class ExceptionManager<T extends BaseEntity> {
             resultList = supplier.get();
             return true;
         } catch (RepositoryException e) {
-            view.showError(e.getMessage(), entity);
+            view.showError(e.getMessage() + ", " + entity);
             LOGGER.error("", e);
         }
         return false;

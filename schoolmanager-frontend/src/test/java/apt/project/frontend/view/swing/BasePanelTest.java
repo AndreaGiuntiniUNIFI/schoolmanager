@@ -131,16 +131,11 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     @Test
     @GUITest
     public void testShowErrorShouldCallSetErrorLabelInParent() {
-        // setup
-        TestEntity entity = new TestEntity();
-
         // exercise
-        GuiActionRunner
-                .execute(() -> basePanel.showError("error message", entity));
+        GuiActionRunner.execute(() -> basePanel.showError("error message"));
 
         // verify
-        verify(basePanel.getMainFrame())
-                .displayErrorLabel("error message: " + entity);
+        verify(basePanel.getMainFrame()).displayErrorLabel("error message");
     }
 
     @Test

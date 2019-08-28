@@ -12,7 +12,7 @@ public interface View<T extends BaseEntity> {
 
     void entityDeleted(T entity);
 
-    void showError(String string, T entity);
+    void showError(String string);
 
     void entityUpdated(T modifiedEntity);
 
