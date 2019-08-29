@@ -117,8 +117,8 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
     }
 
     @Override
-    public void showError(String label, T entity) {
-        mainFrame.displayErrorLabel(label + ": " + entity);
+    public void showError(String label) {
+        mainFrame.displayErrorLabel(label);
     }
 
     public JPanel getPanel() {

@@ -11,6 +11,7 @@ import apt.project.frontend.view.View;
 
 public class ExamController {
 
+    private static final String EXAM = "Exam: ";
     private View<Exam> view;
     private Repository<Student> repository;
     private ExceptionManager<Exam> em;
@@ -24,14 +25,14 @@ public class ExamController {
     public void allEntities(Student student) {
         List<Exam> exams = null;
         if (student == null) {
-            view.showError("Student is null", null);
+            view.showError("Student is null");
             return;
         }
         try {
             exams = ((StudentRepository) repository)
                     .getAllExams(student.getId());
         } catch (RepositoryException e) {
-            view.showError(e.getMessage(), null);
+            view.showError(e.getMessage());
             return;
         }
         student.setExams(exams);
@@ -40,7 +41,7 @@ public class ExamController {
 
     public void newEntity(Student student, Exam exam) {
         if (student.findExam(exam) != -1) {
-            view.showError("Exam already registered in student", exam);
+            view.showError(EXAM + exam + " already registered in student");
             return;
         }
         student.addExam(exam);
@@ -53,7 +54,7 @@ public class ExamController {
 
     public void deleteEntity(Student student, Exam exam) {
         if (student.findExam(exam) == -1) {
-            view.showError("Exam not registered in student", exam);
+            view.showError(EXAM + exam + " not registered in student");
             return;
         }
         student.removeExam(exam);
@@ -67,7 +68,7 @@ public class ExamController {
     public void updateEntity(Student student, Exam exam) {
         int index = student.findExam(exam);
         if (index == -1) {
-            view.showError("Exam not registered in student", exam);
+            view.showError(EXAM + exam + " not registered in student");
             return;
         }
         Exam oldExam = student.getExams().get(index);

@@ -210,8 +210,8 @@ public class ExamPanelIT extends AssertJSwingJUnitTestCase {
         assertThat(panelFixture.list().contents())
                 .containsExactly(exam1.toString(), exam2.toString());
 
-        verify(mainFrame)
-                .displayErrorLabel("Exam not registered in student: " + exam2);
+        verify(mainFrame).displayErrorLabel(
+                "Exam: " + exam2 + " not registered in student");
     }
 
     @Test

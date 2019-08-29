@@ -92,7 +92,7 @@ public class ExamDialogControllerTest {
         boolean result = controller.populateComboBox(courses);
 
         // verify
-        verify(view).showError("Repository exception: " + message, null);
+        verify(view).showError("Repository exception: " + message);
         assertThat(result).isFalse();
         verifyNoMoreInteractions(examDialog);
         verifyNoMoreInteractions(view);
@@ -113,7 +113,7 @@ public class ExamDialogControllerTest {
         boolean result = controller.populateComboBox(courses);
 
         // verify
-        verify(view).showError("Cannot add an exam. No course existing.", null);
+        verify(view).showError("Cannot add an exam. No course existing.");
         assertThat(result).isFalse();
         verifyNoMoreInteractions(examDialog);
         verifyNoMoreInteractions(view);
@@ -135,8 +135,8 @@ public class ExamDialogControllerTest {
         boolean result = controller.populateComboBox(courses);
 
         // verify
-        verify(view).showError(
-                "Cannot add an exam. Alredy registered all exams.", null);
+        verify(view)
+                .showError("Cannot add an exam. Alredy registered all exams.");
         assertThat(result).isFalse();
         verifyNoMoreInteractions(examDialog);
         verifyNoMoreInteractions(view);

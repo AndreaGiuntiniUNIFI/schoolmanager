@@ -138,8 +138,8 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
         panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
         assertThat(panelFixture.list().contents()).isEmpty();
 
-        verify(mainFrame).displayErrorLabel(
-                "Already existing entity: " + student + ": " + student);
+        verify(mainFrame)
+                .displayErrorLabel("Already existing entity: " + student);
     }
 
     @Test
@@ -167,8 +167,7 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
         assertThat(panelFixture.list().contents())
                 .containsExactly(student.toString());
 
-        verify(mainFrame).displayErrorLabel(
-                "No existing entity: " + student + ": " + student);
+        verify(mainFrame).displayErrorLabel("No existing entity: " + student);
     }
 
     @Test
@@ -208,9 +207,8 @@ public class StudentPanelIT extends AssertJSwingJUnitTestCase {
         panelFixture.dialog().button(JButtonMatcher.withText("OK")).click();
         // verify
 
-        verify(mainFrame)
-                .displayErrorLabel("Already existing student with this name: "
-                        + student + ": " + student);
+        verify(mainFrame).displayErrorLabel(
+                "Already existing student with this name: " + student);
     }
 
 }

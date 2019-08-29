@@ -84,7 +84,7 @@ public class ExamControllerTest {
         examController.allEntities(student);
 
         // verify
-        verify(examView).showError("Repository exception: " + message, null);
+        verify(examView).showError("Repository exception: " + message);
         verifyNoMoreInteractions(examView);
         verifyNoMoreInteractions(ignoreStubs(studentRepository));
     }
@@ -96,7 +96,7 @@ public class ExamControllerTest {
         examController.allEntities(null);
 
         // verify
-        verify(examView).showError("Student is null", null);
+        verify(examView).showError("Student is null");
         verifyNoMoreInteractions(studentRepository, examView);
 
     }
@@ -145,8 +145,8 @@ public class ExamControllerTest {
         examController.newEntity(student, duplicatedExam);
 
         // verify
-        verify(examView).showError("Exam already registered in student",
-                duplicatedExam);
+        verify(examView).showError(
+                "Exam: " + duplicatedExam + " already registered in student");
         verifyNoMoreInteractions(examView);
     }
 
@@ -169,7 +169,7 @@ public class ExamControllerTest {
         // exercise
         examController.newEntity(student, exam2);
         // verify
-        verify(examView).showError("Repository exception: " + message, exam2);
+        verify(examView).showError("Repository exception: message, " + exam2);
         assertThat(student.getExams()).containsExactly(exam1);
         verifyNoMoreInteractions(examView);
     }
@@ -211,7 +211,8 @@ public class ExamControllerTest {
         examController.deleteEntity(student, exam2);
 
         // verify
-        verify(examView).showError("Exam not registered in student", exam2);
+        verify(examView)
+                .showError("Exam: " + exam2 + " not registered in student");
         verifyNoMoreInteractions(examView);
     }
 
@@ -232,7 +233,7 @@ public class ExamControllerTest {
         examController.deleteEntity(student, exam1);
 
         // verify
-        verify(examView).showError("Repository exception: " + message, exam1);
+        verify(examView).showError("Repository exception: message, " + exam1);
         assertThat(student.getExams()).containsExactly(exam1);
         verifyNoMoreInteractions(examView);
     }
@@ -273,7 +274,8 @@ public class ExamControllerTest {
         examController.updateEntity(student, exam2);
 
         // verify
-        verify(examView).showError("Exam not registered in student", exam2);
+        verify(examView)
+                .showError("Exam: " + exam2 + " not registered in student");
         verifyNoMoreInteractions(examView);
     }
 
@@ -295,8 +297,8 @@ public class ExamControllerTest {
         examController.updateEntity(student, modifiedExam);
 
         // verify
-        verify(examView).showError("Repository exception: " + message,
-                modifiedExam);
+        verify(examView)
+                .showError("Repository exception: message, " + modifiedExam);
         assertThat(student.getExams()).containsExactly(originalExam);
         verifyNoMoreInteractions(examView);
     }
