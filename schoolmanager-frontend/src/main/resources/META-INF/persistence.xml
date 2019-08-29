@@ -11,6 +11,9 @@
     <class>apt.project.backend.domain.Exam</class>
 
     <properties>
+      <property name="hibernate.connection.provider_class"
+        value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+        <property name="hibernate.hikari.maximumPoolSize" value="4"/>
       <property name="javax.persistence.jdbc.driver"
         value="org.postgresql.Driver" />
       <property name="javax.persistence.jdbc.url"
@@ -35,6 +38,8 @@
     <class>apt.project.backend.domain.Exam</class>
 
     <properties>
+      <property name="hibernate.connection.provider_class"
+        value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
       <property name="javax.persistence.jdbc.driver"
         value="com.mysql.cj.jdbc.Driver" />
       <property name="javax.persistence.jdbc.url"
