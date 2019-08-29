@@ -37,3 +37,17 @@ Sono definiti dei profili per il calcolo della code coverage con JaCoCo e per l'
 ```bash
 -P enable-jacoco -P enable-mutation-testing
 ```
+## Avvio dell'applicazione
+
+* Avviare il container docker attraverso il seguente comando digitato dalla root della repository
+```bash
+mvn -f schoolmanager-parent/pom.xml docker:start
+```
+* Eseguire il seguente comando dalla root della repository:
+```bash
+java -jar schoolmanager-frontend/target/schoolmanager-frontend-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+```
+L'applicazione utilizza il database PostgreSQL di default se si desidera cambiarlo è possibile farlo attraverso l'opzione `-p` o `--persistence-unit-name`, scegliendo tra `MYSQL` e `POSTGRES`
+```bash
+java -jar schoolmanager-frontend/target/schoolmanager-frontend-0.0.1-SNAPSHOT-jar-with-dependencies.jar -p MYSQL
+```
