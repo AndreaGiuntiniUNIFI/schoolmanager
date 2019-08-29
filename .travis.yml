@@ -27,4 +27,4 @@ cache:
 script:
   - git fetch origin master:master
   - git fetch --unshallow
-  - ./execute-on-vnc.sh mvn -f schoolmanager-aggregator/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS sonar:sonar -Dsonar.projectKey=LeonardoScommegna_schoolmanager
+  - ./execute-on-vnc.sh mvn -f schoolmanager-aggregator/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS sonar:sonar -DtimeoutConstant=10000 -Dsonar.projectKey=LeonardoScommegna_schoolmanager
