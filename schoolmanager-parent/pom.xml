@@ -201,6 +201,14 @@
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
           <version>4.3.0</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <phase>verify</phase>
+            </execution>
+          </executions>
         </plugin>
 
         <!-- Pitest maven plugin -->
@@ -380,6 +388,31 @@
           <version>3.6.0.1398</version>
         </plugin>
 
+        <!-- Maven assembly plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.1.1</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+                <archive>
+                  <manifest>
+                    <mainClass>apt.project.frontend.view.swing.SchoolManagerApp</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
         <!-- Maven-generated configuration: lock down plugins versions to enhance 
           reproducibility -->
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -429,52 +462,37 @@
     <profile>
       <id>enable-jacoco</id>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.jacoco</groupId>
-              <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>
-          </plugins>
-        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
       </build>
     </profile>
 
     <profile>
       <id>enable-mutation-testing</id>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.pitest</groupId>
-              <artifactId>pitest-maven</artifactId>
-            </plugin>
-          </plugins>
-        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+          </plugin>
+        </plugins>
       </build>
     </profile>
 
     <profile>
       <id>enable-coveralls</id>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.eluder.coveralls</groupId>
-              <artifactId>coveralls-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>report</goal>
-                  </goals>
-                  <phase>verify</phase>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
       </build>
     </profile>
-
   </profiles>
 </project>
