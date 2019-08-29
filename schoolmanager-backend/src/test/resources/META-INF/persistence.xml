@@ -14,6 +14,9 @@
     <properties>
       <property name="hibernate.connection.provider_class"
         value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+      <property
+        name="hibernate.schema_update.unique_constraint_strategy"
+        value="RECREATE_QUIETLY" />
       <property name="javax.persistence.jdbc.driver"
         value="org.h2.Driver" />
       <property name="javax.persistence.jdbc.url"
@@ -21,7 +24,7 @@
       <property name="javax.persistence.jdbc.user" value="user" />
       <property name="javax.persistence.jdbc.password" value="pwd" />
       <property name="hibernate.format_sql" value="true" />
-      <property name="hibernate.hbm2ddl.auto" value="create" />
+      <property name="hibernate.hbm2ddl.auto" value="update" />
     </properties>
   </persistence-unit>
 
@@ -36,6 +39,9 @@
     <properties>
       <property name="hibernate.connection.provider_class"
         value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+      <property
+        name="hibernate.schema_update.unique_constraint_strategy"
+        value="RECREATE_QUIETLY" />
       <property name="javax.persistence.jdbc.driver"
         value="org.postgresql.Driver" />
       <property name="javax.persistence.jdbc.url"
@@ -44,7 +50,7 @@
         value="postgres_it_user" />
       <property name="javax.persistence.jdbc.password"
         value="postgres_it_pwd" />
-      <property name="hibernate.hbm2ddl.auto" value="create" />
+      <property name="hibernate.hbm2ddl.auto" value="update" />
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.PostgreSQL95Dialect" />
       <property name="hibernate.format_sql" value="true" />
@@ -63,6 +69,9 @@
     <properties>
       <property name="hibernate.connection.provider_class"
         value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+      <property
+        name="hibernate.schema_update.unique_constraint_strategy"
+        value="RECREATE_QUIETLY" />
       <property name="javax.persistence.jdbc.driver"
         value="com.mysql.cj.jdbc.Driver" />
       <property name="javax.persistence.jdbc.url"
@@ -74,7 +83,7 @@
 
       <property name="hibernate.dialect"
         value="org.hibernate.dialect.MySQL8Dialect" />
-      <property name="hibernate.hbm2ddl.auto" value="create" />
+      <property name="hibernate.hbm2ddl.auto" value="update" />
       <property name="hibernate.format_sql" value="true" />
     </properties>
 

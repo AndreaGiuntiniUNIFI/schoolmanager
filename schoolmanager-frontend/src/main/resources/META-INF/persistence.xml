@@ -13,7 +13,10 @@
     <properties>
       <property name="hibernate.connection.provider_class"
         value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
-        <property name="hibernate.hikari.maximumPoolSize" value="4"/>
+      <property
+        name="hibernate.schema_update.unique_constraint_strategy"
+        value="RECREATE_QUIETLY" />
+      <property name="hibernate.hikari.maximumPoolSize" value="4" />
       <property name="javax.persistence.jdbc.driver"
         value="org.postgresql.Driver" />
       <property name="javax.persistence.jdbc.url"
@@ -40,6 +43,9 @@
     <properties>
       <property name="hibernate.connection.provider_class"
         value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+      <property
+        name="hibernate.schema_update.unique_constraint_strategy"
+        value="RECREATE_QUIETLY" />
       <property name="javax.persistence.jdbc.driver"
         value="com.mysql.cj.jdbc.Driver" />
       <property name="javax.persistence.jdbc.url"
