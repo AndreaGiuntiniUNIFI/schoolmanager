@@ -39,8 +39,7 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
         }
         persistedEntity = em.getResult();
         if (persistedEntity == null) {
-            view.showError("No existing entity: " + modifiedEntity,
-                    modifiedEntity);
+            view.showError("No existing entity: " + modifiedEntity);
             return;
         }
         if (!em.voidCatcher(() -> repository.update(modifiedEntity),
@@ -68,8 +67,7 @@ public class BaseController<T extends BaseEntity> implements Controller<T> {
         }
         persistedEntity = em.getResult();
         if (persistedEntity == null) {
-            view.showError("No existing entity: " + entityToDelete,
-                    entityToDelete);
+            view.showError("No existing entity: " + entityToDelete);
             return;
         }
         if (!em.voidCatcher(() -> repository.delete(entityToDelete),

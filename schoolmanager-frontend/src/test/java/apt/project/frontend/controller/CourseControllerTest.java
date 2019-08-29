@@ -60,7 +60,7 @@ public class CourseControllerTest {
         // exercise
         courseController.allEntities();
         // verify
-        verify(courseView).showError("Repository exception: " + message, null);
+        verify(courseView).showError("Repository exception: message, " + null);
     }
 
     @Test
@@ -86,8 +86,7 @@ public class CourseControllerTest {
         // exercise
         courseController.newEntity(course);
         // verify
-        verify(courseView).showError("Already existing entity: " + course,
-                course);
+        verify(courseView).showError("Already existing entity: " + course);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -102,8 +101,8 @@ public class CourseControllerTest {
         // exercise
         courseController.newEntity(course);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                course);
+        verify(courseView)
+                .showError("Repository exception: message, " + course);
     }
 
     @Test
@@ -117,8 +116,8 @@ public class CourseControllerTest {
         // exercise
         courseController.newEntity(course);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                course);
+        verify(courseView)
+                .showError("Repository exception: message, " + course);
     }
 
     @Test
@@ -144,8 +143,7 @@ public class CourseControllerTest {
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
-        verify(courseView).showError("No existing entity: " + courseToDelete,
-                courseToDelete);
+        verify(courseView).showError("No existing entity: " + courseToDelete);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -160,8 +158,8 @@ public class CourseControllerTest {
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                courseToDelete);
+        verify(courseView)
+                .showError("Repository exception: message, " + courseToDelete);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -178,8 +176,8 @@ public class CourseControllerTest {
         // exercise
         courseController.deleteEntity(courseToDelete);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                courseToDelete);
+        verify(courseView)
+                .showError("Repository exception: message, " + courseToDelete);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -208,8 +206,7 @@ public class CourseControllerTest {
         // exercise
         courseController.updateEntity(modifiedCourse);
         // verify
-        verify(courseView).showError("No existing entity: " + modifiedCourse,
-                modifiedCourse);
+        verify(courseView).showError("No existing entity: " + modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -225,8 +222,8 @@ public class CourseControllerTest {
         // exercise
         courseController.updateEntity(modifiedCourse);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                modifiedCourse);
+        verify(courseView)
+                .showError("Repository exception: message, " + modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -245,8 +242,8 @@ public class CourseControllerTest {
         // exercise
         courseController.updateEntity(modifiedCourse);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                modifiedCourse);
+        verify(courseView)
+                .showError("Repository exception: message, " + modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -263,8 +260,8 @@ public class CourseControllerTest {
         // exercise
         courseController.updateEntity(modifiedCourse);
         // verify
-        verify(courseView).showError(
-                "Already existing entity: " + modifiedCourse, modifiedCourse);
+        verify(courseView)
+                .showError("Already existing entity: " + modifiedCourse);
         verifyNoMoreInteractions(ignoreStubs(courseRepository));
     }
 
@@ -281,8 +278,8 @@ public class CourseControllerTest {
         // exercise
         courseController.updateEntity(modifiedCourse);
         // verify
-        verify(courseView).showError("Repository exception: " + message,
-                modifiedCourse);
+        verify(courseView)
+                .showError("Repository exception: message, " + modifiedCourse);
     }
 
 }

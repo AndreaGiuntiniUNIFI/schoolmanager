@@ -21,7 +21,7 @@ public class CourseController extends BaseController<Course> {
         existingCourse = em.getResult();
 
         if (existingCourse != null) {
-            view.showError("Already existing entity: " + course, course);
+            view.showError("Already existing entity: " + course);
             return;
         }
         super.newEntity(course);
@@ -39,8 +39,7 @@ public class CourseController extends BaseController<Course> {
         }
         courseWithNewTitle = em.getResult();
         if (courseWithNewTitle != null) {
-            view.showError("Already existing entity: " + modifiedCourse,
-                    modifiedCourse);
+            view.showError("Already existing entity: " + modifiedCourse);
             return;
         }
 

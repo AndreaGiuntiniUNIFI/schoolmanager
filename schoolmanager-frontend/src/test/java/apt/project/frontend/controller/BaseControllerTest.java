@@ -59,7 +59,7 @@ public class BaseControllerTest {
         // exercise
         controller.allEntities();
         // verify
-        verify(view).showError("Repository exception: " + message, null);
+        verify(view).showError("Repository exception: message, " + null);
         verifyNoMoreInteractions(view);
     }
 
@@ -85,7 +85,7 @@ public class BaseControllerTest {
         // exercise
         controller.newEntity(entity);
         // verify
-        verify(view).showError("Repository exception: " + message, entity);
+        verify(view).showError("Repository exception: message, " + entity);
         verifyNoMoreInteractions(view);
     }
 
@@ -111,8 +111,7 @@ public class BaseControllerTest {
         // exercise
         controller.deleteEntity(entityToDelete);
         // verify
-        verify(view).showError("No existing entity: " + entityToDelete,
-                entityToDelete);
+        verify(view).showError("No existing entity: " + entityToDelete);
         verifyNoMoreInteractions(ignoreStubs(repository));
     }
 
@@ -127,8 +126,8 @@ public class BaseControllerTest {
         // exercise
         controller.deleteEntity(entityToDelete);
         // verify
-        verify(view).showError("Repository exception: " + message,
-                entityToDelete);
+        verify(view)
+                .showError("Repository exception: message, " + entityToDelete);
         verifyNoMoreInteractions(ignoreStubs(repository));
         verifyNoMoreInteractions(view);
     }
@@ -145,8 +144,8 @@ public class BaseControllerTest {
         // exercise
         controller.deleteEntity(entityToDelete);
         // verify
-        verify(view).showError("Repository exception: " + message,
-                entityToDelete);
+        verify(view)
+                .showError("Repository exception: message, " + entityToDelete);
         verifyNoMoreInteractions(ignoreStubs(repository));
         verifyNoMoreInteractions(view);
     }
@@ -174,8 +173,7 @@ public class BaseControllerTest {
         // exercise
         controller.updateEntity(modifiedEntity);
         // verify
-        verify(view).showError("No existing entity: " + modifiedEntity,
-                modifiedEntity);
+        verify(view).showError("No existing entity: " + modifiedEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
     }
 
@@ -190,8 +188,8 @@ public class BaseControllerTest {
         // exercise
         controller.updateEntity(modifiedEntity);
         // verify
-        verify(view).showError("Repository exception: " + message,
-                modifiedEntity);
+        verify(view)
+                .showError("Repository exception: message, " + modifiedEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
         verifyNoMoreInteractions(view);
     }
@@ -209,8 +207,8 @@ public class BaseControllerTest {
         // exercise
         controller.updateEntity(modifiedEntity);
         // verify
-        verify(view).showError("Repository exception: " + message,
-                modifiedEntity);
+        verify(view)
+                .showError("Repository exception: message, " + modifiedEntity);
         verifyNoMoreInteractions(ignoreStubs(repository));
         verifyNoMoreInteractions(view);
     }

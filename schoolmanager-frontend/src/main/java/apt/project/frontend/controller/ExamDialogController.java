@@ -30,12 +30,12 @@ public class ExamDialogController {
         try {
             coursesInRepository = courseRepository.findAll();
         } catch (RepositoryException e) {
-            view.showError(e.getMessage(), null);
+            view.showError(e.getMessage());
             return false;
         }
 
         if (coursesInRepository.isEmpty()) {
-            view.showError("Cannot add an exam. No course existing.", null);
+            view.showError("Cannot add an exam. No course existing.");
             return false;
         }
 
@@ -44,8 +44,7 @@ public class ExamDialogController {
                 .collect(toList());
 
         if (difference.isEmpty()) {
-            view.showError("Cannot add an exam. Alredy registered all exams.",
-                    null);
+            view.showError("Cannot add an exam. Alredy registered all exams.");
             return false;
         }
 
