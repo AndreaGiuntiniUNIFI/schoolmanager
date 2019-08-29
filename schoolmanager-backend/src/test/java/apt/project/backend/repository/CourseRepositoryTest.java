@@ -27,7 +27,8 @@ public class CourseRepositoryTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("H2");
+        entityManagerFactory = Persistence
+                .createEntityManagerFactory("H2_TEST_BACKEND");
         transactionManager = new TransactionManager<>(entityManagerFactory);
     }
 

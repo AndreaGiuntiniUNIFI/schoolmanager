@@ -31,7 +31,8 @@ public class StudentControllerIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("H2");
+        entityManagerFactory = Persistence
+                .createEntityManagerFactory("H2_TEST_FRONTEND");
         transactionManager = new TransactionManager<>(entityManagerFactory);
     }
 

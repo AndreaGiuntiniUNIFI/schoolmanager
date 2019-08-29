@@ -34,7 +34,7 @@ public class CourseRepositoryIT {
 
     @Parameters
     public static Collection<EntityManagerFactory> data() {
-        emfList = asList("POSTGRES", "MYSQL").stream()
+        emfList = asList("POSTGRES_TEST_BACKEND", "MYSQL_TEST_BACKEND").stream()
                 .map(Persistence::createEntityManagerFactory).collect(toList());
         return emfList;
     }
