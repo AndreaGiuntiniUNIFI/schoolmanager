@@ -21,7 +21,6 @@ import org.junit.Test;
 import apt.project.backend.domain.BaseEntity;
 import apt.project.frontend.testdomain.TestEntity;
 import apt.project.frontend.view.MainFrame;
-import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class BasePanelTest extends AssertJSwingJUnitTestCase {
 
@@ -37,13 +36,11 @@ public class BasePanelTest extends AssertJSwingJUnitTestCase {
     @Override
     protected void onSetUp() {
 
-        DialogManager dialogManager = mock(DialogManager.class);
         mainFrame = mock(MainFrame.class);
 
         GuiActionRunner.execute(() -> {
             internalPanel = new JPanel();
-            basePanel = new BasePanel<>(internalPanel, dialogManager,
-                    HEADER_TEXT);
+            basePanel = new BasePanel<>(internalPanel, HEADER_TEXT);
             basePanel.setMainFrame(mainFrame);
             frame = new JFrame();
             frame.add(internalPanel);

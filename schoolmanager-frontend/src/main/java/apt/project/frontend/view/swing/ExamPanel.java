@@ -25,7 +25,7 @@ public class ExamPanel extends BasePanel<Exam> {
 
     public ExamPanel(JPanel examPanel, DialogManager dialogManager,
             String headerText) {
-        super(examPanel, dialogManager, headerText);
+        super(examPanel, headerText);
 
         btnAdd.addActionListener(e -> {
             List<Course> courses = student.getExams().stream()

@@ -13,7 +13,7 @@ public class CoursePanel extends BasePanel<Course> {
     public CoursePanel(JPanel panel, DialogManager dialogManager,
             String headerText) {
 
-        super(panel, dialogManager, headerText);
+        super(panel, headerText);
 
         btnAdd.addActionListener(e -> {
             String title = dialogManager.manageDialog("Title");

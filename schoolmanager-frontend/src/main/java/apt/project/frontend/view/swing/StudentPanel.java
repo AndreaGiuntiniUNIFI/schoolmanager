@@ -26,7 +26,7 @@ public class StudentPanel extends BasePanel<Student> {
             DialogManager dialogManager, ExamController examController,
             String headerText) {
 
-        super(studentPanel, dialogManager, headerText);
+        super(studentPanel, headerText);
 
         this.examPanel = examPanel;
         this.examController = examController;

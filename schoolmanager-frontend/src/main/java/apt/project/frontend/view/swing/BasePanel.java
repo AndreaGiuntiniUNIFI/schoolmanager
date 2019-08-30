@@ -16,13 +16,11 @@ import javax.swing.SwingConstants;
 import apt.project.backend.domain.BaseEntity;
 import apt.project.frontend.view.MainFrame;
 import apt.project.frontend.view.View;
-import apt.project.frontend.view.swing.dialog.DialogManager;
 
 public class BasePanel<T extends BaseEntity> implements View<T> {
 
     private JPanel panel;
     private MainFrame mainFrame;
-    private DialogManager dialogManager;
     private String headerText;
 
     protected JButton btnAdd;
@@ -31,11 +29,9 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
     protected DefaultListModel<T> listModel;
     protected JList<T> list;
 
-    public BasePanel(JPanel panel, DialogManager dialogManager,
-            String headerText) {
+    public BasePanel(JPanel panel, String headerText) {
 
         this.panel = panel;
-        this.dialogManager = dialogManager;
         this.headerText = headerText;
 
         GridBagLayout gridBagLayout = new GridBagLayout();
