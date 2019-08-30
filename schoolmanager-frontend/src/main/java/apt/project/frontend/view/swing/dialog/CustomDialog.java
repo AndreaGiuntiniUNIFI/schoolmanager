@@ -9,16 +9,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class CustomDialog extends JDialog {
-
-    private static final Logger LOGGER = LogManager
-            .getLogger(CustomDialog.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -27,23 +20,6 @@ public class CustomDialog extends JDialog {
     protected JButton okButton;
 
     protected JButton cancelButton;
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        try {
-            CustomDialog dialog = new CustomDialog();
-            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e) {
-            LOGGER.error(e);
-        }
-    }
-
-    /**
-     * Create the dialog.
-     */
 
     public CustomDialog() {
         super();

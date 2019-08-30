@@ -63,6 +63,12 @@ public class SimpleDialogTest extends AssertJSwingJUnitTestCase {
         // verify
         dialogFixture.button(JButtonMatcher.withText("OK")).requireEnabled();
 
+        // setup
+        dialogFixture.textBox("labelTextField").deleteText();
+
+        // verify
+        dialogFixture.button(JButtonMatcher.withText("OK")).requireDisabled();
+
     }
 
     @Test

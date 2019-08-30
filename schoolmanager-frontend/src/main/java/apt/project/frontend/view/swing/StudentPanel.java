@@ -58,7 +58,7 @@ public class StudentPanel extends BasePanel<Student> {
         cardsPanel.setLayout(new CardLayout());
         cardsPanel.add(studentPanel);
         cardLayout = (CardLayout) (cardsPanel.getLayout());
-        cardsPanel.add(examPanel.getPanel());
+        cardsPanel.add(this.examPanel.getPanel());
         examPanel.getBtnBack().addActionListener(e -> {
             examPanel.clearListModel();
             switchPanel.actionPerformed(e);
@@ -73,7 +73,7 @@ public class StudentPanel extends BasePanel<Student> {
         btnOpen.addActionListener(e -> {
             Student selectedStudent = list.getSelectedValue();
             examPanel.setStudent(selectedStudent);
-            examController.allEntities(selectedStudent);
+            this.examController.allEntities(selectedStudent);
             switchPanel.actionPerformed(e);
         });
 
@@ -86,20 +86,8 @@ public class StudentPanel extends BasePanel<Student> {
         return cardsPanel;
     }
 
-    public JPanel getExamPanel() {
-        return examPanel.getPanel();
-    }
-
-    public StudentController getController() {
-        return controller;
-    }
-
     public void setController(StudentController controller) {
         this.controller = controller;
-    }
-
-    public ExamController getExamController() {
-        return examController;
     }
 
 }

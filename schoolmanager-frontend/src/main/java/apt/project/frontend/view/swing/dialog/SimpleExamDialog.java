@@ -47,16 +47,8 @@ public class SimpleExamDialog extends CustomDialog {
         contentPanel.add(rateComboBox);
     }
 
-    JComboBox<String> getRateComboBox() {
-        return rateComboBox;
-    }
-
     public String getOutcome() {
         return outcome;
-    }
-
-    public void setOutcome(String outcome) {
-        this.outcome = outcome;
     }
 
 }

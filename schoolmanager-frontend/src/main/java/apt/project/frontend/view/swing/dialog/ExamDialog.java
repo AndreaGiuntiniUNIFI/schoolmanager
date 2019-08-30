@@ -77,10 +77,6 @@ public class ExamDialog extends CustomDialog {
         return examComboBox;
     }
 
-    JComboBox<String> getRateComboBox() {
-        return rateComboBox;
-    }
-
     public Exam getOutcome() {
         return outcome;
     }

@@ -76,7 +76,7 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
         gbc_scrollPane.gridx = 0;
         gbc_scrollPane.gridy = 0;
 
-        JLabel lblListOfCourses = new JLabel(headerText);
+        JLabel lblListOfCourses = new JLabel(this.headerText);
         lblListOfCourses.setHorizontalAlignment(SwingConstants.CENTER);
         scrollPane.setColumnHeaderView(lblListOfCourses);
         panel.add(scrollPane, gbc_scrollPane);
@@ -131,14 +131,6 @@ public class BasePanel<T extends BaseEntity> implements View<T> {
 
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-    }
-
-    public DialogManager getDialogManager() {
-        return dialogManager;
-    }
-
-    public String getHeaderText() {
-        return headerText;
     }
 
     DefaultListModel<T> getListModel() {

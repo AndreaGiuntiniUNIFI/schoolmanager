@@ -36,10 +36,6 @@ public class CoursePanel extends BasePanel<Course> {
                 e -> controller.deleteEntity(list.getSelectedValue()));
     }
 
-    public CourseController getController() {
-        return controller;
-    }
-
     public void setController(CourseController controller) {
         this.controller = controller;
     }

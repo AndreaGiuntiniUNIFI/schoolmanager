@@ -32,7 +32,8 @@
       **/backend/repository/TransactionManager.java,
       **/backend/repository/RepositoryException.java,
       **/frontend/controller/ExceptionManager.java,
-      **/frontend/view/swing/**/*.*
+      **/frontend/view/swing/SchoolManagerApp.java,
+      **/frontend/view/swing/dialog/TextDocumentListener.java
     </sonar.coverage.exclusions>
 
     <!-- Custom property to point sonar to the right report path in children (see 
@@ -196,7 +197,8 @@
               <exclude>**/repository/TransactionManager.*</exclude>
               <exclude>**/repository/RepositoryException.*</exclude>
               <exclude>**/controller/ExceptionManager.*</exclude>
-              <exclude>**/view/swing/**/*.*</exclude>
+              <exclude>**/view/swing/SchoolManagerApp.java</exclude>
+              <exclude>**/view/swing/dialog/TextDocumentListener.java</exclude>
             </excludes>
           </configuration>
           <executions>
@@ -268,7 +270,7 @@
           <version>2.22.1</version>
           <executions>
             <execution>
-              <id>default-it</id>
+              <id>it-tests</id>
               <goals>
                 <goal>integration-test</goal>
                 <goal>verify</goal>
@@ -493,20 +495,6 @@
             <artifactId>pitest-maven</artifactId>
           </plugin>
         </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>enable-coveralls</id>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.eluder.coveralls</groupId>
-              <artifactId>coveralls-maven-plugin</artifactId>
-            </plugin>
-          </plugins>
-        </pluginManagement>
       </build>
     </profile>
   </profiles>
