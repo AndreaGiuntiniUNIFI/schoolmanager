@@ -33,7 +33,8 @@
       **/backend/repository/RepositoryException.java,
       **/frontend/controller/ExceptionManager.java,
       **/frontend/view/swing/SchoolManagerApp.java,
-      **/frontend/view/swing/dialog/DialogManager.java
+      **/frontend/view/swing/dialog/DialogManager.java,
+      **/frontend/view/swing/dialog/TextDocumentListener.java
     </sonar.coverage.exclusions>
 
     <!-- Custom property to point sonar to the right report path in children (see 
@@ -199,7 +200,7 @@
               <exclude>**/controller/ExceptionManager.*</exclude>
               <exclude>**/view/swing/SchoolManagerApp.*</exclude>
               <exclude>**/view/swing/dialog/DialogManager.*</exclude>
-              <exclude>**/view/swing/dialog/SimpleDialog.*</exclude>
+              <exclude>**/view/swing/dialog/TextDocumentListener.*</exclude>
               <exclude>**/SimpleDialog$3*.*</exclude>
             </excludes>
           </configuration>

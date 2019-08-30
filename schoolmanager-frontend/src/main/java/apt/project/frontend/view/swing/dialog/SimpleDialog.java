@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class SimpleDialog extends CustomDialog {
 
@@ -37,7 +36,7 @@ public class SimpleDialog extends CustomDialog {
             }
         });
 
-        textField.getDocument().addDocumentListener(new DocumentListener() {
+        textField.getDocument().addDocumentListener(new TextDocumentListener() {
 
             private void update() {
                 okButton.setEnabled(textField.getText().length() > 0);
@@ -53,10 +52,6 @@ public class SimpleDialog extends CustomDialog {
                 update();
             }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                // Never used by a TextField
-            }
         });
 
         textField.setName(labelText + "TextField");
